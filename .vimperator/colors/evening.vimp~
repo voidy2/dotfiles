@@ -1,0 +1,35 @@
+" ==VimperatorColorSchema==
+" name: evening
+" ==/VimperatorColorSchema==
+
+
+
+hi StatusLine           color: black;      background: #ddd;
+
+hi Normal               color: #ddd;      background: black;
+hi InfoMsg              color: #ddd;      background: black;
+hi ModeMsg              color: #ddd;      background: black;
+hi MoreMsg              color: limegreen; background: black;
+hi LineNr               color: yellow;    background: black;
+hi Question             color: limegreen; background: black;
+hi WarningMsg           color: yellow;    background: black;
+hi NonText                                background: black;
+
+hi CompItem[selected]   color: black;      background: Khaki;
+
+hi Title                color: Orchid;
+hi Indicator            color: DodgerBlue;
+hi String               color: Orchid;
+hi Number               color: Orchid;
+hi Object               color: SkyBlue;
+hi Function             color: Khaki;
+hi URL                  color: GreenYellow;
+
+
+
+
+style -name statusbar chrome://* <<EOM
+#status-bar statusbarpanel { padding: 0 1px !important; }
+statusbarpanel > * { margin: 0 !important; padding: 0 !important; }
+EOM
+

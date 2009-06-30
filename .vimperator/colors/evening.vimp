@@ -1,0 +1,70 @@
+" ==VimperatorColorSchema==
+" name: evening
+" ==/VimperatorColorSchema==
+
+
+
+hi StatusLine           color: black;      background: #ddd;
+
+hi Normal               color: #ddd;      background: black;
+hi InfoMsg              color: #ddd;      background: black;
+hi ModeMsg              color: #ddd;      background: black;
+hi MoreMsg              color: limegreen; background: black;
+hi LineNr               color: yellow;    background: black;
+hi Question             color: limegreen; background: black;
+hi WarningMsg           color: yellow;    background: black;
+hi NonText                                background: black;
+hi Filter		color: #aacf53;		font-weight: bold;
+
+hi CompItem[selected]   color: black;      background: Khaki;
+
+hi Title                color: Orchid;
+hi Indicator            color: DodgerBlue;
+hi String               color: Orchid;
+hi Number               color: Orchid;
+hi Object               color: SkyBlue;
+hi Function             color: Khaki;
+hi URL                  color: GreenYellow;
+
+hi CompTitle		color: DodgerBlue;	background: Black;	font-weight: bold;	font-family: Consolas, Osaka, monospace, monospace;
+hi CompResult		width: 45%; 		overflow: hidden;				font-family: Consolas, Osaka, monospace, monospace;
+hi CompDesc		width: 50%;								font-family: Consolas, Osaka, monospace, monospace;
+hi CompItem											font-family: Consolas, Osaka, monospace, monospace;
+hi CompItem[selected]	color: #aacf53;		background: #555;	font-weight: bold;	font-family: Consolas, Osaka, monospace, monospace;
+
+hi Gradient		height: 1px; 		margin-bottom: -1px; 	margin-top: -1px;
+hi GradientLeft		background: #aacf53;
+hi GradientRight	background: #333333;
+
+
+" style about:blank html { background-color: black; }
+style -name tab chrome://* <<EOM
+#content { background-color: #ddd; } /* tabbar */
+.tabs-alltabs-button { padding: 0 !important; }
+.tabs-container { height: 20px; border-bottom: 2px solid black; }
+.tabs-container > stack { display: none; } /* remove tab selection menu */
+.tabbrowser-tab {
+    -moz-appearance: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -moz-border-radius-topleft: 0 !important;
+    -moz-border-radius-topright: 0 !important;
+    -moz-border-radius-bottomright: 0 !important;
+    -moz-border-radius-bottomleft: 0 !important;
+    border: 0 none !important;
+    background-image: none !important;
+    background-color: #ddd !important;
+}
+.tabbrowser-tab[selected=false] { background: #ddd !important; }
+.tabbrowser-tab[selected=true] {background : black !important;}
+.tabbrowser-tab[selected=true] > .tab-text { color: white !important;  }
+EOM
+
+style -name statusbar chrome://* <<EOM
+#status-bar statusbarpanel { padding: 0 1px !important; }
+statusbarpanel > * { margin: 0 !important; padding: 0 !important; }
+#liberator-statusline{
+    padding: 0px 0px 0px 0px;
+}
+EOM
+

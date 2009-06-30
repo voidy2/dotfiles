@@ -1,0 +1,141 @@
+echo "Now Loading..."
+"自動フォーカス回避
+set focuscontent
+set showtabline=2
+
+hi Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:12px; color:white; background-color:#6666cc; border-color:ButtonShadow; border-width:0px; border-style:solid; padding:0px 1px 0px 1px; position:absolute;
+
+" move in page
+noremap j 8j
+noremap k 8k
+noremap J <C-d>
+noremap K <C-u>
+inoremap <C-a> <C-v><C-a>
+inoremap <C-z> <C-v><C-z>
+inoremap <C-x> <C-v><C-x>
+inoremap <C-c> <C-v><C-c>
+inoremap <C-v> <C-v><C-v>
+cnoremap <C-a> <C-v><C-a>
+cnoremap <C-z> <C-v><C-z>
+cnoremap <C-x> <C-v><C-x>
+cnoremap <C-c> <C-v><C-c>
+cnoremap <C-v> <C-v><C-v>
+nnoremap <C-H> <BS>
+cmap <C-n> <Tab>
+cmap <C-p> <S-Tab>
+cmap <C-j> <Tab>
+cmap <C-k> <S-Tab>
+cmap <C-;> <C-m>
+" select next/previous tab
+noremap <Right> gt
+noremap <Left> gT
+ 
+" Unhidden and hidden the menubar and the toolbar
+noremap <A-Up> :set guioptions+=mT<CR>
+noremap <A-Down> :set guioptions-=mT<CR>
+ 
+noremap <A-T> :restart<CR>
+
+map ,re <esc>:tombloo ReBlog\ -\ Tumblr<CR>
+" スクロールバーとタブ番号を非表示
+set go=
+
+" ページのアクセスキーを無効化
+set! ui.key.generalAccessKey=0
+
+" リンクのURIをコマンドラインに表示
+set showstatuslinks=
+
+" Options
+"" 検索キーワードのハイライト
+set hlsearch
+
+
+set runtimepath=~/.vimperator
+set guioptions=nbr
+set history=1000
+set complete=ls
+set wildoptions=auto
+set suggestengines=google
+set newtab=all
+
+let g:hintsio="iO"
+let g:tada_userId="voidy21"
+let g:ldrc_intelligence_bind = "true"
+let:g:ldrc_skip = "0.25"
+colorscheme evening
+""タブ追加ボタン消去
+""http://fifnel.com/2009/03/15/2278/
+style -name simple_tabs_container chrome://* <<EOM
+.tabs-newtab-button {display: none !important;}
+.tabs-container> stack {display: none;}
+EOM
+
+
+""ぶくまコメを表示
+noremap v :viewSBMComments<CR>
+
+autocmd LocationChange .* :fmapc
+""Hatena Bookmark
+""autocmd LocationChange ^http://b\.hatena\.ne\.jp/voidy21 :fmap j k o
+
+
+"" Gmail/LDR/Fastladder/OpenFL上では新規タブをバックグラウンドで開く
+autocmd LocationChange (?!https?://((mail|www)\.google\.(com|co\.jp)\/(mail|a|reader)\/|(reader\.livedoor\.com|fastladder\.com|0\.0\.0\.0\:3000)/reader/)|b\.hatena\.ne\.jp/) :set! browser.tabs.loadDivertedInBackground=false
+autocmd LocationChange https?://((mail|www)\.google\.(com|co\.jp)\/(mail|a|reader)\/|(reader\.livedoor\.com|fastladder\.com|0\.0\.0\.0\:3000)/reader/|b\.hatena\.ne\.jp) :set! browser.tabs.loadDivertedInBackground=true
+
+
+"" Google Reader
+autocmd LocationChange 'www\.google\.co\.jp/reader' :fmap! -vkey j k n p m s t v A r S N P X O gh ga gs gt gu u / ?
+
+"" Gmail
+autocmd LocationChange 'mail\.google\.com/mail' :fmap -depth 4 c / j k n p o u e x s r a # [ ] z ? gi gs gt gd ga gc
+
+
+let g:maine_coon_default = "am"
+
+" ステータスバーにfeedボタンを表示
+" http://d.hatena.ne.jp/teramako/20071205/p1
+js <<EOM
+(function(){
+ var feedPanel = document.createElement('statusbarpanel');
+ var feedButton = document.getElementById('feed-button');
+ feedPanel.setAttribute('id','feed-panel-clone');
+ feedPanel.appendChild(feedButton.cloneNode(true));
+ feedButton.parentNode.removeChild(feedButton);
+ document.getElementById('status-bar').insertBefore(feedPanel,document.getElementById('security-button'));
+})();
+EOM
+
+
+"""選択されている単語をmulti_requester.jsを使用して、英辞郎 on the Web で検索するためのキーマップです
+"""@http://vimperator.g.hatena.ne.jp/snaka72/20090506/1241608109
+js <<EOM
+liberator.registerObserver("enter", function() {
+  // for auto_word_select.js
+  mappings.addUserMap(
+    [modes.AUTO_WORD_SELECT],
+    ["s"],
+    "Translate selected word by multi_requester.js.",
+    function() {
+      // FIXME:
+      // A present mode is preserved in the stack beforehand by the push() method
+      // because it doesn't return to AUTO_WORD_SELECT mode before that when
+      // returning from the OUTPUT_MULTILINE mode.
+      modes.push(modes.AUTO_WORD_SELECT, null, true);
+
+      var selText = content.getSelection().toString();
+      var pattern = /[a-zA-Z]+/;
+      selText = pattern.test(selText) ? pattern.exec(selText) : selText;
+      events.feedkeys(":mr alc " + selText + "<CR>", true, true);
+    }
+  );
+});
+EOM
+
+
+ 
+"" vim: set ft=vimperator:
+
+echo ".vimperatorrc sourced" 
+
