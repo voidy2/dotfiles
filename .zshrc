@@ -1,7 +1,10 @@
 ## Completion configuration
 autoload -U compinit
 compinit
-
+##色付けプロンプト
+local GREEN=$'%{[32m%}'
+local BLUE=$'%{[34m%}'
+local DEFAULT=$'%{[1m%}'
 # users generic .zshrc file for zsh(1)
 if [ $USER = "root" ] 
 then
@@ -10,13 +13,14 @@ then
     PATH=${PATH}:/sbin:/usr/sbin:/usr/local/sbin
     HOME=/root
 else
-     PROMPT="%{[$[32+$RANDOM % 5]m%}$LOGNAME@%m%B[%D %T]:%b% "
+     RPROMPT="[%{[33m%}%~%{[m%}]"
+PROMPT="%{[$[32+$RANDOM % 5]m%}$LOGNAME@%m%B[%D %T]:%b% "
 fi
 _set_env_git_current_branch() {
   GIT_CURRENT_BRANCH=$( git branch &> /dev/null | grep '^\*' | cut -b 3- )
 }
 
-_update_rprompt () {
+_update_rprompt() {
   if [ "`git ls-files 2>/dev/null`" ]; then
      RPROMPT="[%{[33m%}%~:%{[32m%}$GIT_CURRENT_BRANCH%{[m%}]"
   else
@@ -151,6 +155,8 @@ case "${TERM}" in
 kterm*|xterm*|screen)
   precmd() {
     echo -ne "\033]0;${USER}@${HOST%%.*}:${PWD}\007"
+    _set_env_git_current_branch
+    _update_rprompt
   }
   export LSCOLORS=exfxcxdxbxegedabagacad
   export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
@@ -191,6 +197,9 @@ zstyle ':completion:*' format $'%{[33m%}completing %B%d%b%{[0m%}'
 zstyle ':completion:*:corrections' format '%{[33m%}%B%d (errors: %e)%b'
 #zstyle ':completion:*:descriptions' format '%{[33m%}%B<%d>%b%{[m%}'
 zstyle ':completion:*' group-name ''
+
+#cd は親ディレクトリからカレントディレクトリを選択しないでしょう (例: cd ../<TAB>):
+zstyle ':completion:*:cd:*' ignore-parents parent pwd
 
 export JAVA_HOME=/usr/lib/jvm/java-6-sun/
 
