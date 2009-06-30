@@ -72,6 +72,7 @@ setopt noautoremoveslash
 # no beep sound when complete list displayed
 setopt nolistbeep
 
+setopt print_eight_bit
 ## Keybind configuration
 #
 # emacs like keybind (e.x. Ctrl-a goes to head of a line and Ctrl-e goes
@@ -147,7 +148,7 @@ esac
 # set terminal title including current directory
 #
 case "${TERM}" in
-kterm*|xterm*)
+kterm*|xterm*|screen)
   precmd() {
     echo -ne "\033]0;${USER}@${HOST%%.*}:${PWD}\007"
   }
@@ -181,6 +182,15 @@ zstyle ':completion:*' use-cache true
 zstyle ':completion:*:cd:*' tag-order local-directories path-directories
 # 補完候補を ←↓↑→ で選択 (補完候補が色分け表示される)
 zstyle ':completion:*:default' menu select=1
+# 補完関数の表示を過剰にする
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list
+zstyle ':completion:*:messages' format '%{[33m%}d%{[m%}'
+zstyle ':completion:*:warnings' format '%{[31m%}No matches for:%{[0m%} %d'
+zstyle ':completion:*' format $'%{[33m%}completing %B%d%b%{[0m%}'
+zstyle ':completion:*:corrections' format '%{[33m%}%B%d (errors: %e)%b'
+zstyle ':completion:*:descriptions' format '%{[33m%}%B<%d>%b%{[m%}'
+zstyle ':completion:*' group-name ''
 
 export JAVA_HOME=/usr/lib/jvm/java-6-sun/
 
