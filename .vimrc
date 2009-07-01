@@ -85,7 +85,11 @@ cnoremap <C-k> <Up>
 let g:Align_xstrlen = 3
 set viminfo+=!
 :map <silent> <C-T> :call BufferList()<CR>
-
+" C/Migemo
+if has('migemo')
+    set migemo
+    set migemodict=$VIM/dict/utf-8.d/migemo-dict
+endif
 
 if has("autocmd")
       autocmd FileType python set complete+=k/home/yoshinoya/pydiction-0.5/pydiction iskeyword+=.,(
