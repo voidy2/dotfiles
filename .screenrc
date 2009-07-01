@@ -199,6 +199,9 @@ bind n screen
 bind h prev
 bind j next
 bind l windowlist
-
+bind r eval 'echo "Resize window"' 'command -c resize'
+bind -c resize ^]  command
+bind -c resize j eval 'resize +1' 'command -c resize'
+bind -c resize k eval 'resize -1' 'command -c resize'
 hardcopydir ~/tmp
 
