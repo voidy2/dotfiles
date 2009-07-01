@@ -90,7 +90,19 @@ if has('migemo')
     set migemo
     set migemodict=$VIM/dict/utf-8.d/migemo-dict
 endif
-
+"-------------------------------------------------------------------
+"Screenのステータスラインに編集中のファイルを表示し、
+" 終了時にはShellと表示する。※^[ はctrl + v を押しながら [
+"-------------------------------------------------------------------
+function! SetScreenTabName(name)
+    let arg = 'k' . a:name . ' > vim \\'
+    silent! exe '!echo -n "' . arg . "\""
+endfunction
+"Screenの場合にvimを使用した時にスクリーンタブ名を書き換える
+if &term =~ "screen"
+  autocmd VimLeave * call SetScreenTabName('shell')
+  autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | call SetScreenTabName("%") | endif
+endif
 if has("autocmd")
       autocmd FileType python set complete+=k/home/yoshinoya/pydiction-0.5/pydiction iskeyword+=.,(
 endif " has("autocmd")
