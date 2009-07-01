@@ -31,17 +31,7 @@ set infercase
 set wildmenu    " :e .v<TAB><TAB> した時に補完候補を表示
 set wildmode=list:longest,full
 set directory=~/tmp " swpファイル出力場所
-inoremap { {}<LEFT>
-inoremap [ []<LEFT>
-inoremap ( ()<LEFT>
-inoremap " ""<LEFT>
-inoremap ' ''<LEFT>
-vnoremap { "zdi^V{<C-R>z}<ESC>
-vnoremap [ "zdi^V[<C-R>z]<ESC>
-vnoremap ( "zdi^V(<C-R>z)<ESC>
-vnoremap " "zdi^V"<C-R>z^V"<ESC>
-vnoremap ' "zdi'<C-R>z'<ESC>
-" ポップアップメニューのカラーを設定
+"" ポップアップメニューのカラーを設定
 hi Pmenu guibg=#666666
 hi PmenuSel guibg=#8cd0d3 guifg=#666666
 hi PmenuSbar guibg=#333333"
