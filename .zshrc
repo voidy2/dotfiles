@@ -6,7 +6,7 @@ local GREEN=$'%{[32m%}'
 local BLUE=$'%{[34m%}'
 local DEFAULT=$'%{[1m%}'
 # users generic .zshrc file for zsh(1)
-if [ $USER = "root" ] 
+if [ $USER = "root" ]
 then
     PROMPT="%{[$[31]m%}%B$LOGNAME@%m[%D %T]:%b%{[m%} %h# "
     RPROMPT="[%{[31m%}%~%{[m%}]"
@@ -28,8 +28,8 @@ _update_rprompt() {
   fi
 }
 
-precmd() 
-{ 
+precmd()
+{
   _set_env_git_current_branch
   _update_rprompt
 }
@@ -245,7 +245,7 @@ bindkey '^o^_' reverse-menu-complete
 if [ $SHLVL = 1 ];then
       screen
 fi
-# ステータスラインに各screenで打ったコマンドを表示  
+# ステータスラインに各screenで打ったコマンドを表示
 if [ "$TERM" = "screen" ]; then
     chpwd () { echo -n "_`dirs`\\" }
     preexec() {
@@ -261,7 +261,7 @@ if [ "$TERM" = "screen" ]; then
                     cmd=(builtin jobs -l $cmd[2])
                 fi
                 ;;
-            %*) 
+            %*)
                 cmd=(builtin jobs -l $cmd[1])
                 ;;
             cd)
