@@ -77,6 +77,9 @@ setopt noautoremoveslash
 setopt nolistbeep
 
 setopt print_eight_bit
+# 拡張グロブで補完
+setopt extended_glob
+
 ## Keybind configuration
 #
 # emacs like keybind (e.x. Ctrl-a goes to head of a line and Ctrl-e goes
@@ -224,6 +227,7 @@ setopt magic_equal_subst     # コマンドラインの引数で --prefix=/usr �
 setopt complete_in_word      # 語の途中でもカーソル位置で補完
 setopt always_last_prompt    # カーソル位置は保持したままファイル名一覧を順次その場で表示
 
+bindkey "^I" menu-complete   # 展開する前に補完候補を出させる ""reverse-menu-complete
 # zsh + screen で端末に表示されてる文字列を補完する
 # 端末上に表示されている画面から Ctrl + o で補完することができるようになります。
 # dabbrev
