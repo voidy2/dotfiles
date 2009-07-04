@@ -56,7 +56,11 @@ FLEX_HOME=~/lib/flex
 export GREP_OPTIONS="--color=auto"
 export STAX_HOME=~/stax-sdk-0.2.14
 PATH=~/stax-sdk-0.2.14:$PATH
+export JAVA_HOME=/usr/lib/jvm/java-6-sun/
 
+#パスを編集するときに階層毎に
+#単語を消したり移動できたりできるようにする
+WORDCHARS="*?_-.[]~=&;!#$%^(){}<>"
 
 # auto change directory
 setopt auto_cd
@@ -193,19 +197,32 @@ zstyle ':completion:*:cd:*' tag-order local-directories path-directories
 zstyle ':completion:*:default' menu select=1 _complete _ignored _approximate
 # 補完関数の表示を過剰にする
 zstyle ':completion:*' verbose yes
-zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list
+#Completer(補完システム)設定
+#_complete
+#    普通の補完関数
+#_approximate
+#    ミススペルを訂正した上で補完を行う。
+#_expand
+#    グロブや変数の展開を行う。もともとあった展開と比べて、細かい制御が可能
+#_history
+#    履歴から補完を行う。_history_complete_wordから使われる
+#_prefix
+#    カーソルの位置で補完を行う 
+zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list _history
 zstyle ':completion:*:messages' format '%{[33m%}d%{[m%}'
 zstyle ':completion:*:warnings' format '%{[31m%}No matches for:%{[0m%} %d'
-zstyle ':completion:*' format $'%{[33m%}completing %B%d%b%{[0m%}'
+zstyle ':completion:*:descriptions' format $'%{[33m%}completing %B%d%b%{[0m%}'
 zstyle ':completion:*:corrections' format '%{[33m%}%B%d (errors: %e)%b'
-#zstyle ':completion:*:descriptions' format '%{[33m%}%B<%d>%b%{[m%}'
 zstyle ':completion:*' group-name ''
 #
 # offer indexes before parameters in subscripts
 #
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
-zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
+#補完候補リスト中で補完する場合に、次の補完候補が表示しきれないとき
+#タブをおすと画面が更新されて補完候補が表示され、それ以外の場合は文字を
+#挿入することを表示するおせっかいな機能
+#zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
 
 #         1つの引数を取るオプション自身の説明文字列が補完定義
 #          に 与えられていないとき，そのオプションの引数の方に
@@ -223,7 +240,6 @@ zstyle ':completion:*' insert-tab false
 #cd は親ディレクトリからカレントディレクトリを選択しないでしょう (例: cd ../<TAB>):
 zstyle ':completion:*:cd:*' ignore-parents parent pwd
 
-export JAVA_HOME=/usr/lib/jvm/java-6-sun/
 
 setopt hist_ignore_all_dups  # 重複するコマンド行は古い方を削除
 setopt hist_ignore_dups      # 直前と同じコマンドラインはヒストリに追加しない
