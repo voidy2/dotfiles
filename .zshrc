@@ -190,7 +190,7 @@ zstyle ':completion:*' use-cache true
 # カレントディレクトリに候補がない場合のみ cdpath 上のディレクトリを候補
 zstyle ':completion:*:cd:*' tag-order local-directories path-directories
 # 補完候補を ←↓↑→ で選択 (補完候補が色分け表示される)
-zstyle ':completion:*:default' menu select=1
+zstyle ':completion:*:default' menu select=1 _complete _ignored _approximate
 # 補完関数の表示を過剰にする
 zstyle ':completion:*' verbose yes
 zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list
@@ -200,6 +200,25 @@ zstyle ':completion:*' format $'%{[33m%}completing %B%d%b%{[0m%}'
 zstyle ':completion:*:corrections' format '%{[33m%}%B%d (errors: %e)%b'
 #zstyle ':completion:*:descriptions' format '%{[33m%}%B<%d>%b%{[m%}'
 zstyle ':completion:*' group-name ''
+#
+# offer indexes before parameters in subscripts
+#
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+
+zstyle ':completion:*' list-prompt '%SAt %p: Hit TAB for more, or the character to insert%s'
+
+#         1つの引数を取るオプション自身の説明文字列が補完定義
+#          に 与えられていないとき，そのオプションの引数の方に
+#          説明文字列があればそれオプション自身の説明として 使
+#          う。 スタイルの値に含ませる %d がその文字列に置き換
+#          えられる(□)。
+zstyle ':completion:*' auto-description 'specify: %d'
+#       insert-tab
+#          この値が `true' のとき，カーソルの左側に非空白文 字
+#          が な い 状態で TABキーを押すと，補完を始める代わり
+#          にTAB文字を挿入する。 `false' ならそのような場所 で
+#          も補完を行なう。
+zstyle ':completion:*' insert-tab false 
 
 #cd は親ディレクトリからカレントディレクトリを選択しないでしょう (例: cd ../<TAB>):
 zstyle ':completion:*:cd:*' ignore-parents parent pwd
