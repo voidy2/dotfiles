@@ -83,6 +83,8 @@ setopt nolistbeep
 setopt print_eight_bit
 # 拡張グロブで補完
 setopt extended_glob
+# 明確なドットの指定なしで.から始まるファイルをマッチ
+setopt globdots
 
 ## Keybind configuration
 #
