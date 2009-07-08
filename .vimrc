@@ -93,6 +93,10 @@ cnoremap <C-l> <Right>
 cnoremap <C-j> <Down>
 cnoremap <C-k> <Up>
 
+map <C-i> :Gtags -f %<CR>
+map <C-g> :GtagsCursor<CR>
+map <C-n> :cn<CR>
+map <C-p> :cp<CR>
 
 let g:Align_xstrlen = 3
 set viminfo+=!
