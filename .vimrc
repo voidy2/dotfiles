@@ -93,7 +93,7 @@ cnoremap <C-l> <Right>
 cnoremap <C-j> <Down>
 cnoremap <C-k> <Up>
 
-map <C-i> :Gtags -f %<CR>
+""map <C-i> :Gtags -f %<CR>
 map <C-g> :GtagsCursor<CR>
 map <C-n> :cn<CR>
 map <C-p> :cp<CR>
@@ -119,6 +119,38 @@ if &term =~ "screen"
   autocmd VimLeave * call SetScreenTabName('shell')
   autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | call SetScreenTabName("%") | endif
 endif
+""コンソールラインを必要な時だけ表示する
+""http://d.hatena.ne.jp/thinca/20090530/1243615055
+set cursorline
+augroup vimrc-auto-cursorline
+  autocmd!
+  autocmd CursorMoved,CursorMovedI * call s:auto_cursorline('CursorMoved')
+  autocmd CursorHold,CursorHoldI * call s:auto_cursorline('CursorHold')
+  autocmd WinEnter * call s:auto_cursorline('WinEnter')
+  autocmd WinLeave * call s:auto_cursorline('WinLeave')
+
+  let s:cursorline_lock = 0
+  function! s:auto_cursorline(event)
+    if a:event ==# 'WinEnter'
+      setlocal cursorline
+      let s:cursorline_lock = 2
+    elseif a:event ==# 'WinLeave'
+      setlocal nocursorline
+    elseif a:event ==# 'CursorMoved'
+      if s:cursorline_lock
+        if 1 < s:cursorline_lock
+          let s:cursorline_lock = 1
+        else
+          setlocal nocursorline
+          let s:cursorline_lock = 0
+        endif
+      endif
+    elseif a:event ==# 'CursorHold'
+      setlocal cursorline
+      let s:cursorline_lock = 1
+    endif
+  endfunction
+augroup END
 "自動的に QuickFix リストを表示する
 autocmd QuickfixCmdPost make,grep,grepadd,vimgrep,vimgrepadd cwin
 autocmd QuickfixCmdPost lmake,lgrep,lgrepadd,lvimgrep,lvimgrepadd lwin
