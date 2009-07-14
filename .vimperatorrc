@@ -132,9 +132,9 @@ liberator.registerObserver("enter", function() {
   );
 });
 EOM
+"""next linkのタブを新しく読み込むようにする
+let g:nextlink_followlink = "true"
 
-
- 
 "" vim: set ft=vimperator:
 
 echo ".vimperatorrc sourced" 
