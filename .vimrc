@@ -122,6 +122,7 @@ endif
 ""コンソールラインを必要な時だけ表示する
 ""http://d.hatena.ne.jp/thinca/20090530/1243615055
 set cursorline
+highlight CursorLine cterm=inverse
 augroup vimrc-auto-cursorline
   autocmd!
   autocmd CursorMoved,CursorMovedI * call s:auto_cursorline('CursorMoved')
