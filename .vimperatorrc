@@ -136,7 +136,8 @@ EOM
 """next linkのタブを新しく読み込むようにする
 let g:nextlink_followlink = "true"
 
-// copy.js
+"" copy.js
+js <<EOM
 liberator.globalVariables.copy_templates = [
   { label: 'titleAndURL',    value: '%TITLE% %URL%' },
   { label: 'title',          value: '%TITLE%' },
@@ -145,7 +146,8 @@ liberator.globalVariables.copy_templates = [
   { label: 'markdown',       value: '[%SEL%](%URL% "%TITLE%")' },
   { label: 'htmlblockquote', value: '<blockquote cite="%URL%" title="%TITLE%">%HTMLSEL%</blockquote>' }
 ];
-// refcontrol.js
+EOM
+"" refcontrol.js
 let g:refcontrol_enabled = "true"
 js <<EOM
 liberator.globalVariables.refcontrol = {
