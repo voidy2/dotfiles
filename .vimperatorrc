@@ -1,12 +1,14 @@
 echo "Now Loading..."
-// コマンドラインC-xでURL補完 -- http://mattn.kaoriya.net/software/firefox/vimperator/20080804213818.htm
+// コマンドラインC-yでURL補完 -- http://mattn.kaoriya.net/software/firefox/vimperator/20080804213818.htm
+js <<EOM
 mappings.addUserMap([modes.COMMAND_LINE], ['<C-y>'],
   'insert current URL to command line',
   function () {
-    var cmd = commandline.command();
+    var cmd = commandline.command;
     if (!cmd.match(/ $/)) cmd += ' ';
     commandline.open(':', cmd+buffer.URL);
 });
+EOM
 "自動フォーカス回避
 set focuscontent
 set showtabline=2
