@@ -1,4 +1,12 @@
 echo "Now Loading..."
+// コマンドラインC-xでURL補完 -- http://mattn.kaoriya.net/software/firefox/vimperator/20080804213818.htm
+mappings.addUserMap([modes.COMMAND_LINE], ['<C-y>'],
+  'insert current URL to command line',
+  function () {
+    var cmd = commandline.command();
+    if (!cmd.match(/ $/)) cmd += ' ';
+    commandline.open(':', cmd+buffer.URL);
+});
 "自動フォーカス回避
 set focuscontent
 set showtabline=2
@@ -135,6 +143,29 @@ EOM
 """next linkのタブを新しく読み込むようにする
 let g:nextlink_followlink = "true"
 
+// copy.js
+liberator.globalVariables.copy_templates = [
+  { label: 'titleAndURL',    value: '%TITLE% %URL%' },
+  { label: 'title',          value: '%TITLE%' },
+  { label: 'hatena',         value: '[%URL%:title=%TITLE%]' },
+  { label: 'hatenacite',     value: '>%URL%:title=%TITLE%>\n%SEL%\n<<' },
+  { label: 'markdown',       value: '[%SEL%](%URL% "%TITLE%")' },
+  { label: 'htmlblockquote', value: '<blockquote cite="%URL%" title="%TITLE%">%HTMLSEL%</blockquote>' }
+];
+// refcontrol.js
+let g:refcontrol_enabled = "true"
+js <<EOM
+liberator.globalVariables.refcontrol = {
+  '@DEFAULT'     : '@FORGE',        // @NORMAL, @FORGE, '', url
+  'tumblr.com'   : '@FORGE',
+  'del.icio.us'  : '@NORMAL',
+  'fc2.com'      : '',
+  'itmedia.co.jp': '@FORGE',
+  'uploader.jp'  : '@NORMAL',
+  'megalodon.jp' : '@NORMAL',
+  'livedoor.com' : '@NORMAL',
+};
+EOM
 "" vim: set ft=vimperator:
 
 echo ".vimperatorrc sourced" 
