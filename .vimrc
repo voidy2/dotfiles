@@ -2,7 +2,7 @@ set hlsearch
 set number
 set scrolloff=1000
 set laststatus=2
-set tags=.tags
+set tags=.tags;
 set showcmd
 set foldmethod=marker
 set linebreak
