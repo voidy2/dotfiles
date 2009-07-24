@@ -43,6 +43,18 @@ alias update='sudo apt-get update'
 alias upgrade='sudo apt-get upgrade'
 #grepにtagsファイルが引っかからないようにする
 alias ctags='ctags -f .tags'
+# http://d.hatena.ne.jp/f99aq/20090418/1240067145
+# .を何回か押すと上の階層へ
+rationalise-dot() {
+    if [[ $LBUFFER = *.. ]]; then
+        LBUFFER+=/..
+    else
+        LBUFFER+=.
+    fi
+}
+zle -N rationalise-dot
+bindkey . rationalise-dot
+
 
 ## Environment variable configuration
 #
@@ -324,7 +336,6 @@ if [ "$TERM" = "screen" ]; then
     }
     chpwd
 fi
-
 ## load user .zshrc configuration file
 
 [ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
