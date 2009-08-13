@@ -30,11 +30,13 @@ cmap <C-;> <C-m>
 " select next/previous tab
 noremap <Right> gt
 noremap <Left> gT
- 
+" tomblrのreblog用
+noremap <Leader>t :mb Tombloo::Reblog<CR>
+
 " Unhidden and hidden the menubar and the toolbar
 noremap <A-Up> :set guioptions+=mT<CR>
 noremap <A-Down> :set guioptions-=mT<CR>
- 
+
 noremap <A-T> :restart<CR>
 
 map ,re <esc>:tombloo ReBlog\ -\ Tumblr<CR>
