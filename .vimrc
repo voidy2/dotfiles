@@ -75,7 +75,7 @@ endif
 set expandtab
 set shiftwidth=4
 set softtabstop=4
-set tabstop=4
+set tabstop=8
 "" タブ文字と改行文字を表示(^I,$)
 set list
 "" 検索時に大文字小文字区別しない
