@@ -84,9 +84,12 @@ set ignorecase
 set wrapscan
 set modifiable
 set fencs=utf-8,cp932,ucs-bom,ucs-2le,ucs-2,iso-2022-jp-3
-filetype plugin indent on 
+filetype plugin indent on
 "挿入モードで貼り付け
-imap <C-V>  <ESC>"*pa
+inoremap <C-V>  <ESC>"*pa
+"ESC連打で強調表示切る
+nnoremap <Esc><Esc> :nohlsearch<CR>
+nnoremap <C-l> W
 "カーソル移動
 cnoremap <C-h> <Backspace>
 cnoremap <C-l> <Right>
@@ -102,9 +105,9 @@ cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
 
 "map <C-i> :Gtags -f %<CR>
-map <C-g> :GtagsCursor<CR>
-map <C-n> :cn<CR>
-map <C-p> :cp<CR>
+noremap <C-g> :GtagsCursor<CR>
+noremap <C-n> :cn<CR>
+noremap <C-p> :cp<CR>
 
 let g:Align_xstrlen = 3
 set viminfo+=!
