@@ -92,8 +92,16 @@ cnoremap <C-h> <Backspace>
 cnoremap <C-l> <Right>
 cnoremap <C-j> <Down>
 cnoremap <C-k> <Up>
+cnoremap <C-b> <Left>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-d> <Del>
 
-""map <C-i> :Gtags -f %<CR>
+"コマンドモードの履歴
+cnoremap <C-p> <Up>
+cnoremap <C-n> <Down>
+
+"map <C-i> :Gtags -f %<CR>
 map <C-g> :GtagsCursor<CR>
 map <C-n> :cn<CR>
 map <C-p> :cp<CR>
