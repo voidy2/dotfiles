@@ -22,24 +22,33 @@ cnoremap <C-x> <C-v><C-x>
 cnoremap <C-c> <C-v><C-c>
 cnoremap <C-v> <C-v><C-v>
 nnoremap <C-H> <BS>
-cmap <C-n> <Tab>
-cmap <C-p> <S-Tab>
-cmap <C-j> <Tab>
-cmap <C-k> <S-Tab>
-cmap <C-;> <C-m>
+cnoremap <C-n> <Tab>
+cnoremap <C-p> <S-Tab>
+cnoremap <C-j> <Tab>
+cnoremap <C-k> <S-Tab>
+cnoremap <C-;> <C-m>
+imap <C-h> <BS>
+imap <C-m> <CR>
+imap <C-j> <Down>
+imap <C-k> <Up>
+imap <C-u> <Left>
+imap <C-l> <Right>
 " select next/previous tab
 noremap <Right> gt
 noremap <Left> gT
+" <C-k>で検索に行かないようにする
+map <C-k> <Nop>
+" leaderキーの明示
+let mapleader=','
 " tomblrのreblog用
+noremap <Leader>re <esc>:tombloo ReBlog\ -\ Tumblr<CR>
 noremap <Leader>t :mb Tombloo::Reblog<CR>
-
 " Unhidden and hidden the menubar and the toolbar
 noremap <A-Up> :set guioptions+=mT<CR>
 noremap <A-Down> :set guioptions-=mT<CR>
 
 noremap <A-T> :restart<CR>
 
-map ,re <esc>:tombloo ReBlog\ -\ Tumblr<CR>
 " スクロールバーとタブ番号を非表示
 set go=
 
@@ -87,13 +96,18 @@ autocmd LocationChange .* :fmapc
 autocmd LocationChange (?!https?://((mail|www)\.google\.(com|co\.jp)\/(mail|a|reader)\/|(reader\.livedoor\.com|fastladder\.com|0\.0\.0\.0\:3000)/reader/)|b\.hatena\.ne\.jp/) :set! browser.tabs.loadDivertedInBackground=false
 autocmd LocationChange https?://((mail|www)\.google\.(com|co\.jp)\/(mail|a|reader)\/|(reader\.livedoor\.com|fastladder\.com|0\.0\.0\.0\:3000)/reader/|b\.hatena\.ne\.jp) :set! browser.tabs.loadDivertedInBackground=true
 
+""LDR
+autocmd LocationChange 'reader\.livedoor\.com/reader' :fmap j k s a p o v c <Space> <S-Space> z b < >
 
 "" Google Reader
 autocmd LocationChange 'www\.google\.co\.jp/reader' :fmap! -vkey j k n p m s t v A r S N P X O gh ga gs gt gu u / ?
 
+
 "" Gmail
 autocmd LocationChange 'mail\.google\.com/mail' :fmap -depth 4 c / j k n p o u e x s r a # [ ] z ? gi gs gt gd ga gc
 
+""Google Calendar
+autocmd LocationChange 'www\.google\.com/calendar/' :fmap! -vkey -event keydown t a d w m x c e <Del> / + q s ?
 
 let g:maine_coon_default = "am"
 
