@@ -41,8 +41,9 @@ map <C-k> <Nop>
 " leaderキーの明示
 let mapleader=','
 " tomblrのreblog用
-noremap <Leader>r <esc>:tombloo ReBlog\ -\ Tumblr<CR>
-noremap <Leader>t <esc>:mb Tombloo::Reblog<CR>
+noremap <Leader>r <esc>:tombloo ReBlog\ -\ Tumblr<CR><esc>:echo "Rebloged!!"<CR>
+noremap  <Leader>t :mb pinned-or-current-node\ |\ Tombloo::Reblog\ |\ clear-pin<CR><esc>:echo "Rebloged!!"<CR>
+
 " Unhidden and hidden the menubar and the toolbar
 noremap <A-Up> :set guioptions+=mT<CR>
 noremap <A-Down> :set guioptions-=mT<CR>
