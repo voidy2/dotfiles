@@ -10,7 +10,7 @@
 // Hatena Bookmark direct add script for Vimperator 0.6.*
 // for Migemo search: require XUL/Migemo Extension
 (function(){
-    var isNormalize = true;
+    var isNormalize = false;
 
     try{
         var XMigemoCore = Components

@@ -87,6 +87,13 @@ set fencs=utf-8,cp932,ucs-bom,ucs-2le,ucs-2,iso-2022-jp-3
 filetype plugin indent on
 "挿入モードで貼り付け
 inoremap <C-V>  <ESC>"*pa
+"挿入モードでのEsc割り当て
+inoremap jj <Esc>j
+inoremap ;; <Esc>j$
+inoremap kk <Esc>k
+inoremap hh <Esc>^
+"Aは押しにくいと思う
+nnoremap ;; A
 "ESC連打で強調表示切る
 nnoremap <Esc><Esc> :nohlsearch<CR>
 nnoremap <C-l> W
