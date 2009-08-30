@@ -89,7 +89,7 @@ filetype plugin indent on
 inoremap <C-V>  <ESC>"*pa
 "挿入モードでのEsc割り当て
 inoremap jj <Esc>j
-inoremap ;; <Esc>j$
+inoremap ;; <Esc>o<Esc>
 inoremap kk <Esc>k
 inoremap hh <Esc>^
 "Aは押しにくいと思う
