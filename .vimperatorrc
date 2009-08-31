@@ -22,6 +22,7 @@ cnoremap <C-x> <C-v><C-x>
 cnoremap <C-c> <C-v><C-c>
 cnoremap <C-v> <C-v><C-v>
 nnoremap <C-H> <BS>
+cnoremap <C-i> <Tab>
 cnoremap <C-n> <Tab>
 cnoremap <C-p> <S-Tab>
 cnoremap <C-j> <Tab>
