@@ -255,6 +255,26 @@ augroup END
 "自動的に QuickFix リストを表示する
 autocmd QuickfixCmdPost make,grep,grepadd,vimgrep,vimgrepadd cwin
 autocmd QuickfixCmdPost lmake,lgrep,lgrepadd,lvimgrep,lvimgrepadd lwin
+"{{{
+function! SetScreenTabName(name)
+    let arg = 'k' . a:name . ' > vim \\'
+    silent! exe '!echo -n "' . arg . "\""
+endfunction
+"Screenの場合にvimを使用した時にスクリーンタブ名を書き換える
+if &term =~ "screen"
+  autocmd VimLeave * call SetScreenTabName('shell')
+  autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | call SetScreenTabName("%") | endif
+endif
+"}}}
+""-------------------------------------------------------------------
+" cdpathを考慮したcd
+" 参考:WEB+DB PRESS Vol.52
+""-------------------------------------------------------------------
+command! -complete=customlist,CompleteCD -nargs=? CD cd <args>
+function CompleteCD(arglead, cmdline, cursorpos)
+    let pattern = join(split(a:cmdline, "\s", !0)[1:], ' ') . '*/'
+    return split(globpath(&cdpath, pattern), "\n")
+endfunction
 
 if has("autocmd")
       autocmd FileType python set complete+=k/home/yoshinoya/pydiction-0.5/pydiction iskeyword+=.,(

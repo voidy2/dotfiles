@@ -61,7 +61,7 @@ bindkey . rationalise-dot
 # LANG
 export LANG=ja_JP.UTF-8
 
-
+cdpath=(.. ~ ~/myapp/gae/ ~/myapp/gae/google_appengine/demos/)
 PATH=~/lib/flex/bin:$PATH
 PATH=/var/lib/gems/1.8/bin:$PATH
 FLEX_HOME=~/lib/flex
@@ -228,11 +228,12 @@ zstyle ':completion:*:warnings' format '%{[31m%}No matches for:%{[0m%} %d'
 zstyle ':completion:*:descriptions' format $'%{[33m%}completing %B%d%b%{[0m%}'
 zstyle ':completion:*:corrections' format '%{[33m%}%B%d (errors: %e)%b'
 zstyle ':completion:*' group-name ''
-#
+# カレントディレクトリに候補がない場合のみ cdpath 上のディレクトリを候補
+zstyle ':completion:*:cd:*' tag-order local-directories path-directories
+#cd は親ディレクトリからカレントディレクトリを選択しないでしょう (例: cd ../<TAB>):
+zstyle ':completion:*:cd:*' ignore-parents parent pwd
 # offer indexes before parameters in subscripts
-#
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
-
 #補完候補リスト中で補完する場合に、次の補完候補が表示しきれないとき
 #タブをおすと画面が更新されて補完候補が表示され、それ以外の場合は文字を
 #挿入することを表示するおせっかいな機能
@@ -250,9 +251,6 @@ zstyle ':completion:*' auto-description 'specify: %d'
 #          にTAB文字を挿入する。 `false' ならそのような場所 で
 #          も補完を行なう。
 zstyle ':completion:*' insert-tab false 
-
-#cd は親ディレクトリからカレントディレクトリを選択しないでしょう (例: cd ../<TAB>):
-zstyle ':completion:*:cd:*' ignore-parents parent pwd
 
 
 setopt hist_ignore_all_dups  # 重複するコマンド行は古い方を削除
