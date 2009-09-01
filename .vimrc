@@ -1,22 +1,14 @@
-set hlsearch
-set number
-set scrolloff=1000
-set laststatus=2
-set tags=.tags;
-set showcmd
-set foldmethod=marker
-set linebreak
-set history=1000
-set helplang=ja
-set keywordprg=:help
-highlight StatusLine cterm=bold,reverse
-highlight StatusLine ctermfg=blue
-highlight StatusLine ctermbg=white
-highlight StatusLineNC cterm=reverse
-autocmd InsertEnter * highlight StatusLine ctermfg=green
-autocmd InsertLeave * highlight StatusLine ctermfg=blue
-autocmd FileType help nnoremap <buffer> q <C-w>c
-set showtabline=2
+"オートコマンドを初期化
+autocmd!
+syntax on
+filetype plugin indent on
+let mapleader=","
+"" -------------------
+"" ハイライト
+"" -------------------
+"{{{1
+
+"ステータスライン"{{{2
 let &statusline = ''
 let &statusline .= '%<%F %h%m%r%w'
 let &statusline .= '%='
@@ -24,21 +16,21 @@ let &statusline .= '%y' " filetype
 let &statusline .= '[%{&fileencoding == "" ? &encoding : &fileencoding}]'
 let &statusline .= '[%{&fileformat}]'
 let &statusline .= '  %-14.(%l,%c%V%) %P'
-inoremap <C-H> <Backspace>
-syntax on
-set incsearch   " 検索文字を打ち込むと即検索する（インクリメンタルサーチ）
-set infercase
-set wildmenu    " :e .v<TAB><TAB> した時に補完候補を表示
-set wildmode=list:longest,full
-set directory=~/tmp " swpファイル出力場所
-"" ポップアップメニューのカラーを設定
-hi Pmenu guibg=#666666
-hi PmenuSel guibg=#8cd0d3 guifg=#666666
-hi PmenuSbar guibg=#333333"
+highlight StatusLine cterm=bold,reverse
+highlight StatusLine ctermfg=blue
+highlight StatusLine ctermbg=white
+highlight StatusLineNC cterm=reverse
+" ステータスラインの色(挿入モード:green,ノーマルモード:blue)
+autocmd InsertEnter * highlight StatusLine ctermfg=green
+autocmd InsertLeave * highlight StatusLine ctermfg=blue
+"}}}
 
-" -------------------
-"" 色の設定
-"" -------------------
+" ポップアップメニュー"{{{2
+highlight Pmenu ctermbg=lightblue
+highlight PmenuSel ctermbg=darkgrey
+"}}}
+
+" テキストライン"{{{2
 highlight LineNr ctermfg=darkyellow    " 行番号
 highlight NonText ctermfg=darkgrey
 highlight Folded ctermfg=blue
@@ -69,8 +61,39 @@ if has("syntax")
         "autocmd BufNew,BufRead * call SOLSpaceHilight()
         autocmd BufNew,BufRead * call JISX0208SpaceHilight()
     augroup END
-endif
+endif"}}}
 
+"}}}
+"" -------------------
+"" オプション
+"" -------------------
+"{{{
+set foldmethod=syntax
+set complete=.,w,b,t,i
+set completeopt=menu,preview,menuone
+set lazyredraw
+set hlsearch
+set backspace=eol,indent,start
+set number
+set scrolloff=1000
+set laststatus=2
+set tags=.tags;
+set showcmd
+set foldmethod=marker
+set linebreak
+set history=1000
+set helplang=ja
+set keywordprg=:help
+set showtabline=2
+" 検索文字を打ち込むと即検索する（インクリメンタルサーチ）
+set incsearch
+" 単語補完時に大文字小文字を上手く区別"
+set infercase
+" :e .v<TAB><TAB> した時に補完候補を表示
+set wildmenu
+set wildmode=list:longest,full
+" swpファイル出力場所
+set directory=~/tmp
 "" タブ幅
 set expandtab
 set shiftwidth=4
@@ -80,22 +103,45 @@ set tabstop=8
 set list
 "" 検索時に大文字小文字区別しない
 set ignorecase
+set smartcase
+
 "" 後方検索時に文字列が見つからない場合にファイルの先頭に戻って再検索する
 set wrapscan
 set modifiable
 set fencs=utf-8,cp932,ucs-bom,ucs-2le,ucs-2,iso-2022-jp-3
-filetype plugin indent on
+"}}}
+"" -------------------
+"" キーマッピング
+"" -------------------
+"{{{
+noremap <leader>. :<C-u>edit $MYVIMRC<Enter>
+noremap <leader>s :<C-u>source $MYVIMRC<Enter>
+" ヘルプ表示
+autocmd FileType help nnoremap <buffer> q <C-w>c
+inoremap <C-h> <Backspace>
+nnoremap <C-h> :<C-u>help<Space>
+nnoremap <C-h><C-h> :<C-u>help<Space><C-r><C-w><CR>
+" タブ切り替え
+nnoremap <silent> <C-n> :<C-u>tabNext<CR>
+nnoremap <silent> <C-p> :<C-u>tabprevious<CR>
+" 表示行単位で移動
+noremap j gj
+noremap k gk
+vnoremap j gj
+vnoremap k gk
+noremap gj j
+noremap gk k
+vnoremap gj j
+vnoremap gk k
 "挿入モードで貼り付け
-inoremap <C-V>  <ESC>"*pa
+inoremap <C-v>  <ESC>"*pa
 "挿入モードでのEsc割り当て
 inoremap jj <Esc>j
 inoremap ;; <Esc>o<Esc>
 inoremap kk <Esc>k
 inoremap hh <Esc>^
-"Aは押しにくいと思う
-nnoremap ;; A
 "ESC連打で強調表示切る
-nnoremap <Esc><Esc> :nohlsearch<CR>
+nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
 nnoremap <C-l> W
 "カーソル移動
 cnoremap <C-h> <Backspace>
@@ -106,28 +152,28 @@ cnoremap <C-b> <Left>
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-d> <Del>
-
 "コマンドモードの履歴
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
-
+"}}}
+" Gtags
 "map <C-i> :Gtags -f %<CR>
 noremap <C-g> :GtagsCursor<CR>
-noremap <C-n> :cn<CR>
-noremap <C-p> :cp<CR>
-
+"noremap <C-n> :cn<CR>
+"noremap <C-p> :cp<CR>
 let g:Align_xstrlen = 3
 set viminfo+=!
-:map <silent> <C-T> :call BufferList()<CR>
+map <silent> <C-T> :call BufferList()<CR>
 " C/Migemo
 if has('migemo')
     set migemo
     set migemodict=$VIM/dict/utf-8.d/migemo-dict
 endif
-"-------------------------------------------------------------------
-"Screenのステータスラインに編集中のファイルを表示し、
+""-------------------------------------------------------------------
+" Screenのステータスラインに編集中のファイルを表示し、
 " 終了時にはShellと表示する。※^[ はctrl + v を押しながら [
 "-------------------------------------------------------------------
+"{{{
 function! SetScreenTabName(name)
     let arg = 'k' . a:name . ' > vim \\'
     silent! exe '!echo -n "' . arg . "\""
@@ -137,8 +183,12 @@ if &term =~ "screen"
   autocmd VimLeave * call SetScreenTabName('shell')
   autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | call SetScreenTabName("%") | endif
 endif
-""コンソールラインを必要な時だけ表示する
-""http://d.hatena.ne.jp/thinca/20090530/1243615055
+"}}}
+""-------------------------------------------------------------------
+" コンソールラインを必要な時だけ表示する
+" http://d.hatena.ne.jp/thinca/20090530/1243615055
+""-------------------------------------------------------------------
+"{{{
 set cursorline
 highlight CursorLine cterm=inverse
 augroup vimrc-auto-cursorline
@@ -170,11 +220,12 @@ augroup vimrc-auto-cursorline
     endif
   endfunction
 augroup END
+"}}}
 "自動的に QuickFix リストを表示する
 autocmd QuickfixCmdPost make,grep,grepadd,vimgrep,vimgrepadd cwin
 autocmd QuickfixCmdPost lmake,lgrep,lgrepadd,lvimgrep,lvimgrepadd lwin
+
 if has("autocmd")
       autocmd FileType python set complete+=k/home/yoshinoya/pydiction-0.5/pydiction iskeyword+=.,(
 endif " has("autocmd")
-
 
