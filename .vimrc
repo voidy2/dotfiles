@@ -155,6 +155,10 @@ cnoremap <C-d> <Del>
 "コマンドモードの履歴
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
+"日付入力
+inoremap <expr> <leader>df strftime('%Y-%m-%dT%H:%M:%S')
+inoremap <expr> <leader>dd strftime('%Y-%m-%d')
+inoremap <expr> <leader>dt strftime('%H:%M:%S')
 "}}}
 " Gtags
 "map <C-i> :Gtags -f %<CR>
