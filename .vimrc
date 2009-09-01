@@ -4,6 +4,21 @@ syntax on
 filetype plugin indent on
 let mapleader=","
 "" -------------------
+"" 文字エンコーディング
+"" -------------------
+"{{{
+command! -bang -bar -complete=file -nargs=? UTf8
+        \ edit<bang> ++enc=utf-8 <args>
+command! -bang -bar -complete=file -nargs=? Cp932
+        \ edit<bang> ++enc=cp932 <args>
+command! -bang -bar -complete=file -nargs=? Eucjp
+        \ edit<bang> ++enc=euc-jp <args>
+command! -bang -bar -complete=file -nargs=? Iso2022jp
+        \ edit<bang> ++enc=iso-2022-jp <args>
+command! -bang -bar -complete=file -nargs=? Jis Iso2022jp<bang> <args>
+command! -bang -bar -complete=file -nargs=? Sjis Cp932<bang> <args>
+"}}}
+"" -------------------
 "" ハイライト
 "" -------------------
 "{{{1
@@ -16,18 +31,21 @@ let &statusline .= '%y' " filetype
 let &statusline .= '[%{&fileencoding == "" ? &encoding : &fileencoding}]'
 let &statusline .= '[%{&fileformat}]'
 let &statusline .= '  %-14.(%l,%c%V%) %P'
-highlight StatusLine cterm=bold,reverse
-highlight StatusLine ctermfg=blue
-highlight StatusLine ctermbg=white
-highlight StatusLineNC cterm=reverse
+autocmd ColorScheme *
+\ highlight StatusLine
+\ cterm=bold,reverse
+\ ctermfg=blue
+\ ctermbg=white
+autocmd ColorScheme * highlight StatusLineNC cterm=reverse
 " ステータスラインの色(挿入モード:green,ノーマルモード:blue)
 autocmd InsertEnter * highlight StatusLine ctermfg=green
 autocmd InsertLeave * highlight StatusLine ctermfg=blue
 "}}}
 
 " ポップアップメニュー"{{{2
-highlight Pmenu ctermbg=lightblue
-highlight PmenuSel ctermbg=darkgrey
+autocmd ColorScheme * highlight Pmenu ctermbg=lightblue
+autocmd ColorScheme * highlight PmenuSel ctermbg=darkgrey
+doautocmd ColorScheme _
 "}}}
 
 " テキストライン"{{{2
@@ -124,6 +142,8 @@ nnoremap <C-h><C-h> :<C-u>help<Space><C-r><C-w><CR>
 " タブ切り替え
 nnoremap <silent> <C-n> :<C-u>tabNext<CR>
 nnoremap <silent> <C-p> :<C-u>tabprevious<CR>
+nnoremap <silent> tn :<C-u>tabnew<CR>
+nnoremap <silent> tq :<C-u>tabclose<CR>
 " 表示行単位で移動
 noremap j gj
 noremap k gk
@@ -159,6 +179,10 @@ cnoremap <C-n> <Down>
 inoremap <expr> <leader>df strftime('%Y-%m-%dT%H:%M:%S')
 inoremap <expr> <leader>dd strftime('%Y-%m-%d')
 inoremap <expr> <leader>dt strftime('%H:%M:%S')
+"最後に変更が行われたテキストを選択
+nnoremap gc `[v`]
+vnoremap gc :<C-u>normal gc<CR>
+onoremap gc :<C-u>normal gc<CR>
 "}}}
 " Gtags
 "map <C-i> :Gtags -f %<CR>
@@ -173,6 +197,9 @@ if has('migemo')
     set migemo
     set migemodict=$VIM/dict/utf-8.d/migemo-dict
 endif
+" surround.vim
+nmap s <Plug>Ysurround
+nmap ss <Plug>Yssurround
 ""-------------------------------------------------------------------
 " Screenのステータスラインに編集中のファイルを表示し、
 " 終了時にはShellと表示する。※^[ はctrl + v を押しながら [
