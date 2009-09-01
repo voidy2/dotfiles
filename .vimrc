@@ -266,15 +266,6 @@ if &term =~ "screen"
   autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | call SetScreenTabName("%") | endif
 endif
 "}}}
-""-------------------------------------------------------------------
-" cdpathを考慮したcd
-" 参考:WEB+DB PRESS Vol.52
-""-------------------------------------------------------------------
-command! -complete=customlist,CompleteCD -nargs=? CD cd <args>
-function CompleteCD(arglead, cmdline, cursorpos)
-    let pattern = join(split(a:cmdline, "\s", !0)[1:], ' ') . '*/'
-    return split(globpath(&cdpath, pattern), "\n")
-endfunction
 
 if has("autocmd")
       autocmd FileType python set complete+=k/home/yoshinoya/pydiction-0.5/pydiction iskeyword+=.,(
