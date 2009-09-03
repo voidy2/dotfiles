@@ -2,10 +2,18 @@
 autoload -U compinit
 compinit
 ##色付けプロンプト
-local GREEN=$'%{[32m%}'
-local BLUE=$'%{[34m%}'
-local DEFAULT=$'%{[1m%}'
+local DEFAULT=$'%{[m%}'
+local RED=$'%{[1;31m%}'
+local GREEN=$'%{[1;32m%}'
+local YELLOW=$'%{[1;33m%}'
+local BLUE=$'%{[1;34m%}'
+local PURPLE=$'%{[1;35m%}'
+local LIGHT_BLUE=$'%{[1;36m%}'
+local WHITE=$'%{[1;37m%}'
+
 # users generic .zshrc file for zsh(1)
+#PROMPT="%{[$[32+$RANDOM % 5]m%}$LOGNAME@%m%B[%D %T]:%b% "
+PROMPT="%{[$[32+$RANDOM % 5]m%}[%D %T]"$YELLOW" %% "$DEFAULT
 if [ $USER = "root" ]
 then
     PROMPT="%{[$[31]m%}%B$LOGNAME@%m[%D %T]:%b%{[m%} %h# "
@@ -14,7 +22,6 @@ then
     HOME=/root
 else
      RPROMPT="[%{[33m%}%~%{[m%}]"
-PROMPT="%{[$[32+$RANDOM % 5]m%}$LOGNAME@%m%B[%D %T]:%b% "
 fi
 _set_env_git_current_branch() {
   GIT_CURRENT_BRANCH=$( git branch &> /dev/null | grep '^\*' | cut -b 3- )
@@ -181,8 +188,6 @@ kterm*|xterm*|screen)
   }
   export LSCOLORS=exfxcxdxbxegedabagacad
   export LS_COLORS='di=34:ln=35:so=32:pi=33:ex=31:bd=46;34:cd=43;34:su=41;30:sg=46;30:tw=42;30:ow=43;30'
-  zstyle ':completion:*' list-colors \
-    'di=34' 'ln=35' 'so=32' 'ex=31' 'bd=46;34' 'cd=43;34'
   ;;
 esac
 
@@ -190,6 +195,7 @@ alias less='/usr/share/vim/vim71/macros/less.sh'
 function cd(){
     builtin cd $@ && ls;
 }
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 #screenセッション保存先
 export SCREENDIR=~/.screen
 #大文字小文字区別しないかつ大文字打ったら大文字限定
@@ -208,9 +214,12 @@ zstyle ':completion:*' use-cache true
 # カレントディレクトリに候補がない場合のみ cdpath 上のディレクトリを候補
 zstyle ':completion:*:cd:*' tag-order local-directories path-directories
 # 補完候補を ←↓↑→ で選択 (補完候補が色分け表示される)
-zstyle ':completion:*:default' menu select=1 _complete _ignored _approximate
+zstyle ':completion:*:default' menu select=2
 # 補完関数の表示を過剰にする
 zstyle ':completion:*' verbose yes
+zstyle ':completion:*' word yes
+#manの補完がセクション別に補完表示されるようになる
+zstyle ':completion:*:manuals' separate-sections true
 #Completer(補完システム)設定
 #_complete
 #    普通の補完関数
@@ -221,19 +230,28 @@ zstyle ':completion:*' verbose yes
 #_history
 #    履歴から補完を行う。_history_complete_wordから使われる
 #_prefix
-#    カーソルの位置で補完を行う 
+#    カーソルの位置で補完を行う
 zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list _history
-zstyle ':completion:*:messages' format '%{[33m%}d%{[m%}'
-zstyle ':completion:*:warnings' format '%{[31m%}No matches for:%{[0m%} %d'
-zstyle ':completion:*:descriptions' format $'%{[33m%}completing %B%d%b%{[0m%}'
-zstyle ':completion:*:corrections' format '%{[33m%}%B%d (errors: %e)%b'
+zstyle ':completion:*:messages' format $YELLOW'%d'$DEFAULT
+zstyle ':completion:*:warnings' format $RED'No matches for:'$YELLOW' %d'$DEFAULT
+zstyle ':completion:*:descriptions' format $YELLOW'completing %B%d%b'$DEFAULT
+zstyle ':completion:*:corrections' format $YELLOW'%B%d '$RED'(errors: %e)%b'$DEFAULT
+zstyle ':completion:*:options' description 'yes'
+# グループ名に空文字列を指定すると，マッチ対象のタグ名がグループ名に使われる。
+# したがって，すべての マッチ種別を別々に表示させたいなら以下のようにする
 zstyle ':completion:*' group-name ''
 # カレントディレクトリに候補がない場合のみ cdpath 上のディレクトリを候補
 zstyle ':completion:*:cd:*' tag-order local-directories path-directories
 #cd は親ディレクトリからカレントディレクトリを選択しないでしょう (例: cd ../<TAB>):
 zstyle ':completion:*:cd:*' ignore-parents parent pwd
-# offer indexes before parameters in subscripts
+#オブジェクトファイルとか中間ファイルとかはfileとして補完させない
+zstyle ':completion:*:*files' ignored-patterns '*?.o' '*?~' '*\#'
+# 変数添字の中身を展開
+# 例えばtest_array=("value1" "value2")と定義して
+# $array[ のところで補完させると添字が表示される
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+# セパレータを指定(デフォルトは'--')
+zstyle ':completion:*' list-separator '-->'
 #補完候補リスト中で補完する場合に、次の補完候補が表示しきれないとき
 #タブをおすと画面が更新されて補完候補が表示され、それ以外の場合は文字を
 #挿入することを表示するおせっかいな機能
@@ -250,7 +268,7 @@ zstyle ':completion:*' auto-description 'specify: %d'
 #          が な い 状態で TABキーを押すと，補完を始める代わり
 #          にTAB文字を挿入する。 `false' ならそのような場所 で
 #          も補完を行なう。
-zstyle ':completion:*' insert-tab false 
+zstyle ':completion:*' insert-tab false
 
 
 setopt hist_ignore_all_dups  # 重複するコマンド行は古い方を削除
