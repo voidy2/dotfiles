@@ -163,6 +163,7 @@ inoremap hh <Esc>^
 "ESC連打で強調表示切る
 nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
 nnoremap <C-l> W
+nnoremap <leader>w :<C-u>write<CR>
 "カーソル移動
 cnoremap <C-h> <Backspace>
 cnoremap <C-l> <Right>
@@ -172,7 +173,6 @@ cnoremap <C-b> <Left>
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-d> <Del>
-cnoremap <leader>w :<C-u>write<CR>
 inoremap <C-h> <Backspace>
 inoremap <C-l> <Right>
 inoremap <C-j> <Down>
@@ -185,6 +185,12 @@ inoremap :w <Esc>:write<CR>
 inoremap <leader>w <Esc>:write<CR>
 inoremap <C-e> <End>
 inoremap <C-d> <Del>
+inoremap <leader>[ [
+inoremap <leader>{ {
+inoremap <leader>( (
+inoremap [ []<LEFT>
+inoremap { {}<LEFT><CR><ESC>O
+inoremap ( ()<LEFT>
 "コマンドモードの履歴
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
@@ -214,9 +220,9 @@ endif
 nmap s <Plug>Ysurround
 nmap ss <Plug>Yssurround
 nmap <leader>q csw"
-imap <leader>q <Esc>csw"a
+imap <leader>q <Esc>csw"wwa
 nmap <leader>sq csw'
-imap <leader>sq <Esc>csw'a
+imap <leader>sq <Esc>csw'wwa
 ""-------------------------------------------------------------------
 " Screenのステータスラインに編集中のファイルを表示し、
 " 終了時にはShellと表示する。※^[ はctrl + v を押しながら [
