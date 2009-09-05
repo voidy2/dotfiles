@@ -1,5 +1,6 @@
 "オートコマンドを初期化
 autocmd!
+comclear
 syntax on
 filetype plugin indent on
 let mapleader=","
@@ -157,7 +158,7 @@ vnoremap gk k
 inoremap <C-v>  <ESC>"*pa
 "挿入モードでのEsc割り当て
 inoremap jj <Esc>j
-inoremap ;; <Esc>o<Esc>
+inoremap ;; <Esc>
 inoremap kk <Esc>k
 inoremap hh <Esc>^
 "ESC連打で強調表示切る
