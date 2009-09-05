@@ -266,6 +266,9 @@ if &term =~ "screen"
   autocmd BufEnter * if bufname("") !~ "^\[A-Za-z0-9\]*://" | call SetScreenTabName("%") | endif
 endif
 "}}}
+"バッファで開かれてるファイルのフルパス
+"http://d.hatena.ne.jp/ns9tks/20090904/1252073153
+command YankPath let @* = expand('%:p')
 
 if has("autocmd")
       autocmd FileType python set complete+=k/home/yoshinoya/pydiction-0.5/pydiction iskeyword+=.,(
