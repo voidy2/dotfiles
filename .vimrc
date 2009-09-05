@@ -137,7 +137,6 @@ noremap <leader>. :<C-u>edit $MYVIMRC<Enter>
 noremap <leader>s :<C-u>source $MYVIMRC<Enter>
 " ヘルプ表示
 autocmd FileType help nnoremap <buffer> q <C-w>c
-inoremap <C-h> <Backspace>
 nnoremap <C-h> :<C-u>help<Space>
 nnoremap <C-h><C-h> :<C-u>help<Space><C-r><C-w><CR>
 " タブ切り替え
@@ -173,6 +172,19 @@ cnoremap <C-b> <Left>
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-d> <Del>
+cnoremap <leader>w :<C-u>write<CR>
+inoremap <C-h> <Backspace>
+inoremap <C-l> <Right>
+inoremap <C-j> <Down>
+inoremap <C-k> <Up>
+inoremap <C-b> <C-o>b
+inoremap <C-a> <Home>
+inoremap <C-f> <Esc>f
+inoremap <C-f><C-f> <Esc>F
+inoremap :w <Esc>:write<CR>
+inoremap <leader>w <Esc>:write<CR>
+inoremap <C-e> <End>
+inoremap <C-d> <Del>
 "コマンドモードの履歴
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
@@ -201,6 +213,10 @@ endif
 " surround.vim
 nmap s <Plug>Ysurround
 nmap ss <Plug>Yssurround
+nmap <leader>q csw"
+imap <leader>q <Esc>csw"a
+nmap <leader>sq csw'
+imap <leader>sq <Esc>csw'a
 ""-------------------------------------------------------------------
 " Screenのステータスラインに編集中のファイルを表示し、
 " 終了時にはShellと表示する。※^[ はctrl + v を押しながら [
