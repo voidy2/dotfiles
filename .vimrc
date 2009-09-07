@@ -128,6 +128,7 @@ set smartcase
 set wrapscan
 set modifiable
 set fencs=utf-8,cp932,ucs-bom,ucs-2le,ucs-2,iso-2022-jp-3
+
 "}}}
 "" -------------------
 "" キーマッピング
@@ -219,10 +220,10 @@ endif
 " surround.vim
 nmap s <Plug>Ysurround
 nmap ss <Plug>Yssurround
-nmap <leader>q csw"
-imap <leader>q <Esc>csw"wwa
-nmap <leader>sq csw'
-imap <leader>sq <Esc>csw'wwa
+nmap <leader>q <Plug>Csurround w"
+imap <leader>q <Esc><Plug>Csurround w"<Right>wa
+nmap <leader>sq <Plug>Csurround w'
+imap <leader>sq <Esc><Plug>Csurround w'<Right>wa
 ""-------------------------------------------------------------------
 " Screenのステータスラインに編集中のファイルを表示し、
 " 終了時にはShellと表示する。※^[ はctrl + v を押しながら [
