@@ -295,6 +295,18 @@ endif
 command YankPath let @* = expand('%:p')
 
 if has("autocmd")
-      autocmd FileType python set complete+=k/home/yoshinoya/pydiction-0.5/pydiction iskeyword+=.,(
+    autocmd FileType python let g:pydiction_location = '~/.vim/pydiction/complete-dict'
 endif " has("autocmd")
+
+" Execute python script ,t 
+function! s:ExecPy()
+    exe "!" . &ft . " %"
+:endfunction
+command! Exec call <SID>ExecPy()
+autocmd FileType python nnoremap  <leader>t :call <SID>ExecPy()<CR>
+
+" Use neocomplcache.
+let g:NeoComplCache_EnableAtStartup = 1
+" Use smartcase.
+let g:NeoComplCache_SmartCase = 1
 
