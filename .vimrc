@@ -317,6 +317,7 @@ let g:NeoComplCache_SmartCase = 1
 " Use Hatena.vim
 let g:hatena_user='voidy21'
 " Use git-vim
+"{{{
 let g:git_no_map_default = 1
 let g:git_command_edit = 'rightbelow vnew'
 nnoremap <Leader>gd :<C-u>GitDiff --cached<CR>
@@ -330,3 +331,4 @@ nnoremap <Leader>gc :<C-u>GitCommit<CR>
 nnoremap <Leader>gC :<C-u>GitCommit --amend<CR>
 nnoremap <Leader>gp :<C-u>Git push 
 autocmd FileType git-* nnoremap <buffer> q <C-w>c
+"}}}
