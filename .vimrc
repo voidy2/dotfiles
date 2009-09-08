@@ -309,4 +309,6 @@ autocmd FileType python nnoremap  <leader>t :call <SID>ExecPy()<CR>
 let g:NeoComplCache_EnableAtStartup = 1
 " Use smartcase.
 let g:NeoComplCache_SmartCase = 1
+" Use Hatena.vim
+let g:hatena_user='voidy21'
 
