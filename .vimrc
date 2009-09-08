@@ -314,14 +314,14 @@ let g:hatena_user='voidy21'
 " Use git-vim
 let g:git_no_map_default = 1
 let g:git_command_edit = 'rightbelow vnew'
-nnoremap <Space>gd :<C-u>GitDiff --cached<CR>
-nnoremap <Space>gD :<C-u>GitDiff<CR>
-nnoremap <Space>gs :<C-u>GitStatus<CR>
-nnoremap <Space>gl :<C-u>GitLog<CR>
-nnoremap <Space>gL :<C-u>GitLog -u \| head -10000<CR>
-nnoremap <Space>ga :<C-u>GitAdd<CR>
-nnoremap <Space>gA :<C-u>GitAdd <cfile><CR>
-nnoremap <Space>gc :<C-u>GitCommit<CR>
-nnoremap <Space>gC :<C-u>GitCommit --amend<CR>
-nnoremap <Space>gp :<C-u>Git push
-
+nnoremap <Leader>gd :<C-u>GitDiff --cached<CR>
+nnoremap <Leader>gD :<C-u>GitDiff<CR>
+nnoremap <Leader>gs :<C-u>GitStatus<CR>
+nnoremap <Leader>gl :<C-u>GitLog<CR>
+nnoremap <Leader>gL :<C-u>GitLog -u \| head -10000<CR>
+nnoremap <Leader>ga :<C-u>GitAdd<CR>
+nnoremap <Leader>gA :<C-u>GitAdd <cfile><CR>
+nnoremap <Leader>gc :<C-u>GitCommit<CR>
+nnoremap <Leader>gC :<C-u>GitCommit --amend<CR>
+nnoremap <Leader>gp :<C-u>Git push
+autocmd FileType git-* nnoremap <buffer> q <C-w>c
