@@ -1,6 +1,6 @@
 "オートコマンドを初期化
 autocmd!
-comclear
+
 syntax on
 filetype plugin indent on
 let mapleader=","
@@ -134,8 +134,8 @@ set fencs=utf-8,cp932,ucs-bom,ucs-2le,ucs-2,iso-2022-jp-3
 "" キーマッピング
 "" -------------------
 "{{{
-noremap <leader>. :<C-u>edit $MYVIMRC<Enter>
-noremap <leader>s :<C-u>source $MYVIMRC<Enter>
+noremap <leader>. :<C-u>edit ~/dotfiles/.vimrc<CR>
+noremap <leader>s :<C-u>source $MYVIMRC<CR>
 " ヘルプ表示
 autocmd FileType help nnoremap <buffer> q <C-w>c
 nnoremap <C-h> :<C-u>help<Space>
@@ -292,13 +292,13 @@ endif
 "}}}
 "バッファで開かれてるファイルのフルパス
 "http://d.hatena.ne.jp/ns9tks/20090904/1252073153
-command YankPath let @* = expand('%:p')
+command! YankPath let @* = expand('%:p')
 
 if has("autocmd")
     autocmd FileType python let g:pydiction_location = '~/.vim/pydiction/complete-dict'
 endif " has("autocmd")
 
-" Execute python script ,t 
+" Execute python script ,t
 function! s:ExecPy()
     exe "!" . &ft . " %"
 :endfunction
@@ -311,4 +311,17 @@ let g:NeoComplCache_EnableAtStartup = 1
 let g:NeoComplCache_SmartCase = 1
 " Use Hatena.vim
 let g:hatena_user='voidy21'
+" Use git-vim
+let g:git_no_map_default = 1
+let g:git_command_edit = 'rightbelow vnew'
+nnoremap <Space>gd :<C-u>GitDiff --cached<CR>
+nnoremap <Space>gD :<C-u>GitDiff<CR>
+nnoremap <Space>gs :<C-u>GitStatus<CR>
+nnoremap <Space>gl :<C-u>GitLog<CR>
+nnoremap <Space>gL :<C-u>GitLog -u \| head -10000<CR>
+nnoremap <Space>ga :<C-u>GitAdd<CR>
+nnoremap <Space>gA :<C-u>GitAdd <cfile><CR>
+nnoremap <Space>gc :<C-u>GitCommit<CR>
+nnoremap <Space>gC :<C-u>GitCommit --amend<CR>
+nnoremap <Space>gp :<C-u>Git push
 
