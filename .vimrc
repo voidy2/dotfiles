@@ -203,6 +203,11 @@ inoremap <expr> <leader>dt strftime('%H:%M:%S')
 nnoremap gc `[v`]
 vnoremap gc :<C-u>normal gc<CR>
 onoremap gc :<C-u>normal gc<CR>
+"vimの戦闘力
+nnoremap ,vim :call <SID>GetVimPower()<CR>
+function! s:GetVimPower()
+    echo len(filter(readfile($MYVIMRC),'v:val !~ "^\\s*$\\|^\\s*\""'))
+endfunction
 "}}}
 " Gtags
 "map <C-i> :Gtags -f %<CR>
