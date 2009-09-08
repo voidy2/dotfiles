@@ -323,5 +323,5 @@ nnoremap <Leader>ga :<C-u>GitAdd<CR>
 nnoremap <Leader>gA :<C-u>GitAdd <cfile><CR>
 nnoremap <Leader>gc :<C-u>GitCommit<CR>
 nnoremap <Leader>gC :<C-u>GitCommit --amend<CR>
-nnoremap <Leader>gp :<C-u>Git push
+nnoremap <Leader>gp :<C-u>Git push 
 autocmd FileType git-* nnoremap <buffer> q <C-w>c
