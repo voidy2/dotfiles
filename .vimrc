@@ -81,7 +81,8 @@ if has("syntax")
         autocmd BufNew,BufRead * call JISX0208SpaceHilight()
     augroup END
 endif"}}}
-
+"タブ文字と終末スペースと改行文字の文字指定
+set listchars=tab:»\ ,trail:-,eol:↲
 "}}}
 "" -------------------
 "" オプション
@@ -123,7 +124,8 @@ set list
 "" 検索時に大文字小文字区別しない
 set ignorecase
 set smartcase
-
+"" バッファを切り替えてもundoの効力を保たせる
+set hidden
 "" 後方検索時に文字列が見つからない場合にファイルの先頭に戻って再検索する
 set wrapscan
 set modifiable
@@ -203,6 +205,20 @@ inoremap <expr> <leader>dt strftime('%H:%M:%S')
 nnoremap gc `[v`]
 vnoremap gc :<C-u>normal gc<CR>
 onoremap gc :<C-u>normal gc<CR>
+" バッファのディレクトリをカレントディレクトリにする
+command! -nargs=? -complete=dir -bang CD call s:ChangeCurrentDir('<args>', '<bang>')
+function! s:ChangeCurrentDir(directory, bang)
+    if a:directory == ''
+        lcd %:p:h
+    else
+        execute 'lcd' . a:directory
+    endif
+    if a:bang == ''
+        pwd
+    endif
+endfunction
+" Change current directory.
+nnoremap <silent> <leader>cd :<C-u>CD<CR>
 "vimの戦闘力
 nnoremap ,vim :call <SID>GetVimPower()<CR>
 function! s:GetVimPower()
@@ -332,3 +348,4 @@ nnoremap <Leader>gC :<C-u>GitCommit --amend<CR>
 nnoremap <Leader>gp :<C-u>Git push 
 autocmd FileType git-* nnoremap <buffer> q <C-w>c
 "}}}
+
