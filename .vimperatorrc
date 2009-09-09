@@ -7,10 +7,10 @@ set showtabline=2
 hi Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:12px; color:white; background-color:#6666cc; border-color:ButtonShadow; border-width:0px; border-style:solid; padding:0px 1px 0px 1px; position:absolute;
 
 " move in page
-noremap j 8j
-noremap k 8k
-noremap J <C-d>
-noremap K <C-u>
+nnoremap j 8j
+nnoremap k 8k
+nnoremap J <C-d>
+nnoremap K <C-u>
 inoremap <C-a> <C-v><C-a>
 inoremap <C-z> <C-v><C-z>
 inoremap <C-x> <C-v><C-x>
