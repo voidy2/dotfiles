@@ -11,6 +11,7 @@ nnoremap j 8j
 nnoremap k 8k
 nnoremap J <C-d>
 nnoremap K <C-u>
+nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
 inoremap <C-a> <C-v><C-a>
 inoremap <C-z> <C-v><C-z>
 inoremap <C-x> <C-v><C-x>
