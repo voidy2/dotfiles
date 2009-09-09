@@ -138,6 +138,7 @@ set fencs=utf-8,cp932,ucs-bom,ucs-2le,ucs-2,iso-2022-jp-3
 "{{{
 noremap <leader>. :<C-u>edit ~/dotfiles/.vimrc<CR>
 noremap <leader>s :<C-u>source $MYVIMRC<CR>
+noremap <leader>v :<C-u>edit ~/dotfiles/.vimperatorrc<CR>
 " ヘルプ表示
 autocmd FileType help nnoremap <buffer> q <C-w>c
 nnoremap <C-h> :<C-u>help<Space>
