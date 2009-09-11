@@ -3,6 +3,7 @@ autocmd!
 
 syntax on
 filetype plugin indent on
+colorscheme desert
 let mapleader=","
 "" -------------------
 "" 文字エンコーディング
@@ -88,7 +89,8 @@ set listchars=tab:»\ ,trail:-,eol:↲
 "" オプション
 "" -------------------
 "{{{
-set foldmethod=syntax
+set foldmethod=marker
+set foldcolumn=4
 set complete=.,w,b,t,i
 set completeopt=menu,preview,menuone
 set lazyredraw
@@ -318,12 +320,13 @@ command! YankPath let @* = expand('%:p')
 
 if has("autocmd")
     autocmd FileType python let g:pydiction_location = '~/.vim/pydiction/complete-dict'
+    autocmd FileType python setlocal smartindent cinwords=if,elif,else,for,while,try,except,finally,def,class
 endif " has("autocmd")
 
 " Execute python script ,t
 function! s:ExecPy()
     exe "!" . &ft . " %"
-:endfunction
+endfunction
 command! Exec call <SID>ExecPy()
 autocmd FileType python nnoremap  <leader>t :call <SID>ExecPy()<CR>
 
@@ -349,4 +352,3 @@ nnoremap <Leader>gC :<C-u>GitCommit --amend<CR>
 nnoremap <Leader>gp :<C-u>Git push 
 autocmd FileType git-* nnoremap <buffer> q <C-w>c
 "}}}
-
