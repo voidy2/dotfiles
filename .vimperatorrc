@@ -46,7 +46,8 @@ let mapleader=','
 nnoremap <Leader>r :tombloo ReBlog\ -\ Tumblr<CR>
 nnoremap  <Leader>t :mb pinned-or-current-node\ |\ Tombloo::Reblog\ |\ clear-pin<CR>
 vnoremap <Leader>q :tombloo Quote<CR>
-
+" google検索
+vnoremap <Leader>g y<normal>:tabopen google <C-v><C-v><CR>
 " Unhidden and hidden the menubar and the toolbar
 noremap <A-Up> :set guioptions+=mT<CR>
 noremap <A-Down> :set guioptions-=mT<CR>
