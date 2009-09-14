@@ -54,6 +54,9 @@ noremap <A-Down> :set guioptions-=mT<CR>
 
 noremap <A-T> :restart<CR>
 
+" ,gaでweb-archiveのページにジャンプ
+nnoremap <Leader>ga :mb location\ |\ web-archive\ |\ open<CR>
+
 " スクロールバーとタブ番号を非表示
 set go=
 
