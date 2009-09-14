@@ -107,6 +107,8 @@ set history=1000
 set helplang=ja
 set keywordprg=:help
 set showtabline=2
+" 矩形選択で文字が無くても右へ進めるようにする
+set virtualedit=block
 " 検索文字を打ち込むと即検索する（インクリメンタルサーチ）
 set incsearch
 " 単語補完時に大文字小文字を上手く区別"
