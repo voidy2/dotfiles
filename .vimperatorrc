@@ -56,7 +56,8 @@ noremap <A-T> :restart<CR>
 
 " ,gaでweb-archiveのページにジャンプ
 nnoremap <Leader>ga :mb location\ |\ web-archive\ |\ open<CR>
-
+" hではてぶ
+nnoremap h :hb [
 " スクロールバーとタブ番号を非表示
 set go=
 
