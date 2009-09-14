@@ -29,6 +29,7 @@ cnoremap <C-p> <S-Tab>
 cnoremap <C-j> <Tab>
 cnoremap <C-k> <S-Tab>
 cnoremap <C-;> <C-m>
+cnoremap <C-d> <Up>
 imap <C-h> <BS>
 imap <C-m> <CR>
 imap <C-j> <Down>
