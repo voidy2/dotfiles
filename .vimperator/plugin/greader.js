@@ -21,7 +21,7 @@ let self = liberator.plugins.greader = (function() {
     _getStaredItems : function() {
        var result = null;
        var request = new libly.Request(
-           "http://www.google.com/reader/atom/user/"+this._getUserID()+"/state/com.google/starred",
+           "http://www.google.com/reader/atom/user/"+this._getUserID()+"/state/com.google/starred?n=1",
            null,
            {
              asynchronous: false,
@@ -29,10 +29,16 @@ let self = liberator.plugins.greader = (function() {
        );
 
        request.addEventListener("onSuccess", function(data) {
-         //result = data.responseXml;
-        // var dom = parseAtom(result);
-        alert(data.toSource());
-         //liberator.echo(result);
+         var response = data.responseText;
+         //firefox bug 336551
+         response = response.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/,"");
+         //名前空間を取り除く
+         response = response.replace(/(xmlns=".*")/,"");
+         var e4x = new XML(response);
+         alert(e4x..link);
+         var links = e4x..link;
+         for each (var e in links ) {
+         }
 
        });
        request.addEventListener("onFailure", function(data) {
