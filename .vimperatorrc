@@ -85,7 +85,7 @@ let g:hintsio="iO"
 let g:tada_userId="voidy21"
 let g:ldrc_intelligence_bind = "true"
 let:g:ldrc_skip = "0.25"
-colorscheme evening
+colorscheme voidy21-color
 ""タブ追加ボタン消去
 ""http://fifnel.com/2009/03/15/2278/
 style -name simple_tabs_container chrome://* <<EOM
