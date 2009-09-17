@@ -116,9 +116,9 @@ let self = liberator.plugins.greader = (function() {
     ["gr[eader]"],
     "Open Google Reader starred items",
     function(args) {
-      let gapi = new GoogleApiController()
-      let stars = new Stars(gapi);
-      let items = stars.items();
+      var gapi = new GoogleApiController()
+      var stars = new Stars(gapi);
+      var items = stars.items();
 
       if (!items || items.length == 0) {
         liberator.echo("starred item doesn't exists.");
@@ -130,12 +130,14 @@ let self = liberator.plugins.greader = (function() {
         for(let i = 0; i < max; i++) {
           if (!(star = stars.shift()))
             break;
-          setTimeout(function(link) liberator.open(link, openBehavior()), 100 * i, star.link);
+          liberator.open(star.link, openBehavior());
         }
+        return;
       }
       else {
         liberator.open(args.string, openBehavior());
-        stars.remove(args.string);
+        setTimeout(function(e_id) { stars.remove_id(e_id)}, 10 , stars.getEntryId(args.string));
+        return;
       }
     },
     {
@@ -297,17 +299,17 @@ let self = liberator.plugins.greader = (function() {
       if (this.items().length == 0)
         return null;
       var star = this.items().shift();
-      this._remove(star.id);
+      this.remove_id(star.id);
       return star;
     },
 
     remove : function(url) {
       entry_id = this.getEntryId(url);
       liberator.log(entry_id,-1);
-      this._remove(entry_id);
+      this.remove_id(entry_id);
     },
 
-    _remove : function(entry_id) {
+    remove_id : function(entry_id) {
       var request = new libly.Request(
         "http://www.google.com/reader/api/0/" + "edit-tag" + "?client=contact:myname-at-gmail",
         null,
