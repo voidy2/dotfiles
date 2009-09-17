@@ -174,9 +174,6 @@ let self = liberator.plugins.greader = (function() {
   function viewItemsCount()
     gv.greaderViewItemsCount || 20;
 
-  function getGreaderUserId()
-    gv.greaderUserId || new GoogleApiController().user_id();
-
   // }}}
   // CLASS ///////////////////////////////////////////////////////// {{{
   function GoogleApiController() {
@@ -316,7 +313,7 @@ let self = liberator.plugins.greader = (function() {
         {
           postBody: toQuery({
             i : entry_id,
-            r : "user/" + this.gapi.user_id() + "/state/com.google/starred",
+            r : "user/" + getGreaderUserId() + "/state/com.google/starred",
             T : this.gapi.token(),
             async : "false",
           })
@@ -341,6 +338,12 @@ let self = liberator.plugins.greader = (function() {
   }
   //}}}
   // FUNCTIONS ///////////////////////////////////////////////////// {{{
+  function getGreaderUserId(){
+    if(!liberator.plugins.greader_id)
+      liberator.plugins.greader_id = (new GoogleApiController()).user_id();
+    return liberator.plugins.greader_id;
+  }
+
   function templateTitleAndUrl(obj) {
     return <>
       <img src={'http://favicon.hatena.ne.jp/?url=' + obj.item.url} />
