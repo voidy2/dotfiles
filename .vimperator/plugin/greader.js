@@ -170,7 +170,7 @@ let self = liberator.plugins.greader = (function() {
     gv.greaderOpenItemsCount || 5;
 
   function viewItemsCount()
-    gv.greaderViewItemsCount || 10;
+    gv.greaderViewItemsCount || 20;
 
   function getGreaderUserId()
     gv.greaderUserId || new GoogleApiController().user_id();
