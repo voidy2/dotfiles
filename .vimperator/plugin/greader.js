@@ -339,22 +339,6 @@ let self = liberator.plugins.greader = (function() {
   }
   //}}}
   // FUNCTIONS ///////////////////////////////////////////////////// {{{
-  function parseAtom(sXML) {
-    var resultText = atomTitle = atomLink = atomText = "";
-    var itemList = sXML.getElementsByTagName("entry");
-    for (var i=0; i<itemList.length; i++) {
-      atomTitle = itemList[i].getElementsByTagName("title")[0].childNodes[0].nodeValue;
-      atomLink = itemList[i].getElementsByTagName("link")[0].getAttribute("href");
-      try {
-        atomText = itemList[i].getElementsByTagName("summary")[0].childNodes[0].nodeValue;
-      }catch(e){
-        atomText = ""
-      }
-      resultText += '<a href="'+atomLink+'">'+atomTitle+'</a><div class="desc">'+atomText+'</div>';
-    }
-    return resultText;
-  }
-
   function templateTitleAndUrl(obj) {
     return <>
       <img src={'http://favicon.hatena.ne.jp/?url=' + obj.item.url} />
