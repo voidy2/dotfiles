@@ -372,15 +372,6 @@ let self = liberator.plugins.greader = (function() {
     return allEntries;
   }
 
-  let showCompletions = function() {
-    if (!options.get('wildoptions').has('auto')) {
-      evalWithContext(function() {
-        completions.complete(true, false);
-        completions.itemList.show();
-      }, commandline.input);
-    }
-  };
-
   function toQuery(source)
     [encodeURIComponent(i) + "=" + encodeURIComponent(source[i])
       for (i in source)
