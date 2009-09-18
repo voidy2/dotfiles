@@ -5,7 +5,7 @@ var PLUGIN_INFO =
   <description>Open Google Reader starred items</description>
   <description lang="ja">Google Reader でスターを付けたページを開く</description>
   <author mail="y2.void@gmail.com" homepage="http://d.hatena.ne.jp/voidy21/">voidy21</author>
-  <version>0.1.0</version>
+  <version>0.1.1</version>
   <minVersion>2.2pre</minVersion>
   <maxVersion>2.2pre</maxVersion>
   <updateURL>http://github.com/voidy21/dotfiles/raw/master/.vimperator/plugin/greader.js</updateURL>
@@ -30,6 +30,9 @@ var PLUGIN_INFO =
 
     g:greaderOpenBehavior:
       default: liberator.NEW_BACKGROUND_TAB
+
+    g:greaderStarRemoveEnable:
+      default: "true"
 
    == API ==
     plugins.greader.items():
@@ -80,6 +83,11 @@ var PLUGIN_INFO =
       参考）http://wiki.livedoor.jp/shin_yan/d/liberator%282%2e0%29#content_34
       default: liberator.NEW_BACKGROUND_TAB
 
+    g:greaderStarRemoveEnable:
+      スター付き記事を開くときにスターを外すかどうか
+      plugins.greader.remove(link)は動く
+      default: "true"
+
     == API ==
     plugins.greader.items():
       スターの付いた記事の一覧を配列で取得する。
@@ -104,7 +112,6 @@ var PLUGIN_INFO =
       ただし、最新のスターからg:greaderViewItemsCountで指定した数(デフォルトでは20)までしか辿らないので注意。
 
     == TODO ==
-      - スターを外すか外さないか指定できるようにする
       - タグ指定で読めるようにする
       - 未読か既読か決められるようにする
   ]]></detail>
@@ -240,6 +247,9 @@ let self = liberator.plugins.greader = (function() {
   function Stars(gapi) {
     this.cache_items = null;
     this.gapi = gapi;
+    this.isRemoveEnable =
+      liberator.globalVariables.greaderStarRemoveEnable != undefined ?
+      window.eval(liberator.globalVariables.greaderStarRemoveEnable) : true;
   }
 
   Stars.prototype = {
@@ -261,6 +271,10 @@ let self = liberator.plugins.greader = (function() {
 
        request.addEventListener("onSuccess", function(data) {
          var response = data.responseText;
+         if ( response.substr(0,6) == "<html>" ){
+             liberator.echoerr("google Web login required",-1);
+             return;
+         }
          //firefox bug 336551
          response = response.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/,"");
          //名前空間を取り除く
@@ -303,10 +317,12 @@ let self = liberator.plugins.greader = (function() {
     remove : function(url) {
       entry_id = this.getEntryId(url);
       liberator.log(entry_id,-1);
-      this.remove_id(entry_id);
+      this.remove_id(entry_id,true);
     },
 
-    remove_id : function(entry_id) {
+    remove_id : function(entry_id, isRemove) {
+      if( !this.isRemoveEnable && isRemove == undefined )
+        return;
       var request = new libly.Request(
         "http://www.google.com/reader/api/0/" + "edit-tag" + "?client=contact:myname-at-gmail",
         null,
