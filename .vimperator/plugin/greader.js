@@ -46,7 +46,8 @@ var PLUGIN_INFO =
         title : (page title),
         id : (page item_id in Google Reader. e.g. tag:google.com,2005:reader/item/~~),
         source_title : (source rss feed title),
-        source_link : (source rss feed link)
+        source_link : (source rss feed link),
+        category : (page category)
       }
       ||<
 
@@ -100,7 +101,8 @@ var PLUGIN_INFO =
         title : (記事のタイトル),
         id : (Google Reader内部で使用されているitem_id。 例 tag:google.com,2005:reader/item/~~),
         source_title : (記事のネタ元のRSSfeedのタイトル),
-        source_link : (記事のネタ元のRSSfeedのURL)
+        source_link : (記事のネタ元のRSSfeedのURL),
+        category : (記事の種類)
       }
       ||<
 
@@ -123,8 +125,7 @@ let self = liberator.plugins.greader = (function() {
     ["gr[eader]"],
     "Open Google Reader starred items",
     function(args) {
-      var gapi = new GoogleApiController()
-      var stars = new Stars(gapi);
+      var stars = new Stars();
       var items = stars.items();
 
       if (!items || items.length == 0) {
@@ -143,7 +144,7 @@ let self = liberator.plugins.greader = (function() {
       }
       else {
         liberator.open(args.string, openBehavior());
-        setTimeout(function(e_id) { stars.remove_id(e_id)}, 10 , stars.getEntryId(args.string));
+        setTimeout(function(e_id) { stars.removeId(e_id)}, 10 , stars.getEntryId(args.string));
         return;
       }
     },
@@ -161,7 +162,7 @@ let self = liberator.plugins.greader = (function() {
           },
           process: [templateTitleAndUrl,templateSourceTitle]
         };
-        context.completions = generateCandidates();
+        context.completions = generateCandidates(false);
       },
       options: [
       ]
@@ -186,6 +187,17 @@ let self = liberator.plugins.greader = (function() {
   function GoogleApiController() {
     this.cache_token = null;
     this.cache_userid = null;
+    this.URI_PREFIXE_READER = 'http://www.google.com/reader/';
+    this.URI_PREFIXE_ATOM = this.URI_PREFIXE_READER + 'atom/';
+    this.URI_PREFIXE_API = this.URI_PREFIXE_READER + 'api/0/';
+    this.URI_PREFIXE_VIEW = this.URI_PREFIXE_READER + 'view/';
+    this.ATOM_PREFIXE_USER = 'user/-/';
+    this.ATOM_PREFIXE_USER_NUMBER = 'user/'+ getGreaderUserId() + '/';
+    this.ATOM_PREFIXE_LABEL = this.ATOM_PREFIXE_USER + 'label/';
+    this.ATOM_PREFIXE_STATE_GOOGLE = this.ATOM_PREFIXE_USER + 'state/com.google/';
+    this.ATOM_STATE_READ = this.ATOM_PREFIXE_STATE_GOOGLE + 'read';
+    this.ATOM_STATE_READING_LIST = this.ATOM_PREFIXE_STATE_GOOGLE + 'reading-list';
+    this.ATOM_STATE_STARRED = this.ATOM_PREFIXE_STATE_GOOGLE + 'starred';
   }
   GoogleApiController.prototype = {
     token : function(){
@@ -204,7 +216,7 @@ let self = liberator.plugins.greader = (function() {
     _getUserId : function() {
       var result = null;
       var request = new libly.Request(
-        "http://www.google.co.jp/reader/view/",
+        this.URI_PREFIXE_VIEW,
         null,
         {
           asynchronous: false,
@@ -227,7 +239,7 @@ let self = liberator.plugins.greader = (function() {
     _getToken : function() {
       var result = null;
       var request = new libly.Request(
-        "http://www.google.com/reader/api/0/token",
+        this.URI_PREFIXE_API + "token",
         null,
         {
           asynchronous: false,
@@ -242,27 +254,18 @@ let self = liberator.plugins.greader = (function() {
       request.get();
       return result;
     },
-  }
-
-  function Stars(gapi) {
-    this.cache_items = null;
-    this.gapi = gapi;
-    this.isRemoveEnable =
-      liberator.globalVariables.greaderStarRemoveEnable != undefined ?
-      window.eval(liberator.globalVariables.greaderStarRemoveEnable) : true;
-  }
-
-  Stars.prototype = {
-    items : function() {
-      let result = this.cache_items
-                 ? this.cache_items
-                 : this.cache_items = this._getStarredItems();
-      return result;
-    },
-    _getStarredItems : function() {
+    getFeed : function(label) {
        var result = null;
+       var feedUri = this.URI_PREFIXE_ATOM;
+       if( label == "_get_starred_item" )
+         feedUri += this.ATOM_STATE_STARRED;
+       else if( label != undefined )
+         feedUri += this.ATOM_PREFIXE_LABEL + escape(label);
+       else
+         feedUri += this.ATOM_STATE_READING_LIST;
+
        var request = new libly.Request(
-         "http://www.google.com/reader/atom/user/-/state/com.google/starred?n=" + viewItemsCount(),
+         feedUri + "?n=" + viewItemsCount(),
          null,
          {
            asynchronous: false,
@@ -295,6 +298,7 @@ let self = liberator.plugins.greader = (function() {
               id : e.id.toString(),
               source_title : e.source.title.toString(),
               source_link : e.source.link.@href.toString(),
+              category : e.category.@term.toSource(),
             }
             result.push(entry);
          }
@@ -305,22 +309,45 @@ let self = liberator.plugins.greader = (function() {
        request.get();
        return result;
     },
+}
+
+  function Stars() {
+    this.cache_items = null;
+    this.gapi = new GoogleApiController();
+    this.isRemoveEnable =
+      liberator.globalVariables.greaderStarRemoveEnable != undefined ?
+      window.eval(liberator.globalVariables.greaderStarRemoveEnable) : true;
+  }
+
+  Stars.prototype = {
+    items : function() {
+      let result = this.cache_items
+                 ? this.cache_items
+                 : this.cache_items = this._getStarredItems();
+      return result;
+    },
+    _getStarredItems : function() {
+      return this.gapi.getFeed("_get_starred_item");
+    },
+
+    getTagItems : function(label) {
+      return this.gapi.getFeed(label);
+    },
 
     shift : function() {
       if (this.items().length == 0)
         return null;
       var star = this.items().shift();
-      this.remove_id(star.id);
+      this.removeId(star.id);
       return star;
     },
 
     remove : function(url) {
       entry_id = this.getEntryId(url);
-      liberator.log(entry_id,-1);
-      this.remove_id(entry_id,true);
+      this.removeId(entry_id,true);
     },
 
-    remove_id : function(entry_id, isRemove) {
+    removeId : function(entry_id, isRemove) {
       if( !this.isRemoveEnable && isRemove == undefined )
         return;
       var request = new libly.Request(
@@ -378,10 +405,12 @@ let self = liberator.plugins.greader = (function() {
   * Get candidates list
   * @return [{"url": "(url)", "title": "hogehoge", "sourceTitle": "hogefuga"}, ... ]
   */
-  function generateCandidates() {
+  function generateCandidates(isUnreadFilter) {
     let allEntries = [];
     let stars = new Stars();
     let items = stars.items();
+    if( isUnreadFilter )
+        items = filterUnReadEntry(items);
     for each (var e in items){
       var entries = {
         "url" : e.link,
@@ -391,6 +420,15 @@ let self = liberator.plugins.greader = (function() {
       allEntries = allEntries.concat(entries);
     }
     return allEntries;
+  }
+
+  function filterUnReadEntry(items){
+    var result = [];
+    for each(item in items){
+      if( item.category.indexOf("read\"",0) > 0)
+        result.push(item);
+    }
+    return result;
   }
 
   function toQuery(source)
