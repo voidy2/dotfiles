@@ -186,13 +186,11 @@ let self = liberator.plugins.greader = (function() {
   // CLASS ///////////////////////////////////////////////////////// {{{
   function GoogleApiController() {
     this.cache_token = null;
-    this.cache_userid = null;
     this.URI_PREFIXE_READER = 'http://www.google.com/reader/';
     this.URI_PREFIXE_ATOM = this.URI_PREFIXE_READER + 'atom/';
     this.URI_PREFIXE_API = this.URI_PREFIXE_READER + 'api/0/';
     this.URI_PREFIXE_VIEW = this.URI_PREFIXE_READER + 'view/';
     this.ATOM_PREFIXE_USER = 'user/-/';
-    this.ATOM_PREFIXE_USER_NUMBER = 'user/'+ getGreaderUserId() + '/';
     this.ATOM_PREFIXE_LABEL = this.ATOM_PREFIXE_USER + 'label/';
     this.ATOM_PREFIXE_STATE_GOOGLE = this.ATOM_PREFIXE_USER + 'state/com.google/';
     this.ATOM_STATE_READ = this.ATOM_PREFIXE_STATE_GOOGLE + 'read';
@@ -206,17 +204,14 @@ let self = liberator.plugins.greader = (function() {
       return this.cache_token;
     },
 
-    user_id : function() {
-      if( !this.cache_userid ){
-        this.cache_userid = this._getUserId();
-      }
-      return this.cache_userid;
+    userId : function() {
+      return this._getUserId();
     },
 
     _getUserId : function() {
       var result = null;
       var request = new libly.Request(
-        this.URI_PREFIXE_VIEW,
+        "http://www.google.co.jp/reader/view/",
         null,
         {
           asynchronous: false,
@@ -383,7 +378,7 @@ let self = liberator.plugins.greader = (function() {
   // FUNCTIONS ///////////////////////////////////////////////////// {{{
   function getGreaderUserId(){
     if(!liberator.plugins.greader_id)
-      liberator.plugins.greader_id = (new GoogleApiController()).user_id();
+      liberator.plugins.greader_id = (new GoogleApiController()).userId();
     return liberator.plugins.greader_id;
   }
 
