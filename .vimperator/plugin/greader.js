@@ -386,7 +386,7 @@ let self = liberator.plugins.greader = (function() {
          feedUri += this.ATOM_STATE_READING_LIST;
 
        var request = new libly.Request(
-         feedUri + "?n=" + viewItemsCount(),
+         feedUri + "?n=" + (viewItemsCount() + 40),
          null,
          {
            asynchronous: false,
@@ -410,7 +410,8 @@ let self = liberator.plugins.greader = (function() {
          } else {
             return [];
          }
-         for each (var e in entrys ) {
+         for (var n = 0,len = viewItemsCount(); n < len; n++ ) {
+            e = entrys[n];
             var entry = {
               author : e.author.name.toString(),
               created_on : e.created_on.toString(),
