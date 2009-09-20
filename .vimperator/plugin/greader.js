@@ -143,7 +143,7 @@ let self = liberator.plugins.greader = (function() {
     var XMigemoCore = undefined;
   }
 
- // }}}
+  // }}}
   // COMMAND /////////////////////////////////////////////////////// {{{
   commands.addUserCommand(
     ["gr[eader]"],
@@ -203,7 +203,7 @@ let self = liberator.plugins.greader = (function() {
         if( args[0].indexOf("http://",0) != 0 )
           return;
         liberator.open(args[0], openBehavior());
-        setTimeout(function(e_id) { gapi.setReadId(e_id)}, 10 , gapi.getEntryIdByLabel(args[0],comp_tag));
+        setTimeout(function() { gapi.setReadUrl(args[0],comp_tag) }, 10 );
         return;
       }
     },
@@ -250,7 +250,7 @@ let self = liberator.plugins.greader = (function() {
     },
     true
   );
- // }}}
+  // }}}
   // GLOBAL VARIABLES ////////////////////////////////////////////// {{{
   var gv = liberator.globalVariables;
 
@@ -431,15 +431,6 @@ let self = liberator.plugins.greader = (function() {
        return result;
     },
 
-    getEntryIdByLabel : function(url,label) {
-      var items = this.getFeed(label);
-      for each( var e in  items) {
-        if(e.link == url)
-          return e.id;
-      }
-      return null;
-    },
-
     setReadId : function(entry_id) {
       this.edit_api({
         i : entry_id,
@@ -448,6 +439,14 @@ let self = liberator.plugins.greader = (function() {
         async : "false",
       });
     },
+
+    setReadUrl : function(url,label) {
+      var items = this.getFeed(label);
+      for each( var e in  items) {
+        if(e.link == url)
+          this.setReadId(e.id);
+      }
+    }
   }
 
   function Stars() {
