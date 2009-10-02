@@ -168,6 +168,10 @@ inoremap jj <Esc>j
 inoremap ;; <Esc>
 inoremap kk <Esc>k
 inoremap hh <Esc>^
+"アンドゥ位置設定 :help i_ctrl-G_u
+inoremap <C-u> <C-g>u<C-u>
+inoremap <C-w> <C-g>u<C-w>
+inoremap <C-h> <C-g>u<C-h>
 "ESC連打で強調表示切る
 nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
 nnoremap <C-l> W
