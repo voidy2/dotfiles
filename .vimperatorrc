@@ -44,7 +44,7 @@ map <C-k> <Nop>
 " leaderキーの明示
 let mapleader=','
 " twitter.js + copy.js
-nnoremap <Leader>a :copy titleAndBitURL<CR>:twitter  : <C-v><C-v><C-a><C-Right>
+nnoremap <Leader>a :copy titleAndBitURL<CR>:twitter : <C-v><C-v><C-a><C-Right> 
 " tomblrのreblog用
 nnoremap <Leader>r :tombloo ReBlog\ -\ Tumblr<CR>
 nnoremap <Leader>t :mb pinned-or-current-node\ |\ Tombloo::Reblog\ |\ clear-pin<CR>
