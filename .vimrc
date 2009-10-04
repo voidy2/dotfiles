@@ -256,6 +256,10 @@ nmap <leader>sq <Plug>Csurround w'
 imap <leader>sq <Esc><Plug>Csurround w'<Right>wa
 " gfは新しいタブで
 map gf <C-w>gf
+" タブでたくさん開く
+set tabpagemax=1000
+command! Rearrange :only|:tabonly|:tab sball
+
 ""-------------------------------------------------------------------
 " Screenのステータスラインに編集中のファイルを表示し、
 " 終了時にはShellと表示する。※^[ はctrl + v を押しながら [
