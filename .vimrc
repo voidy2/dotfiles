@@ -254,6 +254,8 @@ nmap <leader>q <Plug>Csurround w"
 imap <leader>q <Esc><Plug>Csurround w"<Right>wa
 nmap <leader>sq <Plug>Csurround w'
 imap <leader>sq <Esc><Plug>Csurround w'<Right>wa
+" gfは新しいタブで
+map gf <C-w>gf
 ""-------------------------------------------------------------------
 " Screenのステータスラインに編集中のファイルを表示し、
 " 終了時にはShellと表示する。※^[ はctrl + v を押しながら [
