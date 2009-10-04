@@ -6,12 +6,15 @@ set showtabline=2
 
 hi Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:12px; color:white; background-color:#6666cc; border-color:ButtonShadow; border-width:0px; border-style:solid; padding:0px 1px 0px 1px; position:absolute;
 
-" move in page
+"" -------------------
+"" キーマッピング
+"" -------------------
+"{{{
 nnoremap j 8j
 nnoremap k 8k
 nnoremap J <C-d>
 nnoremap K <C-u>
-nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
+" C-a,C-v,C-v,C-zを設定
 inoremap <C-a> <C-v><C-a>
 inoremap <C-z> <C-v><C-z>
 inoremap <C-x> <C-v><C-x>
@@ -60,8 +63,10 @@ noremap <A-T> :restart<CR>
 
 " ,gaでweb-archiveのページにジャンプ
 nnoremap <Leader>ga :mb location\ |\ web-archive\ |\ open<CR>
-" hではてぶ
-nnoremap h :hb [
+" ,hではてぶ
+nnoremap <Leader>h :hb [
+"}}}
+
 " スクロールバーとタブ番号を非表示
 set go=
 
@@ -74,8 +79,6 @@ set showstatuslinks=
 " Options
 "" 検索キーワードのハイライト
 set hlsearch
-
-
 set runtimepath=~/.vimperator
 set guioptions=nbr
 set history=1000
@@ -89,13 +92,13 @@ let g:tada_userId="voidy21"
 let g:ldrc_intelligence_bind = "true"
 let:g:ldrc_skip = "0.25"
 colorscheme voidy21-color
+
 ""タブ追加ボタン消去
 ""http://fifnel.com/2009/03/15/2278/
 style -name simple_tabs_container chrome://* <<EOM
 .tabs-newtab-button {display: none !important;}
 .tabs-container> stack {display: none;}
 EOM
-
 
 ""ぶくまコメを表示
 noremap v :viewSBMComments<CR>
@@ -114,7 +117,6 @@ autocmd LocationChange 'reader\.livedoor\.com/reader' :fmap j k s a p o v c <Spa
 
 "" Google Reader
 autocmd LocationChange 'www\.google\.co\.jp/reader' :fmap! -vkey j k n p m s t v A r S N P X O gh ga gs gt gu u / ?
-
 
 "" Gmail
 autocmd LocationChange 'mail\.google\.com/mail' :fmap -depth 4 c / j k n p o u e x s r a # [ ] z ? gi gs gt gd ga gc
@@ -193,7 +195,6 @@ liberator.globalVariables.refcontrol = {
   'livedoor.com' : '@NORMAL',
 };
 EOM
-"" vim: set ft=vimperator:
 
 echo ".vimperatorrc sourced" 
 
