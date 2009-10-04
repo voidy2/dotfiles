@@ -195,6 +195,18 @@ liberator.globalVariables.refcontrol = {
   'livedoor.com' : '@NORMAL',
 };
 EOM
-
+" flash blockにヒントモード追加 (;z)
+" http://d.hatena.ne.jp/mountain_dew/20090818/1250603912
+js <<EOM
+hints.addMode("z", "Enable a Flash object",
+    function(elem){
+        elem.focus();
+        var e = content.document.createEvent('MouseEvents');
+        e.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+        elem.dispatchEvent( e );
+    },
+    function() "//xhtml:div[@title]"
+);
+EOM
 echo ".vimperatorrc sourced" 
 
