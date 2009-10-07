@@ -95,7 +95,8 @@ highlight TabLineFill term=reverse cterm=reverse ctermfg=white ctermbg=black
 "{{{
 set foldmethod=marker
 set foldcolumn=4
-set complete=.,w,b,t,i
+set complete=.,w,b,t,i,k
+set dictionary=~/.vim/dict/hotchpotch.dict
 set completeopt=menu,preview,menuone
 set lazyredraw
 set hlsearch
