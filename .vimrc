@@ -43,11 +43,11 @@ autocmd ColorScheme * highlight StatusLineNC cterm=reverse
 autocmd InsertEnter * highlight StatusLine ctermfg=green
 autocmd InsertLeave * highlight StatusLine ctermfg=blue
 "}}}
-
+"
 " ポップアップメニュー"{{{2
 autocmd ColorScheme * highlight Pmenu ctermbg=lightblue
 autocmd ColorScheme * highlight PmenuSel ctermbg=darkgrey
-doautocmd ColorScheme _
+
 "}}}
 
 " テキストライン"{{{2
@@ -84,6 +84,10 @@ if has("syntax")
 endif"}}}
 "タブ文字と終末スペースと改行文字の文字指定
 set listchars=tab:»\ ,trail:-,eol:↲
+"tabの色
+highlight TabLine     term=reverse cterm=reverse ctermfg=white ctermbg=black
+highlight TabLineSel  term=bold cterm=bold,underline ctermfg=yellow
+highlight TabLineFill term=reverse cterm=reverse ctermfg=white ctermbg=black
 "}}}
 "" -------------------
 "" オプション
@@ -107,6 +111,30 @@ set history=1000
 set helplang=ja
 set keywordprg=:help
 set showtabline=2
+set tabline=%!MyTabLine()
+function! MyTabLine()
+  let s = ''
+  for i in range(tabpagenr('$'))
+    if i + 1 == tabpagenr()
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
+    let s .= '%' . (i+1) . 'T' 
+    let s .= ' ' . (i+1) . (1==getwinvar(i+1,'&modified')?'[+]':'') . ' %{MyTabLabel(' . (i+1) . ')} '
+  endfor
+  let s .= '%#TabLineFill#%T'
+  if tabpagenr('$') > 1 
+    let s .= '%=%#TabLine#%999Xclose'
+  endif
+  return s
+endfunction
+function! MyTabLabel(n)
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  return bufname(buflist[winnr - 1]) 
+endfunction
+
 " 矩形選択で文字が無くても右へ進めるようにする
 set virtualedit=block
 " 検索文字を打ち込むと即検索する（インクリメンタルサーチ）
@@ -148,7 +176,7 @@ autocmd FileType help nnoremap <buffer> q <C-w>c
 nnoremap <C-h> :<C-u>help<Space>
 nnoremap <C-h><C-h> :<C-u>help<Space><C-r><C-w><CR>
 " タブ切り替え
-nnoremap <silent> <C-n> :<C-u>tabNext<CR>
+nnoremap <silent> <C-n> :<C-u>tabnext<cr>
 nnoremap <silent> <C-p> :<C-u>tabprevious<CR>
 nnoremap <silent> tn :<C-u>tabnew<CR>
 nnoremap <silent> tq :<C-u>tabclose<CR>
@@ -341,7 +369,7 @@ function! s:ExecPy()
 endfunction
 command! Exec call <SID>ExecPy()
 autocmd FileType python nnoremap  <leader>t :call <SID>ExecPy()<CR>
-
+"
 " Use neocomplcache.
 let g:NeoComplCache_EnableAtStartup = 1
 " Use smartcase.
