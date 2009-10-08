@@ -184,6 +184,7 @@ nnoremap <silent> <C-n> :<C-u>tabnext<cr>
 nnoremap <silent> <C-p> :<C-u>tabprevious<CR>
 nnoremap <silent> tn :<C-u>tabnew<CR>
 nnoremap <silent> tq :<C-u>tabclose<CR>
+nmap bb :ls<CR>:buf 
 " 表示行単位で移動
 noremap j gj
 noremap k gk
