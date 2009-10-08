@@ -149,8 +149,8 @@ let self = liberator.plugins.greader = (function() {
     ["gr[eader]"],
     "Open Google Reader starred items",
     function(args) {
-      var stars = new Stars();
-      var items = stars.items();
+      let stars = new Stars();
+      let items = stars.items();
       if (!items || items.length == 0) {
         liberator.echo("starred item doesn't exists.");
         return;
@@ -196,7 +196,7 @@ let self = liberator.plugins.greader = (function() {
     ["grl[abel]"],
     "view Google Reader select label feed",
     function(args) {
-      var gapi = new GoogleApiController();
+      let gapi = new GoogleApiController();
       if (args.string == "") {
         return;
       } else {
@@ -215,10 +215,10 @@ let self = liberator.plugins.greader = (function() {
         let gapi = new GoogleApiController();
         let labels = gapi.getLabels();
         if ( filter.match("] ") == null ){
-          var match_result = filter.match(/((?:\[[^\]]*\])+)?\[?(.*)/); //[all, commited, now inputting]
-          var m = new RegExp(XMigemoCore ? "^(" + XMigemoCore.getRegExp(match_result[2]) + ")"
+          let match_result = filter.match(/((?:\[[^\]]*\])+)?\[?(.*)/); //[all, commited, now inputting]
+          let m = new RegExp(XMigemoCore ? "^(" + XMigemoCore.getRegExp(match_result[2]) + ")"
                                          : "^" + match_result[2],'i');
-          var completionList = [];
+          let completionList = [];
           labels.forEach(function(label){
             if(m.test(label)){
               completionList.push(["[" + label + "]","Google Reader Label"]);
@@ -239,7 +239,7 @@ let self = liberator.plugins.greader = (function() {
             },
             process: [templateTitleAndUrl,templateSourceTitle]
           };
-          var isViewUnreadItem = args["-allitem"] ? false : true;
+          let isViewUnreadItem = args["-allitem"] ? false : true;
           context.completions = generateCandidates(isViewUnreadItem,gapi.getFeed(comp_tag));
         }
       },
@@ -252,7 +252,7 @@ let self = liberator.plugins.greader = (function() {
   );
   // }}}
   // GLOBAL VARIABLES ////////////////////////////////////////////// {{{
-  var gv = liberator.globalVariables;
+  let gv = liberator.globalVariables;
 
   function openBehavior()
     window.eval(gv.greaderOpenBehavior) || liberator.NEW_BACKGROUND_TAB;
@@ -294,8 +294,8 @@ let self = liberator.plugins.greader = (function() {
     },
 
     _getUserId : function() {
-      var result = null;
-      var request = new libly.Request(
+      let result = null;
+      let request = new libly.Request(
         "http://www.google.co.jp/reader/view/",
         null,
         {
@@ -303,8 +303,8 @@ let self = liberator.plugins.greader = (function() {
         }
       );
       request.addEventListener("onSuccess", function(data) {
-        var src = data.responseText;
-        var reg = src.match(/_USER_ID = "([0-9]+)",$/m);
+        let src = data.responseText;
+        let reg = src.match(/_USER_ID = "([0-9]+)",$/m);
         if(reg != null){
           result = reg[1];
         }
@@ -317,8 +317,8 @@ let self = liberator.plugins.greader = (function() {
     },
 
     _getToken : function() {
-      var result = null;
-      var request = new libly.Request(
+      let result = null;
+      let request = new libly.Request(
         this.URI_PREFIXE_API + "token",
         null,
         {
@@ -336,8 +336,8 @@ let self = liberator.plugins.greader = (function() {
     },
 
     getLabels : function() {
-      var result = [];
-      var request = new libly.Request(
+      let result = [];
+      let request = new libly.Request(
         this.URI_PREFIXE_API + this.API_LIST_TAG,
         null,
         {
@@ -345,11 +345,11 @@ let self = liberator.plugins.greader = (function() {
         }
       );
       request.addEventListener("onSuccess", function(data) {
-        var response = data.responseText;
-        var e4x = new XML(response);
-        var lists = e4x.list.object.string.(@name=="id");
-        for each (var e in lists ) {
-          var str = e.toString();
+        let response = data.responseText;
+        let e4x = new XML(response);
+        let lists = e4x.list.object.string.(@name=="id");
+        for each (let e in lists ) {
+          let str = e.toString();
           if ( str.indexOf("state/com.",0) < 0 )
             result.push(str.slice(32,str.length));
          }
@@ -362,7 +362,7 @@ let self = liberator.plugins.greader = (function() {
     },
 
     edit_api : function(postArgs) {
-      var request = new libly.Request(
+      let request = new libly.Request(
         this.URI_PREFIXE_API + this.API_EDIT_TAG,
         null,
         {
@@ -376,8 +376,8 @@ let self = liberator.plugins.greader = (function() {
     },
 
     getFeed : function(label) {
-       var result = null;
-       var feedUri = this.URI_PREFIXE_ATOM;
+       let result = null;
+       let feedUri = this.URI_PREFIXE_ATOM;
        if( label == "_get_starred_item" )
          feedUri += this.ATOM_STATE_STARRED;
        else if( label != undefined )
@@ -385,7 +385,7 @@ let self = liberator.plugins.greader = (function() {
        else
          feedUri += this.ATOM_STATE_READING_LIST;
 
-       var request = new libly.Request(
+       let request = new libly.Request(
          feedUri + "?n=" + (viewItemsCount() + 40),
          null,
          {
@@ -394,7 +394,7 @@ let self = liberator.plugins.greader = (function() {
        );
 
        request.addEventListener("onSuccess", function(data) {
-         var response = data.responseText;
+         let response = data.responseText;
          if ( response.substr(0,6) == "<html>" ){
              liberator.echoerr("google Web login required",-1);
              return;
@@ -403,16 +403,16 @@ let self = liberator.plugins.greader = (function() {
          response = response.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/,"");
          //名前空間を取り除く
          response = response.replace(/(xmlns=".*")/,"");
-         var e4x = new XML(response);
-         var entrys = e4x.entry;
+         let e4x = new XML(response);
+         let entrys = e4x.entry;
          if ( entrys.length != 0 ) {
             result = [];
          } else {
             return [];
          }
-         for (var n = 0,len = viewItemsCount(); n < len; n++ ) {
+         for (let n = 0,len = viewItemsCount(); n < len; n++ ) {
             e = entrys[n];
-            var entry = {
+            let entry = {
               author : e.author.name.toString(),
               created_on : e.created_on.toString(),
               link : e.link.@href.toString(),
@@ -442,8 +442,8 @@ let self = liberator.plugins.greader = (function() {
     },
 
     setReadUrl : function(url,label) {
-      var items = this.getFeed(label);
-      for each( var e in  items) {
+      let items = this.getFeed(label);
+      for each( let e in  items) {
         if(e.link == url)
           this.setReadId(e.id);
       }
@@ -476,7 +476,7 @@ let self = liberator.plugins.greader = (function() {
     shift : function() {
       if (this.items().length == 0)
         return null;
-      var star = this.items().shift();
+      let star = this.items().shift();
       this.removeId(star.id);
       return star;
     },
@@ -498,8 +498,8 @@ let self = liberator.plugins.greader = (function() {
     },
 
     getEntryId : function(url) {
-      var items = this.items();
-      for each( var e in  items) {
+      let items = this.items();
+      for each( let e in  items) {
         if(e.link == url)
           return e.id;
       }
@@ -537,8 +537,8 @@ let self = liberator.plugins.greader = (function() {
     let _items = items;
     if( isUnreadFilter )
       _items = filterUnReadEntry(items);
-    for each (var e in _items){
-      var entries = {
+    for each ( let e in _items ){
+      let entries = {
         "url" : e.link,
         "title" : e.title,
         "sourceTitle" : e.source_title,
@@ -549,7 +549,7 @@ let self = liberator.plugins.greader = (function() {
   }
 
   function filterUnReadEntry(items){
-    var result = [];
+    let result = [];
     for each(item in items){
       if( item.category.indexOf('read\"',0) < 0){
         result.push(item);
