@@ -1,6 +1,7 @@
 "オートコマンドを初期化
 autocmd!
 
+
 syntax on
 filetype plugin indent on
 colorscheme desert
@@ -97,6 +98,7 @@ set foldmethod=marker
 set foldcolumn=4
 set complete=.,w,b,t,i,k
 set whichwrap=b,s,h,l,<,>,[,]
+set cinoptions=g0,j1
 set dictionary=~/.vim/dict/hotchpotch.dict
 set completeopt=menu,preview,menuone
 set lazyredraw
