@@ -196,6 +196,14 @@ vnoremap gj j
 vnoremap gk k
 "挿入モードで貼り付け
 inoremap <C-v>  <ESC>"*pa
+" 選択部分をクリップボードにコピー
+vnoremap <C-C> "*y
+" 選択部分をクリップボードの値に置き換え
+vnoremap <C-V> d"*P
+" コマンドライン時、クリップボードから貼り付け
+cnoremap <C-V> <C-R>* 
+" 選択部分をクリップボードに切り取り
+vnoremap <C-X> "*d<ESC>
 "挿入モードでのEsc割り当て
 inoremap jj <Esc>j
 inoremap ;; <Esc>
