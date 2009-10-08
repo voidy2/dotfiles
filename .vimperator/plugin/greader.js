@@ -158,7 +158,7 @@ let self = liberator.plugins.greader = (function() {
       if (args.string == "") {
         let star;
         let max = (args.count >= 1) ? args.count : openItemsCount();
-        for(let i = 0; i < max; i++) {
+        for(let i = 0; i < max; ++i) {
           if (!(star = stars.shift()))
             break;
           liberator.open(star.link, openBehavior());
@@ -410,7 +410,7 @@ let self = liberator.plugins.greader = (function() {
          } else {
             return [];
          }
-         for (let n = 0,len = viewItemsCount(); n < len; n++ ) {
+         for (let n = 0,len = viewItemsCount(); n < len; ++n ) {
             e = entrys[n];
             let entry = {
               author : e.author.name.toString(),
