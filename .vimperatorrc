@@ -129,7 +129,8 @@ autocmd LocationChange 'reader\.livedoor\.com/reader' :fmap j k s a p o v c <Spa
 autocmd LocationChange 'www\.google\.co\.jp/reader' :fmap! -vkey j k n p m s t v A r S N P X O gh ga gs gt gu u / ?
 
 "" Gmail
-autocmd LocationChange 'mail\.google\.com/mail' :fmap -depth 4 c / j k n p o u e x s r a # [ ] z ? gi gs gt gd ga gc
+autocmd LocationChange mail\\.google\\.com/mail fmap! -depth 4 c / j k n p o u e x s r a # [ ] ? gi gs gt gd ga gc
+autocmd LocationChange mail\\.google\\.com/mail/.*/[0-9a-f]+$ fmap! -depth 4 c / j,n k,p n,j p,k o u e x s r a # [ ] ? gi gs gt gd ga gc
 
 ""Google Calendar
 autocmd LocationChange 'www\.google\.com/calendar/' :fmap! -vkey -event keydown t a d w m x c e <Del> / + q s ?

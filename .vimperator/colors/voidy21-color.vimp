@@ -36,30 +36,30 @@ hi Gradient             height: 1px;            margin-bottom: -1px;    margin-t
 hi GradientLeft         background: #aacf53;
 hi GradientRight        background: #333333;
 
-hi Normal -append font-size:14pt
+hi Normal -append font-size:12pt
 
 " style about:blank html { background-color: black; }
-style -name tab chrome://* <<EOM
-#content { background-color: #ddd; } /* tabbar */
-.tabs-alltabs-button { padding: 0 !important; }
-.tabs-container { height: 20px; border-bottom: 2px solid black; }
-.tabs-container > stack { display: none; } /* remove tab selection menu */
-.tabbrowser-tab {
-    -moz-appearance: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    -moz-border-radius-topleft: 0 !important;
-    -moz-border-radius-topright: 0 !important;
-    -moz-border-radius-bottomright: 0 !important;
-    -moz-border-radius-bottomleft: 0 !important;
-    border: 0 none !important;
-    background-image: none !important;
-    background-color: #ddd !important;
-}
-.tabbrowser-tab[selected=false] { background: #ddd !important; }
-.tabbrowser-tab[selected=true] {background : black !important;}
-.tabbrowser-tab[selected=true] > .tab-text { color: white !important;  }
-EOM
+"style -name tab chrome://* <<EOM
+"#content { background-color: #ddd; } /* tabbar */
+".tabs-alltabs-button { padding: 0 !important; }
+".tabs-container { height: 20px; border-bottom: 2px solid black; }
+".tabs-container > stack { display: none; } /* remove tab selection menu */
+".tabbrowser-tab {
+"    -moz-appearance: none !important;
+"    margin: 0 !important;
+"    padding: 0 !important;
+"    -moz-border-radius-topleft: 0 !important;
+"    -moz-border-radius-topright: 0 !important;
+"    -moz-border-radius-bottomright: 0 !important;
+"    -moz-border-radius-bottomleft: 0 !important;
+"    border: 0 none !important;
+"    background-image: none !important;
+"    background-color: #ddd !important;
+"}
+".tabbrowser-tab[selected=false] { background: #ddd !important; }
+".tabbrowser-tab[selected=true] {background : black !important;}
+".tabbrowser-tab[selected=true] > .tab-text { color: white !important;  }
+"EOM
 
 style -name statusbar chrome://* <<EOM
 #status-bar statusbarpanel { padding: 0 1px !important; }
