@@ -219,5 +219,29 @@ hints.addMode("z", "Enable a Flash object",
     function() "//xhtml:div[@title]"
 );
 EOM
+javascript <<EOM
+commands.addUserCommand(
+  ['reblogall'],
+  'reblog all tabs',
+  function() {
+    var itab=0;
+    var ntab=tabs.count;
+    liberator.echo(ntab);
+    for(itab=0;itab<ntab;itab++){
+      if(buffer.URL.toString().match(/\.tumblr/)) {
+       //reblog and close
+       liberator.echo('reblog');
+       liberator.execute('tombloo ReBlog\ -\ Tumblr');
+       liberator.execute('tabclose');
+      }else{
+        //next tab
+        liberator.echo('no reblog');
+        liberator.execute('tabnext');
+      }
+    }
+  }
+);
+EOM
+
 echo ".vimperatorrc sourced" 
 
