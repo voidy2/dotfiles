@@ -105,6 +105,14 @@ set lazyredraw
 set hlsearch
 set backspace=eol,indent,start
 set number
+" 括弧入力時に対応する括弧を表示
+set showmatch
+" 移動キーを押しても括弧の強調を有効にする
+set cpoptions-=m
+set matchtime=3
+" <>にもマッチするようにする
+set matchpairs+=<:>
+
 set scrolloff=1000
 set laststatus=2
 set tags=.tags;
