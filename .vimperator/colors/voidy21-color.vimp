@@ -60,6 +60,20 @@ hi Normal -append font-size:12pt
 ".tabbrowser-tab[selected=true] {background : black !important;}
 ".tabbrowser-tab[selected=true] > .tab-text { color: white !important;  }
 "EOM
+" compact tab bar
+style chrome://browser/content/browser.xul .tabbrowser-tabs { height: 19px !important; }
+style chrome://browser/content/browser.xul .tabbrowser-tab { border-left-width: 1px !important; border-right-width: 1px !important; border-bottom-width: 0px !important; padding-left: 1px !important; padding-right: 1px !important; }
+style chrome://browser/content/browser.xul .tab-icon-image { margin-top: 1px !important; }
+style chrome://browser/content/browser.xul .tab-text { margin-top: 1px !important; margin-left: 1px !important; margin-right: 0px !important; }
+
+" disable newtab button
+style chrome://browser/content/browser.xul .tabs-newtab-button { display: none; }
+
+" disable alltabs button
+style chrome://browser/content/browser.xul .tabs-alltabs-box-animate, .tabs-alltabs-button { display: none; }
+
+" disable tab scrollbuttons
+style chrome://browser/content/browser.xul .scrollbutton-up, .scrollbutton-down { display: none; }
 
 style -name statusbar chrome://* <<EOM
 #status-bar statusbarpanel { padding: 0 1px !important; }
