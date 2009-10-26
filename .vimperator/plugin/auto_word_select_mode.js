@@ -36,12 +36,12 @@ var PLUGIN_INFO =
   <name>{NAME}</name>
   <description>Add auto word select mode.</description>
   <description lang="ja">単語を自動選択するモードを追加します</description>
-  <minVersion>2.0pre</minVersion>
-  <maxVersion>2.1pre</maxVersion>
+  <minVersion>2.0</minVersion>
+  <maxVersion>2.2pre</maxVersion>
   <updateURL>http://svn.coderepos.org/share/lang/javascript/vimperator-plugins/trunk/auto_word_select_mode.js</updateURL>
   <author mail="snaka.gml@gmail.com" homepage="http://vimperator.g.hatena.ne.jp/snaka72/">snaka</author>
   <license>MIT style license</license>
-  <version>1.2.1</version>
+  <version>1.2.3</version>
   <detail><![CDATA[
     == Subject ==
     Add auto word select mode.
@@ -51,7 +51,7 @@ var PLUGIN_INFO =
     This mode alway selects current word.
 
     == Global variables ==
-    g:auto_word_select_mode_key:
+    g:auto_word_select_key:
       The key that entering to AUTO_WORD_SELECT mode.
       Default is 'I'.
 
@@ -96,7 +96,7 @@ var PLUGIN_INFO =
     コンテンツ内の単語を頻繁に選択＆検索する場合などに便利です。
 
     == グローバル変数 ==
-    g:auto_word_select_mode_key:
+    g:auto_word_select_key:
       AUTO_WORD_SELECTモードに移行するためのキーです。
       デフォルトは'I'です。
 
@@ -154,6 +154,7 @@ const KEY = liberator.globalVariables.auto_word_select_key || 'I';
 if (!modes.AUTO_WORD_SELECT)
   modes.addMode(NEW_MODE, false, function() NEW_MODE);
 
+// MAPPINGS {{{
 mappings.addUserMap(
   [modes.NORMAL, modes.CARET, modes.VISUAL],
   [KEY],
@@ -206,7 +207,8 @@ mappings.add(
   }
 );
 
-mappings.add( [modes.AUTO_WORD_SELECT],
+mappings.add(
+  [modes.AUTO_WORD_SELECT],
   ["l"],
   "Move to right word and select.",
   function() {
@@ -215,7 +217,8 @@ mappings.add( [modes.AUTO_WORD_SELECT],
   }
 );
 
-mappings.add( [modes.AUTO_WORD_SELECT],
+mappings.add(
+  [modes.AUTO_WORD_SELECT],
   ["L"],
   "Extend to right word.",
   function() {
@@ -226,7 +229,8 @@ mappings.add( [modes.AUTO_WORD_SELECT],
   }
 );
 
-mappings.add( [modes.AUTO_WORD_SELECT],
+mappings.add(
+  [modes.AUTO_WORD_SELECT],
   ["h"],
   "Move to left word and select.",
   function() {
@@ -246,7 +250,8 @@ mappings.add( [modes.AUTO_WORD_SELECT],
   }
 );
 
-mappings.add( [modes.AUTO_WORD_SELECT],
+mappings.add(
+  [modes.AUTO_WORD_SELECT],
   ["H"],
   "Extend to left word.",
   function() {
@@ -257,7 +262,8 @@ mappings.add( [modes.AUTO_WORD_SELECT],
   }
 );
 
-mappings.add( [modes.AUTO_WORD_SELECT],
+mappings.add(
+  [modes.AUTO_WORD_SELECT],
   ["j"],
   "Move to below word and select.",
   function() {
@@ -267,7 +273,8 @@ mappings.add( [modes.AUTO_WORD_SELECT],
   }
 );
 
-mappings.add( [modes.AUTO_WORD_SELECT],
+mappings.add(
+  [modes.AUTO_WORD_SELECT],
   ["k"],
   "Move to above word and select.",
   function() {
@@ -287,6 +294,45 @@ mappings.add( [modes.AUTO_WORD_SELECT],
   }
 );
 
+// inherites key mappings from CARET mode
+[
+  // keys                     hasCount  caretModeMethod  caretModeArg
+  [["b", "B", "<C-Left>"],       true,  "wordMove",       false],
+  [["w", "W", "e", "<C-Right>"], true,  "wordMove",       true ],
+  [["<C-f>", "<PageDown>"],      true,  "pageMove",       true ],
+  [["<C-b>", "<PageUp>"],        true,  "pageMove",       false],
+  [["gg", "<C-Home>"],           false, "completeMove",   false],
+  [["G", "<C-End>"],             false, "completeMove",   true ],
+  [["0", "^", "<Home>"],         false, "intraLineMove",  false],
+  [["$", "<End>"],               false, "intraLineMove",  true ],
+].map(function(params) {
+  let [keys, hasCount, caretModeMethod, caretModeArg] = params;
+
+  let extraInfo = {};
+  if (hasCount) {
+    if (Mappings.flags)
+      extraInfo.flags = Mappings.flags.COUNT; // for backward compatibility
+    else
+      extraInfo.count = true;
+  }
+
+  mappings.add([modes.AUTO_WORD_SELECT], keys, "",
+    function (count) {
+      if (typeof count != "number" || count < 1)
+        count = 1;
+
+      let controller = buffer.selectionController;
+      while (count--)
+        controller[caretModeMethod](caretModeArg, false);
+
+      if (selectable()) selectWord();
+    },
+    extraInfo
+  );
+});
+
+// }}}
+// PRIVATE FUNCTIONS {{{
 function selectWord() {
   controller().wordMove(true, false);
   controller().wordMove(false, true);
@@ -316,15 +362,7 @@ function selectable() {
 
   return true;
 }
-
-//// for debuging
-//liberator.registerObserver("modeChange", function(oldModes, newModes, stack) {
-//  liberator.dump(getModeName(oldModes[0]) +" + "+ getModeName(oldModes[1])
-//                 + " -> " +
-//                 getModeName(newModes[0]) +" + "+ getModeName(newModes[1]));
-//  liberator.dumpStack();
-//});
-//function getModeName(id) modes.getMode(id) ? modes.getMode(id).name : "";
+// }}}
 
 })();
 
