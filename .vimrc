@@ -202,6 +202,8 @@ noremap gj j
 noremap gk k
 vnoremap gj j
 vnoremap gk k
+" 同じ名前のヘッダファイルを開く
+nnoremap <C-^>  :<C-u>hide edit %<.hpp<Return>
 "挿入モードで貼り付け
 inoremap <C-v>  <ESC>"*pa
 " 選択部分をクリップボードにコピー
