@@ -84,7 +84,7 @@ set go=
 set! ui.key.generalAccessKey=0
 
 " リンクのURIをコマンドラインに表示
-set showstatuslinks=
+set showstatuslinks=2
 
 " Options
 "" 検索キーワードのハイライト
