@@ -4,6 +4,11 @@ autocmd!
 
 syntax on
 filetype plugin indent on
+autocmd FileType *
+\   if &l:omnifunc == ''
+\ |   setlocal omnifunc=syntaxcomplete#Complete
+\ | endif
+
 colorscheme desert
 let mapleader=","
 "" -------------------
