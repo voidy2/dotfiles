@@ -13,7 +13,8 @@ local WHITE=$'%{[1;37m%}'
 
 # users generic .zshrc file for zsh(1)
 #PROMPT="%{[$[32+$RANDOM % 5]m%}$LOGNAME@%m%B[%D %T]:%b% "
-PROMPT="%{[$[32+$RANDOM % 5]m%}[%D %T]"$YELLOW" %% "$DEFAULT
+#PROMPT="%{[$[32+$RANDOM % 5]m%}[%D %T]"$YELLOW" %% "$DEFAULT
+PROMPT="%{[$[32+$RANDOM % 5]m%}[%D %T]"$DEFAULT"[$GREEN"INS"$DEFAULT] $YELLOW%%$DEFAULT "
 if [ $USER = "root" ]
 then
     PROMPT="%{[$[31]m%}%B$LOGNAME@%m[%D %T]:%b%{[m%} %h# "
@@ -23,6 +24,21 @@ then
 else
      RPROMPT="[%{[33m%}%~%{[m%}]"
 fi
+
+function zle-line-init zle-keymap-select {
+  case $KEYMAP in
+    vicmd)
+    PROMPT="%{[$[32+$RANDOM % 5]m%}[%D %T]"$DEFAULT"[$BLUE"NOR"$DEFAULT] $YELLOW%%$DEFAULT "
+    ;;
+    main|viins)
+    PROMPT="%{[$[32+$RANDOM % 5]m%}[%D %T]"$DEFAULT"[$GREEN"INS"$DEFAULT] $YELLOW%%$DEFAULT "
+    ;;
+  esac
+  zle reset-prompt
+}
+zle -N zle-line-init
+zle -N zle-keymap-select
+
 _set_env_git_current_branch() {
   GIT_CURRENT_BRANCH=$( git branch &> /dev/null | grep '^\*' | cut -b 3- )
 }
@@ -110,7 +126,7 @@ setopt globdots
 # emacs like keybind (e.x. Ctrl-a goes to head of a line and Ctrl-e goes
 # to end of it)
 
-bindkey -e
+bindkey -v
 # historical backward/forward search with linehead string binded to ^P/^N
 autoload history-search-end
 
