@@ -178,7 +178,7 @@ set hidden
 "" 後方検索時に文字列が見つからない場合にファイルの先頭に戻って再検索する
 set wrapscan
 set modifiable
-set fencs=utf-8,cp932,ucs-bom,ucs-2le,ucs-2,iso-2022-jp-3
+set fencs=utf-8,euc-jp,cp932,ucs-bom,ucs-2le,ucs-2,iso-2022-jp-3
 
 "}}}
 "" -------------------
