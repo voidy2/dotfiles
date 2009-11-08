@@ -44,7 +44,9 @@ cnoremap <C-l> <C-u>
 imap <C-h> <BS>
 imap <C-m> <CR>
 imap <C-j> <Down>
+imap <C-n> <Down>
 imap <C-k> <Up>
+imap <C-p> <Down>
 imap <C-u> <Left>
 imap <C-l> <Right>
 " select next/previous tab
