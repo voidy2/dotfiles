@@ -134,8 +134,15 @@ zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
 bindkey "^p" history-beginning-search-backward-end
 bindkey "^n" history-beginning-search-forward-end
-bindkey "\\ep" history-beginning-search-backward-end
-bindkey "\\en" history-beginning-search-forward-end
+#bindkey "\\ep" history-beginning-search-backward-end
+#bindkey "\\en" history-beginning-search-forward-end
+bindkey "\\vp" history-beginning-search-backward-end
+bindkey "\\vn" history-beginning-search-forward-end
+bindkey "^r" history-incremental-search-backward
+#bindkey "^w"  backward-kill-word
+bindkey -a 'H' run-help
+bindkey -a 'q' push-line
+
 
 ## Command history configuration
 HISTFILE=~/.zsh_history
