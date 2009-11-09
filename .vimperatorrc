@@ -46,7 +46,7 @@ imap <C-m> <CR>
 imap <C-j> <Down>
 imap <C-n> <Down>
 imap <C-k> <Up>
-imap <C-p> <Down>
+imap <C-p> <Up>
 imap <C-u> <Left>
 imap <C-l> <Right>
 " select next/previous tab
