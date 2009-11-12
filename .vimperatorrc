@@ -8,8 +8,6 @@ hi Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:12px; 
 " qmark go + ○ でアクセス
 qmark c http://www.google.com/calendar/render
 qmark g http://mail.google.com/
-" Google から飛んだときにはてダのハイライトの色を変える
-style hatena.ne.jp .highlight {background-color:hotpink !important;}
 "" -------------------
 "" キーマッピング
 "" -------------------
@@ -18,6 +16,8 @@ nnoremap j 8j
 nnoremap k 8k
 nnoremap J <C-d>
 nnoremap K <C-u>
+nnoremap rd :removetabsright<CR>
+nnoremap ld :removetabsleft<CR>
 " C-a,C-v,C-v,C-zを設定
 inoremap <C-a> <C-v><C-a>
 inoremap <C-z> <C-v><C-z>
@@ -139,8 +139,8 @@ autocmd LocationChange 'reader\.livedoor\.com/reader' :fmap j k s a p o v c <Spa
 autocmd LocationChange 'www\.google\.co\.jp/reader' :fmap! -vkey j k n p m s t v A r S N P X O gh ga gs gt gu u / ?
 
 "" Gmail
-autocmd LocationChange mail\\.google\\.com/mail fmap! -depth 4 c / j k n p o u e x s r a # [ ] ? gi gs gt gd ga gc
-autocmd LocationChange mail\\.google\\.com/mail/.*/[0-9a-f]+$ fmap! -depth 4 c / j,n k,p n,j p,k o u e x s r a # [ ] ? gi gs gt gd ga gc
+autocmd LocationChange mail\\.google\\.com/mail fmap! c / j k n p o u e x s r a # [ ] ? gi gs gt gd ga gc
+autocmd LocationChange mail\\.google\\.com/mail/.*/[0-9a-f]+$ fmap! c / j,n k,p n,j p,k o u e x s r a # [ ] ? gi gs gt gd ga gc
 
 ""Google Calendar
 autocmd LocationChange 'www\.google\.com/calendar/' :fmap! -vkey -event keydown t a d w m x c e <Del> / + q s ?
