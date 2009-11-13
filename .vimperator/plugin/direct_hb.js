@@ -158,7 +158,7 @@
     getTags();
 
     function addHatenaBookmarks(user,password,url,comment,normalize){
-        var target = normalize ? getNormalizedPermalink(url) : url;
+        var target = url;
         var request =
             <entry xmlns="http://purl.org/atom/ns#">
                 <title>dummy</title>
