@@ -293,8 +293,8 @@ endfunction
 " Gtags
 "map <C-i> :Gtags -f %<CR>
 noremap <C-g> :GtagsCursor<CR>
-"noremap <C-n> :cn<CR>
-"noremap <C-p> :cp<CR>
+noremap g<C-n> :cn<CR>
+noremap g<C-p> :cp<CR>
 let g:Align_xstrlen = 3
 set viminfo+=!
 map <silent> <C-T> :call BufferList()<CR>
