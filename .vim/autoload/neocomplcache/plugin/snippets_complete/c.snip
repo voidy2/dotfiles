@@ -1,18 +1,21 @@
 snippet     if
 abbr        if () {}
-prev_word   '^'
     if (${1:/* condition */}) {
         ${0:/* code */}
     }
 
-snippet el
+snippet else
     else {
+        ${0}
+    }
+
+snippet elseif
+    else if (${1:/* condition */}) {
         ${0}
     }
 
 snippet     ifelse
 abbr        if () {} else {}
-prev_word   '^'
     if (${1:condition}) {
         ${2}
     } else {
@@ -21,14 +24,12 @@ prev_word   '^'
 
 snippet     for
 abbr        for () {}
-prev_word   '^'
     for (${1} = 0; $1 < ${2}; $1++) {
         ${0}
     }
 
 snippet     while
 abbr        while () {}
-prev_word   '^'
     while (${1:/* condition */}) {
         ${0:/* code */}
     }
@@ -48,14 +49,12 @@ abbr        switch () {}
 
 snippet     function
 abbr        func() {}
-prev_word   '^'
     ${1:void} ${2:func_name}(${3}) {
         ${0}
     }
 
 snippet     struct
 abbr        struct {}
-prev_word   '^'
     struct ${1:name} {
         ${0:/* data */}
     };
@@ -68,7 +67,6 @@ snippet struct_typedef
 
 snippet     enum
 abbr        enum {}
-prev_word   '^'
     enum ${1:name} {
         ${0}
     };
