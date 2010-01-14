@@ -106,6 +106,7 @@ bmark -title="ニコニコ動画" -tags=keyword -keyword=nico http://www.nicovid
 bmark -title="Tumblr Dashboard" -tags=keyword -keyword=tumblr http://www.tumblr.com/dashboard/search/%s
 bmark -title="FriendFeed Twitter(voidy21)" -tags=keyword -keyword=fftwitter http://friendfeed.com/search?q=from%3Avoidy21+service%3Atwitter+%s
 bmark -title="FriendFeed Tumblr(voidy21)" -tags=keyword -keyword=fftumblr http://friendfeed.com/search?q=from%3Avoidy21+service%3Atumblr+%s
+bmark -title="ニコニコ動画タグ検索" -tags=keyword -keyword=nicosearch http://www.nicovideo.jp/search/%s 
 set defsearch=g
 
 let g:hintsio="iO"
