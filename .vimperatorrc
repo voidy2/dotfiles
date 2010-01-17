@@ -35,12 +35,13 @@ cnoremap <C-n> <Tab>
 cnoremap <C-p> <S-Tab>
 cnoremap <C-j> <Tab>
 cnoremap <C-k> <S-Tab>
+cnoremap <C-l> <C-u>
 cnoremap <C-;> <C-m>
-cnoremap <C-d> <Up>
+cnoremap <C-d> <Down>
+cnoremap <C-u> <Up>
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
 cnoremap <C-r> <C-u>history 
-cnoremap <C-l> <C-u>
 imap <C-h> <BS>
 imap <C-m> <CR>
 imap <C-j> <Down>
