@@ -16,6 +16,11 @@ nnoremap j 8j
 nnoremap k 8k
 nnoremap J <C-d>
 nnoremap K <C-u>
+" ソースコードはもっと複雑なコマンドを使う
+nnoremap ,gf gf
+nnoremap ,gF gF
+nnoremap gf <Nop>
+nnoremap gF <Nop>
 nnoremap rd :removetabsright<CR>
 nnoremap ld :removetabsleft<CR>
 " C-a,C-v,C-v,C-zを設定
@@ -78,6 +83,12 @@ noremap <A-T> :restart<CR>
 nnoremap <Leader>ga :mb location\ |\ web-archive\ |\ open<CR>
 " ,hではてぶ
 nnoremap <Leader>h :hb [
+" nicoseek
+nnoremap <Leader>np :nicopause<CR>
+nnoremap <S-Right> :nicoseek! +3<CR>
+nnoremap <S-Left> :nicoseek! -3<CR>
+nnoremap <S-Up> :nicovolume! +3<CR>
+nnoremap <S-Down> :nicovolume! -3<CR>
 "}}}
 
 " スクロールバーとタブ番号を非表示
