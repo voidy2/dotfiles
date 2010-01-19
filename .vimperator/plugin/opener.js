@@ -15,9 +15,9 @@
     }
  
     let open = commands.get("open");
-    let edit = commands.get("edit");
+    //let edit = commands.get("edit");
     let tabopen = commands.get("tabopen");
     open.action = opener(liberator.CURRENT_TAB);
-    edit.action = opener(liberator.CURRENT_TAB);
+    //edit.action = opener(liberator.CURRENT_TAB);
     tabopen.action = opener(liberator.NEW_TAB);
 })();
