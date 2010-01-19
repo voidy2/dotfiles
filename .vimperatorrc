@@ -270,6 +270,21 @@ commands.addUserCommand(
   }
 );
 EOM
-
+""素因数分解
+""誰特
+javascript <<EOM
+commands.addUserCommand(
+    ['fac[tor]'],
+    'factorization in prime numbers',
+    function(args) {
+        let p=1,q,n=args[0],s="";
+        while(++p && n-1){
+            for(q=0;!(n%p);++q,n/=p);
+            s+=q?(p+"^"+q+((n-1)?"*":"\n")):"";
+        }
+        liberator.echo(s);
+    }
+);
+EOM
 echo ".vimperatorrc sourced" 
 

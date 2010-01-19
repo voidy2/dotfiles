@@ -105,12 +105,27 @@
 
     // copied from Pagerization (c) id:ofk
     function parseHTML(str){
-        str = str.replace(/^[\s\S]*?<html(?:\s[^>]+?)?>|<\/html\s*>[\S\s]*$/ig, '');
-        var res = document.implementation.createDocument(null, 'html', null);
-        var range = document.createRange();
-        range.setStartAfter(window.content.document.body);
-        res.documentElement.appendChild(res.importNode(range.createContextualFragment(str), true));
-        return res;
+        var createHTMLDocument = function() {
+            var xsl = (new DOMParser()).parseFromString(
+                ['<?xml version="1.0"?>',
+                 '<stylesheet version="1.0" xmlns="http://www.w3.org/1999/XSL/Transform">',
+                 '<output method="html"/>',
+                 '</stylesheet>'].join("\n"), "text/xml");
+
+            var xsltp = new XSLTProcessor();
+            xsltp.importStylesheet(xsl);
+            var doc = xsltp.transformToDocument(
+                document.implementation.createDocument("", "", null));
+            return doc;
+        };
+
+        var doc = createHTMLDocument();
+        var range = doc.createRange();
+        doc.appendChild(doc.createElement("html"));
+        range.selectNodeContents(doc.documentElement);
+        doc.documentElement.appendChild(
+            range.createContextualFragment(str));
+        return doc;
     }
 
     //
@@ -145,10 +160,10 @@
 
     function getTags(arg){
         liberator.plugins.hatena_tags = [];
-        httpGET("http://b.hatena.ne.jp/my",
+        httpGET("http://b.hatena.ne.jp/my/add.confirm?url=http://example.com",
                 function(mypage_text){
                     var mypage_html = parseHTML(mypage_text);
-                    var tags = getElementsByXPath("//ul[@id=\"tags\"]/li/a",mypage_html);
+                    var tags = getElementsByXPath('id("all-tags-container")//span',mypage_html);
                     tags.forEach(function(tag){
                         liberator.plugins.hatena_tags.push(tag.innerHTML);
                     });

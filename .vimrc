@@ -257,8 +257,11 @@ inoremap <leader>[ [
 inoremap <leader>{ {
 inoremap <leader>( (
 inoremap [ []<LEFT>
-inoremap { {}<LEFT><CR><ESC>O
+inoremap [] []<LEFT>
+inoremap { {}<LEFT>
+inoremap {} {}<LEFT>
 inoremap ( ()<LEFT>
+inoremap () ()<LEFT>
 "コマンドモードの履歴
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
