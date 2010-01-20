@@ -247,6 +247,12 @@ hints.addMode("z", "Enable a Flash object",
     function() "//xhtml:div[@title]"
 );
 EOM
+""statstat.jsでtwitter.jsの文字数表示
+""http://vimperator.g.hatena.ne.jp/nokturnalmortum/20091201/1259594430
+let g:statstat_expression = "let ([,,,as]=commands.parseCommand(commandline.command)) as.length"
+let g:statstat_autorun = "true"
+let g:statstat_interval = "400"
+""reblogをすべてのtumblrタブで
 javascript <<EOM
 commands.addUserCommand(
   ['reblogall'],
