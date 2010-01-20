@@ -106,7 +106,7 @@ set hlsearch
 set runtimepath=~/.vimperator
 set guioptions=nbr
 set history=1000
-set complete=ls
+set complete=tls
 set wildoptions=auto
 set suggestengines=google
 set newtab=all
