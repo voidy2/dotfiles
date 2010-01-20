@@ -103,6 +103,7 @@ set showstatuslinks=2
 " Options
 "" 検索キーワードのハイライト
 set hlsearch
+set noincsearch
 set runtimepath=~/.vimperator
 set guioptions=nbr
 set history=1000
