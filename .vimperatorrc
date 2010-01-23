@@ -96,6 +96,41 @@ set go=
 
 " ページのアクセスキーを無効化
 set! ui.key.generalAccessKey=0
+" 最初の5回だけ描画してダウンロード完了してからページ全体を描画する
+" http://d.hatena.ne.jp/futashika/20091014/1255528382
+set! content.notfy.backoffcount=5
+" Linuxでのマウス中クリックで勝手にどこかに飛ばされるのをなんとかする
+" http://msfree2.blog90.fc2.com/blog-entry-157.html
+set! middlemouse.contentLoadURL=false
+" Linuxでのカラーマネジメントがおかしいのをなんとかする
+set! gfx.color_management.mode=0
+" その他チューニング
+set! browser.cache.memory.capacity=65536
+set! content.interrupt.parsing=true
+set! content.max.tokenizing.time=2250000
+set! content.maxtextrun=8191
+set! content.notify.interval=750000
+set! content.switch.threshold=750000
+set! ui.submenuDelay=0
+set! network.http.pipelining=true
+set! network.http.proxy.pipelining=true
+set! network.dns.disableIPv6=true
+set! network.http.max-connections=32
+set! network.http.max-connections-per-server=8
+set! network.http.pipelining.maxrequests=8
+set! network.http.request.timeout=300
+set! nglayout.initialpaint.delay=0
+set! javascript.options.jit.chrome=true
+set! security.dialog_enable_delay=0
+set! content.notify.backoffcount=5
+set! content.notify.ontimer=true
+set! browser.cache.disk_cache_ssl=true
+set! browser.xul.error_pages.enabled=true
+set! browser.cache.memory.capacity=65536
+set! plugin.expose_full_path=true
+set! signed.applets.codebase_principal_support=true
+
+
 
 " リンクのURIをコマンドラインに表示
 set showstatuslinks=2
