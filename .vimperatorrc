@@ -124,7 +124,7 @@ bmark -title="2ch内検索(Google)" -tags=keyword -keyword=2chsearch http://www.
 bmark -title="Tumblrタグ検索" -tags=keyword -keyword=tumblrtag http://www.tumblr.com/tagged/%s
 bmark -title="GoogleReader検索" -tags=keyword -keyword=googlereader http://www.google.co.jp/reader/view/#search/%s/
 
-set defsearch=g
+set defsearch=google
 
 let g:hintsio="iO"
 let g:tada_userId="voidy21"
