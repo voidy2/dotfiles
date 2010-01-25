@@ -243,7 +243,7 @@ let g:hintlabeling:
             if(/^\d$/.test(events.toString(event))) {
                 charhints.onInput(event);
             } else {
-                charhints.original.onEvent(event);
+                charhints.original.onEvent.apply(hintContext,arguments);
                 clearOriginalTimeout();
                 statusline.updateInputBuffer(hintInput);
             }
