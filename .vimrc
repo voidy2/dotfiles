@@ -262,6 +262,8 @@ inoremap { {}<LEFT>
 inoremap {} {}<LEFT>
 inoremap ( ()<LEFT>
 inoremap () ()<LEFT>
+inoremap <leader>; <End>;
+nnoremap <leader>; A;
 "コマンドモードの履歴
 cnoremap <C-p> <Up>
 cnoremap <C-n> <Down>
