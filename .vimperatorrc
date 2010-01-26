@@ -2,7 +2,7 @@ echo "Now Loading..."
 
 "自動フォーカス回避
 set focuscontent
-set showtabline=2
+" set showtabline=2
 
 hi Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:16px; color:white; background-color:#6666cc; border-color:ButtonShadow; border-width:0px; border-style:solid; padding:0px 1px 0px 1px; position:absolute;
 " qmark go + ○ でアクセス
