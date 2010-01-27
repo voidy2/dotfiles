@@ -328,5 +328,9 @@ commands.addUserCommand(
     }
 );
 EOM
+
+"debugger on
+js services.get("debugger").on()
+
 echo ".vimperatorrc sourced" 
 
