@@ -2,7 +2,7 @@ echo "Now Loading..."
 
 "自動フォーカス回避
 set focuscontent
-" set showtabline=2
+set showtabline=2
 
 hi Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:16px; color:white; background-color:#6666cc; border-color:ButtonShadow; border-width:0px; border-style:solid; padding:0px 1px 0px 1px; position:absolute;
 " qmark go + ○ でアクセス
@@ -133,7 +133,7 @@ set! signed.applets.codebase_principal_support=true
 
 
 " リンクのURIをコマンドラインに表示
-set showstatuslinks=2
+" set showstatuslinks=2
 
 " Options
 "" 検索キーワードのハイライト
@@ -142,7 +142,8 @@ set noincsearch
 set runtimepath=~/.vimperator
 set guioptions=nbr
 set history=1000
-set complete=tls
+" set complete=tls
+set complete=ls
 set wildoptions=auto
 set suggestengines=google
 set newtab=all
@@ -331,6 +332,27 @@ EOM
 
 "debugger on
 js services.get("debugger").on()
+
+" マウスオーバーするヒントモード
+" http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100131/1264923630
+javascript <<EOM
+hints.addMode(
+  'm',
+  'mouse over',
+  function (elem, count) {
+    let evt = elem.ownerDocument.createEvent('MouseEvents');
+    evt.initMouseEvent(
+      'mouseover',
+      true, true,
+      elem.ownerDocument.defaultView,
+      0, 0, 0, 0, 0,
+      false, false, false, false, 0, null
+    );
+    elem.dispatchEvent(evt);
+  },
+  function () options.get('hinttags').get()
+);
+EOM
 
 echo ".vimperatorrc sourced" 
 
