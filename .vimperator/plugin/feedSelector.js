@@ -18,12 +18,43 @@
     return feeds;
   }
 
-  function templateTitleAndUrl(obj) {
+  function loadFeed(url){
+    let result = [];
+    let request = new libly.Request(
+      url,
+      null,
+      {
+        asynchronous: false,
+      }
+    );
+    request.addEventListener("onSuccess", function(data) {
+      let response = data.responseText;
+      //firefox bug 336551
+      response = response.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/,"");
+      //名前空間を取り除く
+      response = response.replace(/(xmlns=".*")/,"");
+      //ここで上手くいかなくて処理が止まることがある #bug
+      let e4x = new XML(response);
+      let item_list = e4x.item;
+      for each ( let e in item_list ) {
+        let title = e.title.toString();
+        let link = e.link;
+        result.push([link,title]);
+      }
+    });
+    request.addEventListener("onFailure", function(data) {
+      liberator.echoerr("Failure: cannot load..");
+    });
+    request.get();
+    return result;
+  }
+
+  function templateTitleAndUrl(title,url) {
     return <>
-      <img src={'http://favicon.hatena.ne.jp/?url=' + obj.item.url} />
-      <span class="td-strut"/>{obj.item.title}
-      <a href={obj.item.url} highlight="simpleURL">
-        <span class="extra-info">{obj.item.url.replace(/^https?:\/\//, '')}</span>
+      <img src={'http://favicon.hatena.ne.jp/?url=' + url} />
+      <span class="td-strut"/>{title}
+      <a href={url} highlight="simpleURL">
+        <span class="extra-info">{url.replace(/^https?:\/\//, '')}</span>
       </a>
     </>;
   }
@@ -46,13 +77,21 @@
       literal: 0,
       count: false,
       completer: function(context, args) {
-        let feeds = getFeedUrl();
-        let completionList = [];
-        feeds.forEach(function(feed){
-            completionList.push([feed,"RSS Feed"]);
-        });
-        context.title = ['RSS Feed URL'];
-        context.completions = completionList;
+        let filter = context.filter;
+        if( filter.match("\S? ") == null ){
+          let feeds = getFeedUrl();
+          let completionList = [];
+          feeds.forEach(function(feed){
+              completionList.push([feed,"RSS Feed"]);
+          });
+          context.title = ['RSS Feed URL'];
+          context.completions = completionList;
+        } else {
+          context.filter = "";
+          let url = filter.replace(" ","");
+          context.title = ['Link and Title in RSS Feed'];
+          context.completions = loadFeed(url);
+        }
       },
       options: []
     },
