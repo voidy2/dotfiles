@@ -264,6 +264,7 @@ liberator.globalVariables.refcontrol = {
   '@DEFAULT'     : '@FORGE',        // @NORMAL, @FORGE, '', url
   'tumblr.com'   : '@FORGE',
   'del.icio.us'  : '@NORMAL',
+  'localhost'    : '@NORMAL',
   'fc2.com'      : '',
   'itmedia.co.jp': '@FORGE',
   'uploader.jp'  : '@NORMAL',
