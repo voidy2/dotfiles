@@ -355,5 +355,21 @@ hints.addMode(
 );
 EOM
 
+
+" http://gist.github.com/297986
+" <C-o>でこれ以上戻れなかったらタブを閉じるスクリプト
+javascript <<EOM
+let (
+  back = mappings.getDefault(modes.NORMAL, '<C-o>').action,
+  remove = mappings.getDefault(modes.NORMAL, 'd').action
+)
+mappings.addUserMap(
+  [modes.NORMAL],
+  ['<C-o>'],
+  'http://d.hatena.ne.jp/nyama/20100208/1265617681',
+  function () (gBrowser.sessionHistory.index > 0 ? back : remove)(-1)
+)
+EOM
+
 echo ".vimperatorrc sourced" 
 

@@ -35,11 +35,16 @@
       response = response.replace(/(xmlns=".*")/,"");
       //ここで上手くいかなくて処理が止まることがある #bug
       let e4x = new XML(response);
-      let item_list = e4x.item;
-      for each ( let e in item_list ) {
-        let title = e.title.toString();
-        let link = e.link;
-        result.push([link,title]);
+      if ( e4x.@version == "2.0" ) {
+        Firebug.Console.log(e4x.@version);
+      } else {
+        Firebug.Console.log(e4x.item);
+        let item_list = e4x.item;
+        for each ( let e in item_list ) {
+          let title = e.title.toString();
+          let link = e.link;
+          result.push([link,title]);
+        }
       }
     });
     request.addEventListener("onFailure", function(data) {
