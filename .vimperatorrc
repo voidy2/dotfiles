@@ -371,5 +371,33 @@ mappings.addUserMap(
 )
 EOM
 
+" http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100218/1266506228
+javascript <<EOM
+// 指定の xpath でヒントを出して、選んだ物を削除する
+let (hintName = 'foo-remove-node', shareArgs) {
+  hints.addMode(
+    hintName,
+    'prompt text',
+    function (elem, count) {
+      elem.parentNode.removeChild(elem);
+    },
+    function () (shareArgs.literalArg || '//div')
+  );
+
+  commands.addUserCommand(
+    ['removenode'],
+    'description',
+    function (args) {
+      shareArgs = args;
+      hints.show(hintName);
+    },
+    {
+      literal: 0
+    },
+    true
+  );
+}
+EOM
+
 echo ".vimperatorrc sourced" 
 
