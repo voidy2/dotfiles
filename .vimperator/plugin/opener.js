@@ -2,12 +2,15 @@ liberator.registerObserver(
   "enter",
   function () {
     let U = liberator.plugins.libly.$U;
+    //BarTabs用
+    let mTabs = document.getElementById("content").mTabs;
 
     function jump (url) {
       let index = 0;
       let url = util.stringToURLArray(url).toString();
       for each ( [,tab] in tabs.browsers ) {
-        if(url == tab.currentURI.spec){
+        if(url == tab.currentURI.spec ||
+           url == mTabs[index].linkedBrowser.userTypedValue){
           tabs.select(index);
           return true;
         }
