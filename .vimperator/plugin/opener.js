@@ -1,50 +1,78 @@
-(function () {
-  let U = liberator.plugins.libly.$U;
+liberator.registerObserver(
+  "enter",
+  function () {
+    let U = liberator.plugins.libly.$U;
 
-  function jump (url) {
-    let index = 0;
-    let url = util.stringToURLArray(url).toString();
-    for each ( [,tab] in tabs.browsers ) {
-      if(url == tab.currentURI.spec){
-        tabs.select(index);
-        return true;
+    function jump (url) {
+      let index = 0;
+      let url = util.stringToURLArray(url).toString();
+      for each ( [,tab] in tabs.browsers ) {
+        if(url == tab.currentURI.spec){
+          tabs.select(index);
+          return true;
+        }
+        ++index;
       }
-      ++index;
+      return false;
     }
-    return false;
-  }
 
-  "open tabopen edit".split(/\s/).forEach(
-    function (name) {
-      let command = commands.get(name);
-      if (!command)
-        return;
+    "open tabopen edit".split(/\s/).forEach(
+      function (name) {
+        let command = commands.get(name);
+        if (!command)
+          return;
+        U.around(
+          command,
+          "action",
+          function (next, args) {
+            let url = args[0].string;
+            if (!(url && jump(url)))
+              return next();
+          }
+        );
+      }
+    );
+
+    //buffer.followLink()を変更
+    //hint-a-hint時[f,F]に対象のタブが既に開いてあったらjump
+    let (ignore = false) {
+      let ignoreBlock = function (block) {
+        ignore = true;
+        let result = block();
+        ignore = false;
+        return result;
+      };
+
       U.around(
-        command,
-        "action",
+        buffer,
+        "followLink",
         function (next, args) {
-          let url = args[0].string;
-          if (!(url && jump(url)))
-            return next();
+          return ignoreBlock(function () {
+            let [elem,] = args;
+            let url = elem.href;
+            if (!(url && jump(url))){
+              liberator.echo("Now Loading... " + url);
+              return next();
+            }
+          });
+        }
+      );
+
+      document.addEventListener(
+        'click',
+        function (event) {
+          if (ignore)
+            return;
+          let e = event.target;
+          if (e && e.tagName.match(/^a$/i) && e.href && jump(e.href)) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
         },
         true
       );
     }
-  );
 
-  //buffer.followLink()を変更
-  //hint-a-hint時[f,F]に対象のタブが既に開いてあったらjump
-  U.around(
-    buffer,
-    "followLink",
-    function (next, args) {
-      let [elem,] = args;
-      let url = elem.href;
-      if (!(url && jump(url))){
-        liberator.echo("Now Loading...  " + url);
-        return next();
-      }
-    },
-    true
-  );
-})();
+  }
+);
+
