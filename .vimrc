@@ -228,6 +228,9 @@ inoremap hh <Esc>^
 inoremap <C-u> <C-g>u<C-u>
 inoremap <C-w> <C-g>u<C-w>
 inoremap <C-h> <C-g>u<C-h>
+"はてな記法的な何か
+inoremap <leader>* <h4></h4><Esc>4hi
+inoremap <leader>** <h5></h5><Esc>4hi
 "ESC連打で強調表示切る
 nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
 nnoremap <C-l> W
