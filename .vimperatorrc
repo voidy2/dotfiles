@@ -47,14 +47,14 @@ cnoremap <C-u> <Up>
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
 cnoremap <C-r> <C-u>history 
-imap <C-h> <BS>
-imap <C-m> <CR>
-imap <C-j> <Down>
-imap <C-n> <Down>
-imap <C-k> <Up>
-imap <C-p> <Up>
-imap <C-u> <Left>
-imap <C-l> <Right>
+inoremap <C-h> <BS>
+inoremap <C-m> <CR>
+inoremap <C-j> <Down>
+inoremap <C-n> <Down>
+inoremap <C-k> <Up>
+inoremap <C-p> <Up>
+inoremap <C-u> <Left>
+inoremap <C-l> <Right>
 " select next/previous tab
 noremap <Right> gt
 noremap <Left> gT
@@ -240,6 +240,27 @@ liberator.registerObserver("enter", function() {
   );
 });
 EOM
+
+"""INSERT(MENU)モードのときのマッピング
+js <<EOM
+// imap されていないキーで無視したいものは、inoremap <C-n> <nop> などとしておく
+
+window.addEventListener(
+  'keypress',
+  function (event) {
+    if (liberator.mode === modes.INSERT && modes.extended === modes.MENU) {
+      let map = mappings.get(modes.INSERT, events.toString(event));
+      if (map) {
+        event.preventDefault();
+        event.stopPropagation();
+        map.execute();
+      }
+    }
+  },
+  false
+);
+EOM
+
 """next linkのタブを新しく読み込むようにする
 let g:nextlink_followlink = "true"
 
