@@ -292,7 +292,10 @@ zstyle ':completion:*' auto-description 'specify: %d'
 #          にTAB文字を挿入する。 `false' ならそのような場所 で
 #          も補完を行なう。
 zstyle ':completion:*' insert-tab false
-
+# kill コマンドの命令に色を付ける
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([%0-9]#)*=0=01;31'
+# killコマンドで補完候補を表示
+zstyle ':completion:*:processes' command 'ps x -o pid,s,args'
 
 setopt hist_ignore_all_dups  # 重複するコマンド行は古い方を削除
 setopt hist_ignore_dups      # 直前と同じコマンドラインはヒストリに追加しない
