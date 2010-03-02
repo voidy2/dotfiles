@@ -49,6 +49,8 @@ cnoremap <C-u> <Up>
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
 cnoremap <C-r> <C-u>history 
+cnoremap <C-j> <silent> <C-v><C-a><C-v><C-c>:normal J<CR>:<C-v><C-v>
+cnoremap <C-k> <silent> <C-v><C-a><C-v><C-c>:normal K<CR>:<C-v><C-v>
 inoremap <C-h> <BS>
 inoremap <C-m> <CR>
 inoremap <C-j> <Down>
