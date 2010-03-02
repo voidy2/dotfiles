@@ -71,7 +71,7 @@ nnoremap <Leader>a :copy titleAndBitURL<CR>:twitter : <C-v><C-v><C-a><C-Right>
 nnoremap <Leader>@ :twitter!@<CR>
 nnoremap <Leader>f :twitter<CR>
 " tomblrのreblog用
-nnoremap <Leader>r :tombloo ReBlog\ -\ Tumblr<CR>
+nnoremap <Leader>r :tombloo ReBlog - Tumblr<CR>
 nnoremap <Leader>t :mb pinned-or-current-node\ |\ Tombloo::Reblog\ |\ clear-pin<CR>
 vnoremap <Leader>q :tombloo Quote<CR>
 " google検索
