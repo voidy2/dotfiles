@@ -170,6 +170,7 @@ let g:hintsio="iO"
 let g:tada_userId="voidy21"
 let g:ldrc_intelligence_bind = "true"
 let:g:ldrc_skip = "0.25"
+let g:jquery_filepath = "~/.vimperator/script/jquery-1.4.2.js"
 colorscheme voidy21-color
 
 ""タブ追加ボタン消去
