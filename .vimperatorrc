@@ -346,6 +346,67 @@ commands.addUserCommand(
   }
 );
 EOM
+
+" タブ上にある全ての画像を保存するコマンド
+" TODO: -cオプションでタブを閉じながら保存させたい
+let g:imageSaveDirectry = "~/Pictures/"
+
+javascript <<EOM
+commands.addUserCommand(
+    ['saveallimage'],
+    'save all image in tabs',
+    function(args) {
+        let mTabs = document.getElementById("content").mTabs;
+        let index = -1;
+        for each ( [,tab] in tabs.browsers ) {
+            ++index;
+            let bartabURL = mTabs[index].linkedBrowser.userTypedValue;
+            let url = bartabURL ? bartabURL : tab.currentURI.spec;
+
+            if( url.match(/\.(jpe?g|gif|png|bmp)$/i) ){
+                //URLの拡張子だけで判別すると404とかだったときに困るのでMIME-TYPEからも調べる
+                try{
+                    const ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
+                    let ch = ioService.newChannel(url, "UTF-8", null);
+                    let stream = ch.open();
+                    if ( ch.contentType.match(/^text/) ) continue;
+                }catch(e){liberator.echoerr(e)};
+
+                //ファイル名取得
+                let leafname = url.split(/\/+/g).pop();
+                let targetpath = liberator.globalVariables.imageSaveDirectry + leafname;
+                let file = io.File(targetpath);
+
+                if ( !file.exists() || args.bang ){
+                    //以下の1行でもほぼOKだけど、保存先がどうしても変更できない・・・
+                    //saveImageURL(url,targetpath,null,true,makeURI(url,getCharsetforSave(null)));
+
+                    //URLからダウンロードする
+                    const dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
+                    let persist = makeWebBrowserPersist();
+                    try{
+                        let to_file = services.create('file');
+                        to_file.initWithPath(targetpath);
+                        let to_uri = makeFileURI(to_file);
+                        let from_uri = makeURI(url,null,null);
+
+                        let download = dm.addDownload(0, from_uri, to_uri, leafname,
+                                                    null, null, null, null, persist);
+                        persist.progressListener = download;
+                        persist.saveURI(from_uri, null, null, null, null, to_file);
+                        liberator.echo("Save : " + targetpath);
+                    }catch(e){liberator.echoerr(e)}
+                }else{
+                    liberator.echoerr("E13: File exists (add ! to override) : " + targetpath);
+                }
+            }
+        }
+    },
+    {
+        bang: true,
+    }
+);
+EOM
 ""素因数分解
 ""誰特
 javascript <<EOM
