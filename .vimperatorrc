@@ -376,7 +376,7 @@ commands.addUserCommand(
             }catch(e){liberator.echoerr(e)};
             return true;
         };
-        function downloadImage(url,file) {
+        function downloadImage(url,file,leafname) {
             if ( !file.exists() || args.bang ){
                 //以下の1行でもほぼOKだけど、保存先がどうしても変更できない・・・
                 //saveImageURL(url,targetpath,null,true,makeURI(url,getCharsetforSave(null)));
@@ -415,7 +415,7 @@ commands.addUserCommand(
                 let leafname = url.split(/\/+/g).pop();
                 let targetpath = liberator.globalVariables.imageSaveDirectory + leafname;
                 let file = io.File(targetpath);
-                downloadImage(url,file);
+                downloadImage(url,file,leafname);
                 closeTab(index);
             }
         }
