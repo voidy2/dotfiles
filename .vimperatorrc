@@ -361,7 +361,7 @@ commands.addUserCommand(
         let index = -1;
         let closes = 0;
         function closeTab(i) {
-            if( args["-close"] || liberator.globalVariables.saveAndClose ) {
+            if( args["-close"] || eval(liberator.globalVariables.saveAndClose) ) {
                  let ts = getBrowser().tabContainer.childNodes;
                  getBrowser().removeTab(ts[i - closes]);
                  ++closes;
