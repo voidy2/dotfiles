@@ -349,7 +349,7 @@ EOM
 
 " タブ上にある全ての画像を保存するコマンド
 " -cオプションでタブを閉じながら保存
-let g:imageSaveDirectry = "~/Pictures/"
+let g:imageSaveDirectory = "~/Pictures/"
 let g:saveAndClose = "false"
 
 javascript <<EOM
@@ -413,7 +413,7 @@ commands.addUserCommand(
                 }
                 //ファイル名取得
                 let leafname = url.split(/\/+/g).pop();
-                let targetpath = liberator.globalVariables.imageSaveDirectry + leafname;
+                let targetpath = liberator.globalVariables.imageSaveDirectory + leafname;
                 let file = io.File(targetpath);
                 downloadImage(url,file);
                 closeTab(index);
