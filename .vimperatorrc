@@ -405,7 +405,7 @@ commands.addUserCommand(
             let lb = mTabs[index-closes].linkedBrowser;
             let bartabURL = lb.userTypedValue ? lb.userTypedValue : lb.mIconURL;
             let url = bartabURL ? bartabURL : tab.currentURI.spec;
-            if( url.match(/\.(jpe?g|gif|png|bmp)$/i) ){
+            if( url.match(/\.(jpe?g|gif|png|bmp)($|\?)/i) ){
                 //URLの拡張子だけで判別すると404とかだったときに困るのでMIME-TYPEからも調べる
                 if( isTextType(url) ) {
                     closeTab(index);
@@ -413,7 +413,7 @@ commands.addUserCommand(
                 }
                 //ファイル名取得
                 let leafname = url.split(/\/+/g).pop();
-                let targetpath = liberator.globalVariables.imageSaveDirectory + leafname;
+                let targetpath = liberator.globalVariables.imageSaveDirectory + leafname.split(/\?+/g)[0];
                 let file = io.File(targetpath);
                 downloadImage(url,file,leafname);
                 closeTab(index);
