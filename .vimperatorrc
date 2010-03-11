@@ -98,6 +98,8 @@ nnoremap <S-Down> :nicovolume! -3<CR>
 " スクロールバーとタブ番号を非表示
 set go=
 
+" Firefox起動時には前回のタブを復元して起動する(ダイアログなし)
+set! browser.startup.page=3
 " ページのアクセスキーを無効化
 set! ui.key.generalAccessKey=0
 " 最初の5回だけ描画してダウンロード完了してからページ全体を描画する
