@@ -406,7 +406,6 @@ commands.addUserCommand(
             let bartabURL = lb.userTypedValue ? lb.userTypedValue : lb.mIconURL;
             bartabURL = !bartabURL || bartabURL.match(/favicon\./) ? null : bartabURL;
             let url = bartabURL ? bartabURL : tab.currentURI.spec;
-            alert(url);
             if( url.match(/\.(jpe?g|gif|png|bmp)($|\?)/i) ){
                 //URLの拡張子だけで判別すると404とかだったときに困るのでMIME-TYPEからも調べる
                 if( isTextType(url) ) {
