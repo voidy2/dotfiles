@@ -1,4 +1,4 @@
-echo "Now Loading..."
+echo 'Now Loading...'
 
 "自動フォーカス回避
 set focuscontent
@@ -8,8 +8,8 @@ hi! Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:16px;
 
 " qmark g[o|n] + ○ でアクセス
 javascript <<EOM
-[["c","http://www.google.com/calendar/render"],
- ["g","http://mail.google.com/"]
+[['c','http://www.google.com/calendar/render'],
+ ['g','http://mail.google.com/']
 ].forEach(function (b) {
   function isQmarked() {
     for([qmark,] in quickmarks._qmarks) {
@@ -18,13 +18,13 @@ javascript <<EOM
     return false;
   }
   if ( !isQmarked() ) {
-    liberator.execute("qmark #".replace("#",b.join(' ')));
+    liberator.execute('qmark #'.replace('#',b.join(' ')));
   }
 });
 EOM
-"" -------------------
-"" キーマッピング
-"" -------------------
+" -------------------
+" キーマッピング
+" -------------------
 "{{{
 nnoremap j 8j
 nnoremap k 8k
@@ -92,7 +92,7 @@ vnoremap <Leader>g y<normal>:tabopen google <C-v><C-v><CR>
 nnoremap <Leader>g :gr<CR>
 " Unhidden and hidden the menubar and the toolbar
 noremap <A-Up> :set guioptions+=mT<CR>
-noremap <A-Down> :set guioptions-=mT<CR>
+noremap <A-Down> :set guioptions=<CR>
 
 noremap <A-T> :restart<CR>
 
@@ -155,7 +155,7 @@ set! signed.applets.codebase_principal_support=true
 " set showstatuslinks=2
 
 " Options
-"" 検索キーワードのハイライト
+" 検索キーワードのハイライト
 set hlsearch
 set noincsearch
 set runtimepath=~/.vimperator
@@ -168,18 +168,18 @@ set suggestengines=google
 set newtab=all
 
 javascript <<EOM
-[["Twitter","http://twitter.com/%s","tw"],
- ["Twitter Search","http://search.twitter.com/search?q=%s","ts"],
- ["ふぁぼったー","http://favotter.matope.com/user.php?user=%s","fav"],
- ["Ustream","http://www.ustream.tv/channel/%s","ust"],
- ["ニコニコ動画","http://www.nicovideo.jp/watch/%s","nico"],
- ["Tumblr Dashboard","http://www.tumblr.com/dashboard/search/%s","tumblr"],
- ["FriendFeed Twitter(voidy21)","http://friendfeed.com/search?q=from%3Avoidy21+service%3Atwitter+%s","fftwitter"],
- ["FriendFeed Tumblr(voidy21)","http://friendfeed.com/search?q=from%3Avoidy21+service%3Atumblr+%s","fftumblr"],
- ["ニコニコ動画タグ検索","http://www.nicovideo.jp/search/%s","nicosearch"],
- ["2ch内検索(Google)","http://www.google.com/search?hl=ja&q=site%3A2ch.net+%s","2chsearchN"],
- ["Tumblrタグ検索","http://www.tumblr.com/tagged/%s","tumblrtag"],
- ["GoogleReader検索","http://www.google.co.jp/reader/view/#search/%s/","googlereader"]
+[['Twitter','http://twitter.com/%s','tw'],
+ ['Twitter Search','http://search.twitter.com/search?q=%s','ts'],
+ ['ふぁぼったー','http://favotter.matope.com/user.php?user=%s','fav'],
+ ['Ustream','http://www.ustream.tv/channel/%s','ust'],
+ ['ニコニコ動画','http://www.nicovideo.jp/watch/%s','nico'],
+ ['Tumblr Dashboard','http://www.tumblr.com/dashboard/search/%s','tumblr'],
+ ['FriendFeed Twitter(voidy21)','http://friendfeed.com/search?q=from%3Avoidy21+service%3Atwitter+%s','fftwitter'],
+ ['FriendFeed Tumblr(voidy21)','http://friendfeed.com/search?q=from%3Avoidy21+service%3Atumblr+%s','fftumblr'],
+ ['ニコニコ動画タグ検索','http://www.nicovideo.jp/search/%s','nicosearch'],
+ ['2ch内検索(Google)','http://www.google.com/search?hl=ja&q=site%3A2ch.net+%s','2chsearchN'],
+ ['Tumblrタグ検索','http://www.tumblr.com/tagged/%s','tumblrtag'],
+ ['GoogleReader検索','http://www.google.co.jp/reader/view/#search/%s/','googlereader']
 ].forEach(function (b) {
   if (!bookmarks.isBookmarked(b[1])) {
     bookmarks.add(false, b[0], b[1], b[2], ['vimp'], false);
@@ -189,46 +189,46 @@ EOM
 
 set defsearch=google
 
-let g:hintsio="iO"
-let g:tada_userId="voidy21"
-let g:ldrc_intelligence_bind = "true"
-let:g:ldrc_skip = "0.25"
-let g:jquery_filepath = "~/.vimperator/script/jquery-1.4.2.js"
+let g:hintsio='iO'
+let g:tada_userId='voidy21'
+let g:ldrc_intelligence_bind = 'true'
+let:g:ldrc_skip = '0.25'
+let g:jquery_filepath = '~/.vimperator/script/jquery-1.4.2.js'
 colorscheme voidy21-color
 
-""タブ追加ボタン消去
-""http://fifnel.com/2009/03/15/2278/
+" タブ追加ボタン消去
+" http://fifnel.com/2009/03/15/2278/
 style -name simple_tabs_container chrome://* <<EOM
 .tabs-newtab-button {display: none !important;}
 .tabs-container> stack {display: none;}
 EOM
 
-""ぶくまコメを表示
+" ぶくまコメを表示
 noremap v :viewSBMComments<CR>
 
 autocmd LocationChange .* :fmapc
-""Hatena Bookmark
-""autocmd LocationChange ^http://b\.hatena\.ne\.jp/voidy21 :fmap j k o
+" Hatena Bookmark
+" autocmd LocationChange ^http://b\.hatena\.ne\.jp/voidy21 :fmap j k o
 
 
-"" Gmail/LDR/Fastladder/OpenFL上では新規タブをバックグラウンドで開く
+" Gmail/LDR/Fastladder/OpenFL上では新規タブをバックグラウンドで開く
 autocmd LocationChange (?!https?://((mail|www)\.google\.(com|co\.jp)\/(mail|a|reader)\/|(reader\.livedoor\.com|fastladder\.com|0\.0\.0\.0\:3000)/reader/)|b\.hatena\.ne\.jp/) :set! browser.tabs.loadDivertedInBackground=false
 autocmd LocationChange https?://((mail|www)\.google\.(com|co\.jp)\/(mail|a|reader)\/|(reader\.livedoor\.com|fastladder\.com|0\.0\.0\.0\:3000)/reader/|b\.hatena\.ne\.jp) :set! browser.tabs.loadDivertedInBackground=true
 
-""LDR
+" LDR
 autocmd LocationChange 'reader\.livedoor\.com/reader' :fmap j k s a p o v c <Space> <S-Space> z b < >
 
-"" Google Reader
+" Google Reader
 autocmd LocationChange 'www\.google\.co\.jp/reader' :fmap! -vkey j k n p m s t v A r S N P X O gh ga gs gt gu u / ?
 
-"" Gmail
+" Gmail
 autocmd LocationChange mail\\.google\\.com/mail fmap! c / j k n p o u e x s r a # [ ] ? gi gs gt gd ga gc
 autocmd LocationChange mail\\.google\\.com/mail/.*/[0-9a-f]+$ fmap! c / j,n k,p n,j p,k o u e x s r a # [ ] ? gi gs gt gd ga gc
 
-""Google Calendar
+" Google Calendar
 autocmd LocationChange 'www\.google\.com/calendar/' :fmap! -vkey -event keydown t a d w m x c e <Del> / + q s ?
 
-let g:maine_coon_default = "am"
+let g:maine_coon_default = 'am'
 
 " ステータスバーにfeedボタンを表示
 " http://d.hatena.ne.jp/teramako/20071205/p1
@@ -244,15 +244,15 @@ js <<EOM
 EOM
 
 
-"""選択されている単語をmulti_requester.jsを使用して、英辞郎 on the Web で検索するためのキーマップです
-"""@http://vimperator.g.hatena.ne.jp/snaka72/20090506/1241608109
+" 選択されている単語をmulti_requester.jsを使用して、英辞郎 on the Web で検索するためのキーマップです
+" @http://vimperator.g.hatena.ne.jp/snaka72/20090506/1241608109
 js <<EOM
-liberator.registerObserver("enter", function() {
+liberator.registerObserver('enter', function() {
   // for auto_word_select.js
   mappings.addUserMap(
     [modes.AUTO_WORD_SELECT],
-    ["s"],
-    "Translate selected word by multi_requester.js.",
+    ['s'],
+    'Translate selected word by multi_requester.js.',
     function() {
       // FIXME:
       // A present mode is preserved in the stack beforehand by the push() method
@@ -263,13 +263,13 @@ liberator.registerObserver("enter", function() {
       var selText = content.getSelection().toString();
       var pattern = /[a-zA-Z]+/;
       selText = pattern.test(selText) ? pattern.exec(selText) : selText;
-      events.feedkeys(":mr alc " + selText + "<CR>", true, true);
+      events.feedkeys(':mr alc ' + selText + '<CR>', true, true);
     }
   );
 });
 EOM
 
-"""INSERT(MENU)モードのときのマッピング
+" INSERT(MENU)モードのときのマッピング
 js <<EOM
 // imap されていないキーで無視したいものは、inoremap <C-n> <nop> などとしておく
 
@@ -289,14 +289,14 @@ window.addEventListener(
 );
 EOM
 
-"""next linkのタブを新しく読み込むようにする
-let g:nextlink_followlink = "true"
+" next linkのタブを新しく読み込むようにする
+let g:nextlink_followlink = 'true'
 
-"" copy.js
+" copy.js
 js <<EOM
 liberator.globalVariables.copy_templates = [
   { label: 'titleAndBitURL', value: '%TITLE% %bitURL%', custom: function() { 
-        return '"' + buffer.title + '" ' + util.httpGet('http://bit.ly/api?url=' + encodeURIComponent(buffer.URL)).responseText;
+        return '"' +  buffer.title + '" : ' + util.httpGet('http://bit.ly/api?url=' + encodeURIComponent(buffer.URL)).responseText;
   } },
   { label: 'bitURL', value: '%bitURL%', custom: function() { 
         return util.httpGet('http://bit.ly/api?url=' + encodeURIComponent(buffer.URL)).responseText;
@@ -312,8 +312,8 @@ liberator.globalVariables.copy_templates = [
   { label: 'htmlblockquote', value: '<blockquote cite="%URL%" title="%TITLE%">%HTMLSEL%</blockquote>' }
 ];
 EOM
-"" refcontrol.js
-let g:refcontrol_enabled = "true"
+" refcontrol.js
+let g:refcontrol_enabled = 'true'
 js <<EOM
 liberator.globalVariables.refcontrol = {
   '@DEFAULT'     : '@FORGE',        // @NORMAL, @FORGE, '', url
@@ -330,22 +330,22 @@ EOM
 " flash blockにヒントモード追加 (;z)
 " http://d.hatena.ne.jp/mountain_dew/20090818/1250603912
 js <<EOM
-hints.addMode("z", "Enable a Flash object",
+hints.addMode('z', 'Enable a Flash object',
     function(elem){
         elem.focus();
         var e = content.document.createEvent('MouseEvents');
         e.initMouseEvent('click', true, true, window, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
         elem.dispatchEvent( e );
     },
-    function() "//xhtml:div[@title]"
+    function() '//xhtml:div[@title]'
 );
 EOM
-""statstat.jsでtwitter.jsの文字数表示
-""http://vimperator.g.hatena.ne.jp/nokturnalmortum/20091201/1259594430
-let g:statstat_expression = "let ([,,,as]=commands.parseCommand(commandline.command)) as.length"
-let g:statstat_autorun = "true"
-let g:statstat_interval = "400"
-""reblogをすべてのtumblrタブで
+" statstat.jsでtwitter.jsの文字数表示
+" http://vimperator.g.hatena.ne.jp/nokturnalmortum/20091201/1259594430
+let g:statstat_expression = 'let ([,,,as]=commands.parseCommand(commandline.command)) as.length'
+let g:statstat_autorun = 'true'
+let g:statstat_interval = '400'
+" reblogをすべてのtumblrタブで
 javascript <<EOM
 commands.addUserCommand(
   ['reblogall'],
@@ -372,19 +372,19 @@ EOM
 
 " タブ上にある全ての画像を保存するコマンド
 " -cオプションでタブを閉じながら保存
-let g:imageSaveDirectory = "~/Pictures/"
-let g:saveAndClose = "false"
+let g:imageSaveDirectory = '~/Pictures/'
+let g:saveAndClose = 'false'
 
 javascript <<EOM
 commands.addUserCommand(
     ['saveallimage'],
     'save all image in tabs',
     function(args) {
-        let mTabs = document.getElementById("content").mTabs;
+        let mTabs = document.getElementById('content').mTabs;
         let index = -1;
         let closes = 0;
         function closeTab(i) {
-            if( args["-close"] || eval(liberator.globalVariables.saveAndClose) ) {
+            if( args['-close'] || eval(liberator.globalVariables.saveAndClose) ) {
                  let ts = getBrowser().tabContainer.childNodes;
                  getBrowser().removeTab(ts[i - closes]);
                  ++closes;
@@ -392,8 +392,8 @@ commands.addUserCommand(
         };
         function isTextType(url){
             try{
-                const ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
-                let ch = ioService.newChannel(url, "UTF-8", null);
+                const ioService = Cc['@mozilla.org/network/io-service;1'].getService(Ci.nsIIOService);
+                let ch = ioService.newChannel(url, 'UTF-8', null);
                 let stream = ch.open();
                 return ch.contentType.match(/^text/);
             }catch(e){liberator.echoerr(e)};
@@ -405,7 +405,7 @@ commands.addUserCommand(
                 //saveImageURL(url,targetpath,null,true,makeURI(url,getCharsetforSave(null)));
 
                 //URLからダウンロードする
-                const dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
+                const dm = Cc['@mozilla.org/download-manager;1'].getService(Ci.nsIDownloadManager);
                 let persist = makeWebBrowserPersist();
                 try{
                     let to_file = services.create('file');
@@ -417,10 +417,10 @@ commands.addUserCommand(
                                                 null, null, null, null, persist);
                     persist.progressListener = download;
                     persist.saveURI(from_uri, null, null, null, null, to_file);
-                    liberator.echo("Save : " + file.path);
+                    liberator.echo('Save : ' + file.path);
                 }catch(e){liberator.echoerr(e)}
             }else{
-                liberator.echoerr("E13: File exists (add ! to override) : " + file.path);
+                liberator.echoerr('E13: File exists (add ! to override) : ' + file.path);
             }
         };
         for each ( [,tab] in tabs.browsers ) {
@@ -447,33 +447,33 @@ commands.addUserCommand(
     {
         bang: true,
         options: [
-           [["-close", "-c"], commands.OPTION_NOARG],
+           [['-close', '-c'], commands.OPTION_NOARG],
         ]
     }
 );
 EOM
-""素因数分解
-""誰特
+" 素因数分解
+" 誰特
 javascript <<EOM
 commands.addUserCommand(
     ['fac[tor]'],
     'factorization in prime numbers',
     function(args) {
-        let p=1,q,n=args[0],s="";
+        let p=1,q,n=args[0],s='';
         while(++p && n-1){
             for(q=0;!(n%p);++q,n/=p);
-            s+=q?(p+"^"+q+((n-1)?"*":"\n")):"";
+            s+=q?(p+'^'+q+((n-1)?'*':'\n')):'';
         }
         liberator.echo(s);
     }
 );
 EOM
 
-"debugger on
-js services.get("debugger").on()
+" debugger on
+js services.get('debugger').on()
 " コマンドラインでlibly.$U.getNodesFromXPathを簡単に呼び出せるようにする
 " http://vimperator.g.hatena.ne.jp/snaka72/20100313/1268470861
-js liberator.modules.__defineGetter__("$LXs", function() liberator.plugins.libly.$U.getNodesFromXPath) 
+js liberator.modules.__defineGetter__('$LXs', function() liberator.plugins.libly.$U.getNodesFromXPath) 
 
 " マウスオーバーするヒントモード
 " http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100131/1264923630
@@ -540,5 +540,5 @@ let (hintName = 'foo-remove-node', shareArgs) {
 }
 EOM
 
-echo ".vimperatorrc sourced" 
+echo '.vimperatorrc sourced'
 
