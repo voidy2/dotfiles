@@ -5,9 +5,23 @@ set focuscontent
 set showtabline=2
 
 hi! Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:16px; color:white; background-color:#6666cc; border-color:ButtonShadow; border-width:0px; border-style:solid; padding:0px 1px 0px 1px; position:absolute;
-" qmark go + ○ でアクセス
-qmark c http://www.google.com/calendar/render
-qmark g http://mail.google.com/
+
+" qmark g[o|n] + ○ でアクセス
+javascript <<EOM
+[["c","http://www.google.com/calendar/render"],
+ ["g","http://mail.google.com/"]
+].forEach(function (b) {
+  function isQmarked() {
+    for([qmark,] in quickmarks._qmarks) {
+      if( b[0] == qmark ) return true;
+    }
+    return false;
+  }
+  if ( !isQmarked() ) {
+    liberator.execute("qmark #".replace("#",b.join(' ')));
+  }
+});
+EOM
 "" -------------------
 "" キーマッピング
 "" -------------------
