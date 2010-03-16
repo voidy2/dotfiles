@@ -1,6 +1,9 @@
 echo 'Now Loading...'
 
-"自動フォーカス回避
+command! -nargs=+ lazy autocmd VimperatorEnter .* <args>
+" char-hints-mod2.jsと相性が悪いのでもう一度読み込ませる
+lazy :source .vimperator/plugin/appendAnchor.js
+" 自動フォーカス回避
 set focuscontent
 set showtabline=2
 
@@ -116,10 +119,10 @@ set! browser.startup.page=3
 " ページのアクセスキーを無効化
 set! ui.key.generalAccessKey=0
 " 最初の5回だけ描画してダウンロード完了してからページ全体を描画する
-" http://d.hatena.ne.jp/futashika/20091014/1255528382
+" @http://d.hatena.ne.jp/futashika/20091014/1255528382
 set! content.notfy.backoffcount=5
 " Linuxでのマウス中クリックで勝手にどこかに飛ばされるのをなんとかする
-" http://msfree2.blog90.fc2.com/blog-entry-157.html
+" @http://msfree2.blog90.fc2.com/blog-entry-157.html
 set! middlemouse.contentLoadURL=false
 " Linuxでのカラーマネジメントがおかしいのをなんとかする
 set! gfx.color_management.mode=0
@@ -192,12 +195,21 @@ set defsearch=google
 let g:hintsio='iO'
 let g:tada_userId='voidy21'
 let g:ldrc_intelligence_bind = 'true'
-let:g:ldrc_skip = '0.25'
+let g:ldrc_skip = '0.25'
+let g:auto_append_anchor='true'
 let g:jquery_filepath = '~/.vimperator/script/jquery-1.4.2.js'
+" statstat.jsでtwitter.jsの文字数表示
+" @http://vimperator.g.hatena.ne.jp/nokturnalmortum/20091201/1259594430
+let g:statstat_expression = 'let ([,,,as]=commands.parseCommand(commandline.command)) as.length'
+let g:statstat_autorun = 'true'
+let g:statstat_interval = '400'
+" next linkのタブを新しく読み込むようにする
+let g:nextlink_followlink = 'true'
+
 colorscheme voidy21-color
 
 " タブ追加ボタン消去
-" http://fifnel.com/2009/03/15/2278/
+" @http://fifnel.com/2009/03/15/2278/
 style -name simple_tabs_container chrome://* <<EOM
 .tabs-newtab-button {display: none !important;}
 .tabs-container> stack {display: none;}
@@ -231,7 +243,7 @@ autocmd LocationChange 'www\.google\.com/calendar/' :fmap! -vkey -event keydown 
 let g:maine_coon_default = 'am'
 
 " ステータスバーにfeedボタンを表示
-" http://d.hatena.ne.jp/teramako/20071205/p1
+" @http://d.hatena.ne.jp/teramako/20071205/p1
 js <<EOM
 (function(){
  var feedPanel = document.createElement('statusbarpanel');
@@ -270,6 +282,7 @@ liberator.registerObserver('enter', function() {
 EOM
 
 " INSERT(MENU)モードのときのマッピング
+" @http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100223/1266855618
 js <<EOM
 // imap されていないキーで無視したいものは、inoremap <C-n> <nop> などとしておく
 
@@ -289,8 +302,6 @@ window.addEventListener(
 );
 EOM
 
-" next linkのタブを新しく読み込むようにする
-let g:nextlink_followlink = 'true'
 
 " copy.js
 js <<EOM
@@ -327,8 +338,9 @@ liberator.globalVariables.refcontrol = {
   'livedoor.com' : '@NORMAL',
 };
 EOM
+
 " flash blockにヒントモード追加 (;z)
-" http://d.hatena.ne.jp/mountain_dew/20090818/1250603912
+" @http://d.hatena.ne.jp/mountain_dew/20090818/1250603912
 js <<EOM
 hints.addMode('z', 'Enable a Flash object',
     function(elem){
@@ -340,11 +352,7 @@ hints.addMode('z', 'Enable a Flash object',
     function() '//xhtml:div[@title]'
 );
 EOM
-" statstat.jsでtwitter.jsの文字数表示
-" http://vimperator.g.hatena.ne.jp/nokturnalmortum/20091201/1259594430
-let g:statstat_expression = 'let ([,,,as]=commands.parseCommand(commandline.command)) as.length'
-let g:statstat_autorun = 'true'
-let g:statstat_interval = '400'
+
 " reblogをすべてのtumblrタブで
 javascript <<EOM
 commands.addUserCommand(
@@ -472,11 +480,11 @@ EOM
 " debugger on
 js services.get('debugger').on()
 " コマンドラインでlibly.$U.getNodesFromXPathを簡単に呼び出せるようにする
-" http://vimperator.g.hatena.ne.jp/snaka72/20100313/1268470861
+" @http://vimperator.g.hatena.ne.jp/snaka72/20100313/1268470861
 js liberator.modules.__defineGetter__('$LXs', function() liberator.plugins.libly.$U.getNodesFromXPath) 
 
 " マウスオーバーするヒントモード
-" http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100131/1264923630
+" @http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100131/1264923630
 javascript <<EOM
 hints.addMode(
   'm',
@@ -497,8 +505,8 @@ hints.addMode(
 EOM
 
 
-" http://gist.github.com/297986
 " <C-o>でこれ以上戻れなかったらタブを閉じるスクリプト
+" @http://gist.github.com/297986
 javascript <<EOM
 let (
   back = mappings.getDefault(modes.NORMAL, '<C-o>').action,
@@ -512,9 +520,9 @@ mappings.addUserMap(
 )
 EOM
 
-" http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100218/1266506228
+" 指定の xpath でヒントを出して、選んだ物を削除する
+" @http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100218/1266506228
 javascript <<EOM
-// 指定の xpath でヒントを出して、選んだ物を削除する
 let (hintName = 'foo-remove-node', shareArgs) {
   hints.addMode(
     hintName,
