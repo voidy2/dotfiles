@@ -83,3 +83,7 @@ statusbarpanel > * { margin: 0 !important; padding: 0 !important; }
 }
 EOM
 
+style -name sbmcommentsviewer chrome://* <<EOM
+   .liberator-sbmcommentsviewer > dd:nth-child(odd) { background: #222; }
+   .liberator-sbmcommentsviewer-timestamp { color: #666; }
+EOM
