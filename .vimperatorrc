@@ -283,25 +283,34 @@ EOM
 
 " INSERT(MENU)モードのときのマッピング
 " @http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100223/1266855618
+" ヒントモードでのショートカットーキー誤爆を阻止する
+" @http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100410/1270905036
 js <<EOM
 // imap されていないキーで無視したいものは、inoremap <C-n> <nop> などとしておく
-
 window.addEventListener(
   'keypress',
   function (event) {
+    function killEvent ()
+      (event.preventDefault(), event.stopPropagation());
+
+    if (liberator.mode === modes.COMMAND_LINE && modes.extended === modes.HINTS) {
+      let key = events.toString(event);
+      if (/^<[CA]/(key))
+        killEvent();
+    }
+
     if (liberator.mode === modes.INSERT && modes.extended === modes.MENU) {
       let map = mappings.get(modes.INSERT, events.toString(event));
       if (map) {
-        event.preventDefault();
-        event.stopPropagation();
+        killEvent();
         map.execute();
       }
     }
   },
   false
 );
-EOM
 
+EOM
 
 " copy.js
 js <<EOM
