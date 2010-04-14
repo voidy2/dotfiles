@@ -38,6 +38,10 @@ hi! GradientRight        background: #333333;
 
 hi! Normal -append font-size:12pt
 
+
+hi! CompResult -a -moz-binding: url(chrome://liberator/content/bindings.xml#compitem-td);
+hi! CompDesc -a -moz-binding: url(chrome://liberator/content/bindings.xml#compitem-td);
+
 " style about:blank html { background-color: black; }
 "style -name tab chrome://* <<EOM
 "#content { background-color: #ddd; } /* tabbar */
