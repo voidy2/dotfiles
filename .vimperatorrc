@@ -557,5 +557,9 @@ let (hintName = 'foo-remove-node', shareArgs) {
 }
 EOM
 
+" calコマンド
+" @http://vimperator.g.hatena.ne.jp/teramako/20100416/1271432039
+command cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
+
 echo '.vimperatorrc sourced'
 
