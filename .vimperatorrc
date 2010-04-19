@@ -2,7 +2,7 @@ echo 'Now Loading...'
 
 command! -nargs=+ lazy autocmd VimperatorEnter .* <args>
 " char-hints-mod2.jsと相性が悪いのでもう一度読み込ませる
-lazy :source .vimperator/plugin/appendAnchor.js
+lazy :source ~/.vimperator/plugin/appendAnchor.js
 " 自動フォーカス回避
 set focuscontent
 set showtabline=2
