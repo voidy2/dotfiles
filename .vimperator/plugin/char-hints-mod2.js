@@ -71,6 +71,24 @@ let g:hintlabeling:
 //}}}
 
 (function () {
+    (function(){
+        //override _showHints
+        const key = "Hints.prototype._showHints";
+        let conf = userContext[key],original;
+        if(conf) original = conf;
+        else original = userContext[key] = Hints.prototype._showHints;
+
+        const target = "String(hintnum).indexOf(String(activeHint)) == 0";
+
+        let source = original.toSource();
+        if(source.indexOf(target)>=0){
+            source = source.replace(target,
+                "num2chars(hintnum).indexOf(num2chars(activeHint)) == 0");
+            Hints.prototype._showHints = eval("(function() "+source+")()");
+        }else{
+            liberator.echoerr(new Error("_showHints override failed!"));
+        }
+    })();
 
     const DEFAULT_HINTCHARS = "HJKLASDFGYUIOPQWERTNMZXCVB";
     const hintContext = modules.hints;
