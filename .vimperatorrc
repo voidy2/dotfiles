@@ -316,13 +316,13 @@ EOM
 js <<EOM
 liberator.globalVariables.copy_templates = [
   { label: 'titleAndBitURL', value: '%TITLE% %bitURL%', custom: function() { 
-        return '"' +  buffer.title + '" - ' + plugins.bitly.get(buffer.URL);
+        return '"' +  buffer.title + '" - ' + plugins.bitly.get();
   } },
   { label: 'bitURL', value: '%bitURL%', custom: function() { 
-        return plugins.bitly.get(buffer.URL);
+        return plugins.bitly.get();
   } },
   { label: 'bitInfoURL', value: '%bitURL%', custom: function() { 
-        return plugins.bitly.get(buffer.URL)+'+';
+        return plugins.bitly.get()+'+';
   } },
   { label: 'titleAndURL',    value: '%TITLE% %URL%' },
   { label: 'title',          value: '%TITLE%' },
