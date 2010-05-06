@@ -1,5 +1,7 @@
 [user]
 	name = voidy21
-	email = y2.void@gmail.com
+	email = y2.void+github@gmail.com
 [color]
 	ui = auto
+[core]
+	editor = vim
