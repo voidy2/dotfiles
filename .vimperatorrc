@@ -48,7 +48,7 @@ inoremap <C-c> <C-v><C-c>
 inoremap <C-v> <C-v><C-v>
 cnoremap <C-a> <C-v><C-a>
 cnoremap <C-z> <C-v><C-z>
-cnoremap <C-x> <C-v><C-x>
+"cnoremap <C-x> <C-v><C-x>
 cnoremap <C-c> <C-v><C-c>
 cnoremap <C-v> <C-v><C-v>
 nnoremap <C-H> <BS>
@@ -564,6 +564,20 @@ command cal :js liberator.echo(<datepicker type="grid" xmlns={XUL}/>)
 " 背景画像を開くコマンド (backgroundimage)
 " @http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100426/1272270280
 command! backgroundimage :js let (doc = content.document) let (m = doc.defaultView.getComputedStyle(doc.body, '').backgroundImage.match(/url\s*\(\s*['"](.+)['"]\s*\)/)) m ? liberator.open(m[1], liberator.NEW_TAB) : liberator.echoerr('background image not found')
+
+" コマンドラインで bang をトグル
+" @http://d.hatena.ne.jp/eagletmt/20100506/1273141081
+javascript <<EOM
+mappings.addUserMap(
+  [modes.COMMAND_LINE],
+  ['<C-x>'],
+  'toggle bang',
+  function() {
+    let [,cmd,bang,args] = commands.parseCommand(commandline.command);
+    bang = bang ? '' : '!';
+    commandline.command = cmd + bang + ' ' + args;
+  });
+EOM
 
 echo '.vimperatorrc sourced'
 
