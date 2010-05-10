@@ -191,40 +191,14 @@ let g:hintlabeling:
     } //}}}
     function processHintInput(hintInput, hints) //{{{
     {
-        if (timer) {
-            clearTimeout(timer);
-            timer = null;
-        }
         let start = getStartCount(hintchars.length, hints.length);
         let num = chars2num(hintInput)-start;
         if(num < 0) return;
-
-        let numstr = String(num);
-        for(let i=0,l=numstr.length;i<l;++i) {
-            let num = numstr[i];
-            // events.toString(e) return e.liberatorString
-            // if e.liberatorString.
-            // so alt handled as press number event by vimperator.
-            let alt = new Object;
-            alt.liberatorString = num;
-            charhints.original.onEvent.apply(hintContext,[alt]);
-        }
-        clearOriginalTimeout();
+        hintContext._hintNumber = Math.floor(num/10);
+        charhints.original.onEvent.apply(hintContext,[{
+            liberatorString: String(num%10)
+        }]);
         statusline.updateInputBuffer(hintInput);
-
-        let validHints = hints.filter(function(hint) isValidHint(hintInput, hint));
-        if(validHints.length == 1) {
-            charhints.original.processHints.apply(hintContext,[true]);
-            return true;
-        }
-
-        let timeout = options["hinttimeout"];
-        if (timeout > 0) {
-            timer = setTimeout(function () {
-                charhints.original.processHints.apply(hintContext,[true]);
-            }, timeout);
-        }
-
     } //}}}
 
     var hintInput = "";
