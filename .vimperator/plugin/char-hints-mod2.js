@@ -90,6 +90,12 @@ let g:hintlabeling:
         }
     })();
 
+    (function(){
+        const source = Hints.prototype._checkUnique.toSource();
+        if(source.indexOf("10")<0) return;
+        Hints.prototype._checkUnique = eval("(function() "+source.replace("10",<>hintchars.length</>)+")()");
+    })();
+
     const DEFAULT_HINTCHARS = "HJKLASDFGYUIOPQWERTNMZXCVB";
     const hintContext = modules.hints;
 
