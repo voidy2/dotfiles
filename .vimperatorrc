@@ -579,5 +579,18 @@ mappings.addUserMap(
   });
 EOM
 
+" コマンドライン上でブックマークキーワードを展開
+" @http://vimperator.g.hatena.ne.jp/nokturnalmortum/20100515/1273924701
+javascript <<EOM
+mappings.addUserMap(
+  [modes.COMMAND_LINE],
+  ['<C-o>'],
+  'Expand bookmark keyword.',
+  function ()
+    let ([, cmd, bang, args] = commands.parseCommand(commandline.command))
+      (commandline.command = commandline.command.replace(args, util.stringToURLArray(args).join(', ')))
+);
+EOM
+
 echo '.vimperatorrc sourced'
 
