@@ -5,9 +5,9 @@ var PLUGIN_INFO =
   <description>Open Google Reader starred items</description>
   <description lang="ja">Google Reader でスターを付けたページを開く</description>
   <author mail="y2.void@gmail.com" homepage="http://d.hatena.ne.jp/voidy21/">voidy21</author>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
   <minVersion>2.2pre</minVersion>
-  <maxVersion>2.2pre</maxVersion>
+  <maxVersion>2.4pre</maxVersion>
   <updateURL>http://github.com/voidy21/dotfiles/raw/master/.vimperator/plugin/greader.js</updateURL>
   <require type="plugin">_libly.js</require>
   <detail><![CDATA[
@@ -123,6 +123,8 @@ var PLUGIN_INFO =
       ただし、最新のスターからg:greaderViewItemsCountで指定した数(デフォルトでは20)までしか辿らないので注意。
 
     == ChangeLog ==
+      - 0.3.0
+      -- まとめて開く際はBarTabで蓋をするようにした
       - 0.2.0
       -- ラベル指定で記事を読めるようにした
 
@@ -158,10 +160,12 @@ let self = liberator.plugins.greader = (function() {
       if (args.string == "") {
         let star;
         let max = (args.count >= 1) ? args.count : openItemsCount();
+        let index = tabs.index(tabs.getTab());
         for(let i = 0; i < max; ++i) {
           if (!(star = stars.shift()))
             break;
           liberator.open(star.link, openBehavior());
+          gBrowser.BarTabHandler.unloadTab(tabs.getTab(index+i+1));
         }
         return;
       }
