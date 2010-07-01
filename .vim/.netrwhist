@@ -1,11 +1,3 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =9
-let g:netrw_dirhist_1='/home/voidy21/.termtter'
-let g:netrw_dirhist_2='/home/voidy21/prog/yoshinoya'
-let g:netrw_dirhist_3='/home/voidy21/prog/yoshinoya/bipwspect_prj'
-let g:netrw_dirhist_4='/home/voidy21/dotfiles/.vimperator/plugin'
-let g:netrw_dirhist_5='/home/voidy21/var/vimperator-labs'
-let g:netrw_dirhist_6='/home/voidy21/var/vimperator-labs/common'
-let g:netrw_dirhist_7='/home/voidy21/var/vimperator-labs/common/content'
-let g:netrw_dirhist_8='/home/voidy21/dotfiles/.vimperator/colors'
-let g:netrw_dirhist_9='/home/voidy21/myapp/gae/google_appengine/demos/ktou/contents/template'
+let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_1='/home/voidy21/myapp/gae/google_appengine/demos/ordinary_bbs/src/view'

@@ -1,7 +1,7 @@
 "=============================================================================
 " FILE: cache.vim
 " AUTHOR: Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 03 Jun 2010
+" Last Modified: 05 Mar 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -93,11 +93,10 @@ function! neocomplcache#cache#load_from_cache(cache_dir, filename)"{{{
     endtry
 
     if l:max_lines > 3000
-        call neocomplcache#print_caching('Caching done.')
-
         if g:NeoComplCache_CachingPercentInStatusline
             let &l:statusline = l:statusline_save
         endif
+        redraw
     endif
 
     return l:keyword_lists
@@ -117,7 +116,6 @@ function! neocomplcache#cache#index_load_from_cache(cache_dir, filename, complet
 endfunction"}}}
 function! neocomplcache#cache#load_from_file(filename, pattern, mark)"{{{
 
-    let l:abbr_pattern = printf('%%.%ds..%%s', g:NeoComplCache_MaxKeywordWidth-10)
     let l:lines = (buflisted(a:filename) || fnamemodify(a:filename, ':t') == '')?
                 \getbufline(bufnr(a:filename), 1, '$') : readfile(a:filename)
     let l:max_lines = len(l:lines)
@@ -168,12 +166,8 @@ function! neocomplcache#cache#load_from_file(filename, pattern, mark)"{{{
                         \&& !has_key(l:dup_check, l:match_str)
                 " Append list.
                 let l:keyword = {
-                            \'word' : l:match_str, 'menu' : l:menu, 'icase' : 1, 'kind' : '', 'class' : ''
+                            \'word' : l:match_str, 'abbr' : l:match_str, 'menu' : l:menu, 'icase' : 1, 'kind' : '', 'class' : ''
                             \}
-
-                let l:keyword.abbr = 
-                            \ (len(l:match_str) > g:NeoComplCache_MaxKeywordWidth)? 
-                            \ printf(l:abbr_pattern, l:match_str, l:match_str[-8:]) : l:match_str
 
                 call add(l:keyword_lists, l:keyword)
 
@@ -188,11 +182,10 @@ function! neocomplcache#cache#load_from_file(filename, pattern, mark)"{{{
     endfor"}}}
 
     if l:max_lines > 400
-        call neocomplcache#print_caching('Caching done.')
-
         if g:NeoComplCache_CachingPercentInStatusline
             let &l:statusline = l:statusline_save
         endif
+        redraw
     endif
 
     return l:keyword_lists
@@ -224,7 +217,6 @@ function! neocomplcache#cache#load_from_tags(cache_dir, filename, tags_list, mar
     endif
     let l:line_cnt = l:print_cache_percent
     
-    let l:abbr_pattern = printf('%%.%ds..%%s', g:NeoComplCache_MaxKeywordWidth-10)
     let l:menu_pattern = printf('[%s] %%.%ds %%.%ds', a:mark, g:NeoComplCache_MaxFilenameWidth, g:NeoComplCache_MaxFilenameWidth)
     let l:keyword_lists = []
     let l:dup_check = {}
@@ -268,9 +260,7 @@ function! neocomplcache#cache#load_from_tags(cache_dir, filename, tags_list, mar
                 let l:abbr = (l:option['kind'] == 'd' || l:option['cmd'] == '')?  l:tag[0] : l:option['cmd']
                 let l:keyword = {
                             \ 'word' : l:tag[0], 'rank' : 5, 'prev_rank' : 0, 'prepre_rank' : 0, 'icase' : 1, 'dup' : 1,
-                            \ 'abbr' : (len(l:abbr) > g:NeoComplCache_MaxKeywordWidth)?
-                            \   printf(l:abbr_pattern, l:abbr, l:abbr[-8:]) : l:abbr,
-                            \ 'kind' : l:option['kind']
+                            \ 'abbr' : l:abbr, 'kind' : l:option['kind']
                             \}
                 if has_key(l:option, 'struct')
                     let keyword.menu = printf(l:menu_pattern, fnamemodify(l:tag[1], ':t'), l:option.struct)
@@ -302,11 +292,10 @@ function! neocomplcache#cache#load_from_tags(cache_dir, filename, tags_list, mar
     endtry
 
     if l:max_lines > 1000
-        call neocomplcache#print_caching('Caching done.')
-
         if g:NeoComplCache_CachingPercentInStatusline
             let &l:statusline = l:statusline_save
         endif
+        redraw
     endif
 
     if a:filetype != '' && has_key(g:NeoComplCache_TagsFilterPatterns, a:filetype)
