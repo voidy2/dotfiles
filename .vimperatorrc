@@ -592,5 +592,8 @@ mappings.addUserMap(
 );
 EOM
 
+" リンクのテキストをリンク先URLに変換
+command showurl :js for each(let link in Array.slice(content.document.links)){link.textContent = link.href}
+
 echo '.vimperatorrc sourced'
 

@@ -39,6 +39,7 @@ function zle-line-init zle-keymap-select {
 zle -N zle-line-init
 zle -N zle-keymap-select
 
+
 _set_env_git_current_branch() {
   GIT_CURRENT_BRANCH=$( git branch &> /dev/null | grep '^\*' | cut -b 3- )
 }
@@ -254,7 +255,7 @@ zstyle ':completion:*:manuals' separate-sections true
 #    履歴から補完を行う。_history_complete_wordから使われる
 #_prefix
 #    カーソルの位置で補完を行う
-zstyle ':completion:*' completer _expand _complete _match _prefix _approximate _list _history
+zstyle ':completion:*' completer _oldlist _expand _complete _match _prefix _approximate _list _history
 zstyle ':completion:*:messages' format $YELLOW'%d'$DEFAULT
 zstyle ':completion:*:warnings' format $RED'No matches for:'$YELLOW' %d'$DEFAULT
 zstyle ':completion:*:descriptions' format $YELLOW'completing %B%d%b'$DEFAULT
@@ -378,6 +379,9 @@ if [ "$TERM" = "screen" ]; then
     }
     chpwd
 fi
+
+#source ~/dotfiles/zsh/auto-fu.zsh; zle-line-init () { auto-fu-init; }; zle -N zle-line-init
+
 ## load user .zshrc configuration file
 
 [ -f ~/.zshrc.mine ] && source ~/.zshrc.mine
