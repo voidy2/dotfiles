@@ -80,10 +80,10 @@ noremap <Left> gT
 "map <C-k> <Nop>
 " leaderキーの明示
 let mapleader=','
-" twitter.js + copy.js
-nnoremap <Leader>a :copy titleAndBitURL<CR>:twitter : <C-v><C-v><C-a><C-Right> 
-nnoremap <Leader>@ :twitter!@<CR>
-nnoremap <Leader>f :twitter<CR>
+" twittperator.js + copy.js
+nnoremap <Leader>a :copy titleAndBitURL<CR>:tw / <C-v><C-v><C-a><C-Right> 
+nnoremap <Leader>@ :tw!@<CR>
+nnoremap <Leader>f :tw<CR>
 " tomblrのreblog用
 nnoremap <Leader>r :tombloo ReBlog - Tumblr<CR>
 nnoremap <Leader>t :mb pinned-or-current-node\ |\ Tombloo::Reblog\ |\ clear-pin<CR>
@@ -316,7 +316,7 @@ EOM
 js <<EOM
 liberator.globalVariables.copy_templates = [
   { label: 'titleAndBitURL', value: '%TITLE% %bitURL%', custom: function() { 
-        return '"' +  buffer.title + '" - ' + plugins.bitly.get();
+        return buffer.title + ' ' + plugins.bitly.get();
   } },
   { label: 'bitURL', value: '%bitURL%', custom: function() { 
         return plugins.bitly.get();
