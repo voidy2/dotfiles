@@ -106,7 +106,8 @@ let self = liberator.plugins.gcal = (function() {
                [['-refresh', '-r'], commands.OPTION_NOARG],
                [['-date', '-d'], commands.OPTION_NOARG],
             ]
-        }
+        },
+        true
     );
 
     try {
