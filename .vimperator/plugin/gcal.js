@@ -56,16 +56,14 @@ var PLUGIN_INFO =
 </VimperatorPlugin>;
 //}}}
 
-let self = liberator.plugins.greader = (function() {
-    let accessor = storage.newMap("gcal",{ store: true });
-
+let self = liberator.plugins.gcal = (function() {
+    var accessor = storage.newMap("gcal",{ store: true });
     // COMMAND /////////////////////////////////////////////////////// {{{
     commands.addUserCommand(
         ["gc[al]"],
         "Google Calendar Controller",
         function(args) {
             gcalapi = new GoogleCalendarApiController();
-            let accessor = storage.newMap("gcal",{ store: true });
             if( args['-refresh'] || !accessor.get("cal_list") ) {
                 let arr = gcalapi.getAllCalendars();
                 for each(let a in arr) {
@@ -77,11 +75,14 @@ let self = liberator.plugins.greader = (function() {
                 let week_info = [];
                 accessor.get("cal_list").forEach(function(element){
                     accessor.get(element.url).forEach(function(e){
-                        week_info.push({url:element.url.toString(),info:e});
+                        week_info.push(new CalendarData({
+                            url: element.url.toString(),
+                            info: e
+                        }));
                     });
                 });
                 week_info.sort(function(a,b){
-                    if (new Date(a.info.start_time) < new Date(b.info.start_time)) {
+                    if ( a.getStartTime() < b.getStartTime() ) {
                         return -1;
                     } else {
                         return 1;
@@ -95,12 +96,19 @@ let self = liberator.plugins.greader = (function() {
         },
 
         {
+            literal: 0,
+            count: false,
+            completer: function(context,args) {
+                context.completions = [[/* todo */ ]];
+            },
+
             options: [
                [['-refresh', '-r'], commands.OPTION_NOARG],
+               [['-date', '-d'], commands.OPTION_NOARG],
             ]
         }
     );
-  
+
     try {
         var form = ['https://www.google.com', 'https://www.google.com', null];
         var passwordManager = Cc["@mozilla.org/login-manager;1"].getService(Ci.nsILoginManager);
@@ -126,10 +134,10 @@ let self = liberator.plugins.greader = (function() {
             }
             return;
         }
-      } catch(e) {
-          liberator.log(e);
-          liberator.echoerr("gcal.js " + e);
-      }
+    } catch(e) {
+        liberator.log(e);
+        liberator.echoerr("gcal.js " + e);
+    }
     // }}}
     // GLOBAL VARIABLES ////////////////////////////////////////////// {{{
     // }}}
@@ -189,15 +197,7 @@ let self = liberator.plugins.greader = (function() {
 
         isToday: function() {
             let start = this.getStartTime();
-            let dayTime = function(n) {
-                let today = new Date();
-                today.setHours(0);
-                today.setMinutes(0);
-                today.setSeconds(0);
-                today.setMilliseconds(0);
-                return new Date(today.setDate(today.getDate()+n)).getTime();
-            }
-            return dayTime(0) < start && start < dayTime(1);
+            return getDayTime(0).getTime() < start && start < getDayTime(1).getTime();
         },
 
         getDisplayHtml: function() {
@@ -211,15 +211,15 @@ let self = liberator.plugins.greader = (function() {
                   this.title +
                   "</td></tr></tbody></table>");
         }
-
     }
 
     function GoogleCalendarApiController() {
-      this.cache_authtoken = null;
-      this.API_PREFIX = 'http://www.google.com/calendar/feeds/';
-      this.ALL_CALENDARS_URL = 'default/allcalendars/full'
-      this.PRIVATE_URL = '/private/full';
+        this.cache_authtoken = null;
+        this.API_PREFIX = 'http://www.google.com/calendar/feeds/';
+        this.ALL_CALENDARS_URL = 'default/allcalendars/full'
+        this.PRIVATE_URL = '/private/full';
     }
+
     GoogleCalendarApiController.prototype = {
       getAllCalendars: function() {
         let result = null;
@@ -242,7 +242,7 @@ let self = liberator.plugins.greader = (function() {
            response = response.replace(/(xmlns='.*?')/,"");
            //gCal名前空間接頭辞ィィィ
            let gCal = new Namespace("http://schemas.google.com/gCal/2005");
-  
+
            let e4x = new XML(response);
            let entries = e4x..entry;
            if ( entries.length != 0 ) {
@@ -257,7 +257,6 @@ let self = liberator.plugins.greader = (function() {
                  "color" : e.gCal::color.@value.toString(),
               });
            }
-           let accessor = storage.newMap("gcal",{ store: true });
            accessor.set("cal_list",result);
         });
         request.addEventListener("onFailure", function(data) {
@@ -266,18 +265,11 @@ let self = liberator.plugins.greader = (function() {
         request.get();
         return result;
       },
-  
+
       getPrivateCalendarUrl : function(url) {
         let result = null;
-        let now = new Date();
-        let start_min = new Date();
-        start_min.setDate(now.getDate());
-        start_min.setHours(0);
-        start_min.setMinutes(0);
-        start_min.setSeconds(0);
-        start_min.setMilliseconds(0);
-        let start_max = new Date();
-        start_max.setDate(now.getDate()+7);
+        let start_min = getDayTime(0);
+        let start_max = getDayTime(14);
         let request = new libly.Request(
             url + "?start-min="+start_min.toISOString()+"&start-max="+start_max.toISOString()+"&singleevents=true",
             null,
@@ -313,7 +305,6 @@ let self = liberator.plugins.greader = (function() {
                  "place" : e.gd::where.@valueString.toString(),
               });
            }
-           let accessor = storage.newMap("gcal",{ store: true });
            accessor.set(url,result);
         });
         request.addEventListener("onFailure", function(data) {
@@ -322,13 +313,13 @@ let self = liberator.plugins.greader = (function() {
         request.get();
         return result;
       },
-  
+
       getAuthToken : function() {
         if( !this.cache_authtoken )
           this.cache_authtoken = this._getAuthToken();
         return this.cache_authtoken;
       },
-  
+
       _getAuthToken : function() {
           let auth_token = "";
           let auth = new libly.Request(
@@ -342,8 +333,8 @@ let self = liberator.plugins.greader = (function() {
                     "accountType":"GOOGLE",
                     "service":"cl",
                     "source":"Google-Contact-Lister"
-                 })
-              });
+              })
+          });
           auth.addEventListener("onSuccess", function(data) {
             auth_token = data.responseText.split("Auth=")[1].trim();
           });
@@ -353,7 +344,7 @@ let self = liberator.plugins.greader = (function() {
           auth.post();
           return auth_token;
       },
-  
+
       postCalendarEntry : function(text) {
           let xml = <entry xmlns="http://www.w3.org/2005/Atom" xmlns:gCal="http://schemas.google.com/gCal/2005">
                       <content type="html">{text}</content>
@@ -385,7 +376,7 @@ let self = liberator.plugins.greader = (function() {
           });
           request.post();
       }
-  }
+    }
 
     function toQuery(source)
         [encodeURIComponent(i) + "=" + encodeURIComponent(source[i]) for (i in source)].join('&');
@@ -394,7 +385,7 @@ let self = liberator.plugins.greader = (function() {
         let html = <style type="text/css"><![CDATA[
             .cal{ vertical-align: top;  }
             .calendar{ margin: 1px 0px; width: 150px;}
-        ]]></style>.toSource().replace(/(?:\r\n|[\r\n])[ \t]*/g, " ");
+        ]]></style>.toSource();
         let table = <table><tr>
             <th></th><th>{new Date().toLocaleDateString()}</th><th></th>
             </tr></table>;
@@ -403,8 +394,7 @@ let self = liberator.plugins.greader = (function() {
              </td></tr>;
         let today_info = <table/>;
         let info = <table/>;
-        elements.forEach(function(e) {
-            let data = new CalendarData(e);
+        elements.forEach(function(data) {
             (data.isToday() ? today_info : info).appendChild(<tr>{data.getDisplayHtml()}</tr>);
         });
         tr.appendChild(<td>{today_info}</td>);
@@ -414,9 +404,8 @@ let self = liberator.plugins.greader = (function() {
         //liberator.log(html);
         liberator.echo(html, true);
     }
-  
+
     function getColor(url) {
-        let accessor = storage.newMap("gcal",{ store: true });
         let color;
         accessor.get("cal_list").forEach(function(e){
             if (e.url == url){ color = e.color; }
@@ -424,6 +413,12 @@ let self = liberator.plugins.greader = (function() {
         return color;
     }
 
-
-
+    function getDayTime(n) {
+        let today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+        today.setMilliseconds(0);
+        return new Date(today.setDate(today.getDate()+n));
+    }
 })();
