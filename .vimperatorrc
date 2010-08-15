@@ -4,8 +4,8 @@ command! -nargs=+ lazy autocmd VimperatorEnter .* <args>
 " 自動フォーカス回避
 set focuscontent
 set showtabline=2
-
-hi! Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:16px; color:white; background-color:#6666cc; border-color:ButtonShadow; border-width:0px; border-style:solid; padding:0px 1px 0px 1px; position:absolute;
+set hintchars=hjklasdf
+hi! Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:16px; color:white; background-color:#6666cc; border-color:ButtonShadow; border-width:0px; border-style:solid; text-transform:uppercase; padding:0px 1px 0px 1px; position:absolute;
 
 " qmark g[o|n] + ○ でアクセス
 javascript <<EOM
@@ -595,5 +595,7 @@ EOM
 " リンクのテキストをリンク先URLに変換
 command showurl :js for each(let link in Array.slice(content.document.links)){link.textContent = link.href}
 
+let g:twlist_screen_name = "voidy21"
+let g:twittperator_plugin_twlist = 1
 echo '.vimperatorrc sourced'
 
