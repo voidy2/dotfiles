@@ -281,12 +281,25 @@ let self = liberator.plugins.gcal = (function() {
         //gd名前空間接頭辞ィィィ
         const gd = new Namespace("http://schemas.google.com/g/2005");
 
+        let isInit = false;
+
+        let init = function() {
+            if (isInit) return;
+            // 起動時にあらかじめ最新の情報を取得しておく
+            let cacheCalUrl = getCacheAllCalendarUrl();
+            if (cacheCalUrl) for each(let c in cacheCalUrl) {
+                GoogleCalendarApiController.getPrivateCalendarUrl(c.url,true);
+            }
+            isInit = true;
+        }
+
         let refresh = function() {
             let gcalapi = GoogleCalendarApiController;
             let arr = gcalapi.getAllCalendars(false);
             for each(let a in arr) {
                 gcalapi.getPrivateCalendarUrl(a.url,false);
             }
+            isInit = true;
         }
 
         let getCacheAllCalendarUrl = function() {
@@ -341,6 +354,7 @@ let self = liberator.plugins.gcal = (function() {
         }
 
         let getCacheData = function(date) {
+            init();
             let datas = [];
             accessor.get("cal_list").forEach(function(element){
                 accessor.get(element.url).forEach(function(e){
@@ -376,12 +390,6 @@ let self = liberator.plugins.gcal = (function() {
                 completer.push([start_date,title]);
             });
             return completer;
-        }
-
-        // 起動時にあらかじめ最新の情報を取得しておく
-        let cacheCalUrl = getCacheAllCalendarUrl();
-        if (cacheCalUrl) for each(let c in cacheCalUrl) {
-            GoogleCalendarApiController.getPrivateCalendarUrl(c.url,true);
         }
 
         return {
