@@ -280,16 +280,16 @@ let self = liberator.plugins.gcal = (function() {
         //gd名前空間接頭辞ィィィ
         const gd = new Namespace("http://schemas.google.com/g/2005");
 
-        let isInit = false;
+        let is_init = false;
 
         let init = function() {
-            if (isInit) return;
+            if (is_init) return;
             // 起動時にあらかじめ最新の情報を取得しておく
             let cacheCalUrl = getCacheAllCalendarUrl();
             if (cacheCalUrl) for each(let c in cacheCalUrl) {
                 GoogleCalendarApiController.getPrivateCalendarUrl(c.url,true);
             }
-            isInit = true;
+            is_init = true;
         }
 
         let refresh = function() {
@@ -298,7 +298,7 @@ let self = liberator.plugins.gcal = (function() {
             for each(let a in arr) {
                 gcalapi.getPrivateCalendarUrl(a.url,false);
             }
-            isInit = true;
+            is_init = true;
         }
 
         let getCacheAllCalendarUrl = function() {
@@ -404,7 +404,7 @@ let self = liberator.plugins.gcal = (function() {
     })();
 
     let CalendarData = (function(arg) {
-        let is_all_day = true;
+        let is_all_day = false;
         let start_time;
         let start_clocktime;
         let end_time;
@@ -418,12 +418,14 @@ let self = liberator.plugins.gcal = (function() {
             let start = new Date(e.info.start_time);
             let end = new Date(e.info.end_time);
             let info_html = "";
-            if (end - start != 86400000) {
-                is_all_day = false;
-            }
             start_time = start;
-            start_clocktime = start.toTimeString().slice(0,8);
             end_time = end;
+            if (end - start == 86400000) {
+                is_all_day = true;
+                start = setTimeZero(start);
+                end = setTimeZero(end);
+            }
+            start_clocktime = start.toTimeString().slice(0,8);
             end_clocktime= end.toTimeString().slice(0,8);
             category = e.url;
             title = e.info.title;
@@ -572,13 +574,17 @@ let self = liberator.plugins.gcal = (function() {
         return color;
     }
 
+    function setTimeZero(date) {
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+        return date;
+    }
+
     function getDayTime(n) {
         let today = new Date();
-        today.setHours(0);
-        today.setMinutes(0);
-        today.setSeconds(0);
-        today.setMilliseconds(0);
-        return new Date(today.setDate(today.getDate()+n));
+        return new Date(setTimeZero(today).setDate(today.getDate()+n));
     }
 
     // COMMAND /////////////////////////////////////////////////////// {{{
