@@ -103,8 +103,14 @@ let self = liberator.plugins.gcal = (function() {
         liberator.echoerr("gcal.js " + e);
     }
     // }}}
-    // CLASS ///////////////////////////////////////////////////////// {{{
 
+    // GLOBAL VARIABLES ////////////////////////////////////////////// {{{
+    let gv = liberator.globalVariables;
+
+    function getDisplayDays()
+        gv.gcalDisplayDays || 14;
+
+    // CLASS ///////////////////////////////////////////////////////// {{{
     let GoogleCalendarApiController = (function() {
         let cache_authtoken = null;
         const API_PREFIX = 'http://www.google.com/calendar/feeds/';
@@ -158,10 +164,14 @@ let self = liberator.plugins.gcal = (function() {
         let getPrivateCalendarUrl = function(url,isAsync) {
             let result = null;
             let start_min = getDayTime(0);
-            let start_max = getDayTime(14);
+            let start_max = getDayTime(getDisplayDays());
+            let params = toQuery({
+                "start-min" : start_min.toISOString(),
+                "start-max" : start_max.toISOString(),
+                "singleevents" : "true"
+            });
             let request = new libly.Request(
-                url + "?start-min="+ start_min.toISOString() + 
-                    "&start-max="+start_max.toISOString()+"&singleevents=true",
+                url + "?" + params,
                 null,
                 {
                    asynchronous: isAsync,
@@ -179,7 +189,7 @@ let self = liberator.plugins.gcal = (function() {
                  response = response.replace(/(xmlns='.*?')/,"");
                  let e4x = new XML(response);
                  let entries = e4x..entry;
-                 if ( entries.length != 0 ) {
+                 if (entries.length != 0) {
                      GoogleCalendar.setCacheDatasFromXmlEntry(url,entries);
                  }
             });
@@ -191,7 +201,7 @@ let self = liberator.plugins.gcal = (function() {
         }
 
         let getAuthToken = function() {
-            if( !cache_authtoken )
+            if (!cache_authtoken)
                 cache_authtoken = _getAuthToken();
             return cache_authtoken;
         }
@@ -202,15 +212,16 @@ let self = liberator.plugins.gcal = (function() {
                 "https://www.google.com/accounts/ClientLogin",
                 null,
                 {
-                   asynchronous: false,
-                   postBody : "&" + toQuery({
-                      "Email": gmailUser,
-                      "Passwd": gmailPassword,
-                      "accountType":"GOOGLE",
-                      "service":"cl",
-                      "source":"Google-Contact-Lister"
-                })
-            });
+                     asynchronous: false,
+                     postBody : "&" + toQuery({
+                         "Email": gmailUser,
+                         "Passwd": gmailPassword,
+                         "accountType": "GOOGLE",
+                         "service": "cl",
+                         "source": "Google-Contact-Lister"
+                     })
+                }
+            );
             auth.addEventListener("onSuccess", function(data) {
                 auth_token = data.responseText.split("Auth=")[1].trim();
             });
