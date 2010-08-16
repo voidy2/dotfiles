@@ -12,7 +12,7 @@ var PLUGIN_INFO =
   <require type="plugin">_libly.js</require>
   <detail><![CDATA[
    == Subject ==
-    Open Google Reader starred items.
+    Google Calendar Controller!!!
 
    == Needs Library ==
     - _libly.js(ver.0.1.32)
