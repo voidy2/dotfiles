@@ -250,7 +250,7 @@ let self = liberator.plugins.gcal = (function() {
                 },
                 {
                     asynchronous: true,
-                    postBody:xml.toSource()
+                    postBody: xml.toSource()
                 }
             );
             request.addEventListener("onSuccess", function(data) {
@@ -260,7 +260,6 @@ let self = liberator.plugins.gcal = (function() {
                 //名前空間を取り除く
                 response = response.replace(/(xmlns='.*?')/,"");
                 let entry = new XML(response);
-                alert(entry);
                 GoogleCalendar.setCacheDataFromXmlEntry(url,entry,true);
             });
             request.addEventListener("onFailure", function(data) {
@@ -326,7 +325,7 @@ let self = liberator.plugins.gcal = (function() {
             let start_time = xmlEntry.gd::when[0].@startTime.toString();
             let end_time = xmlEntry.gd::when[0].@endTime.toString();
             let time = " [" + start_time + 
-                (start_time == end_time ? "" : (" - " + end_time)) + "]";
+                (start_time.length == 10 ? "" : (" - " + end_time)) + "]";
             datas.push({
                "id" : xmlEntry.id.toString(),
                "title" : title,
@@ -406,13 +405,13 @@ let self = liberator.plugins.gcal = (function() {
 
     let CalendarData = (function(arg) {
         let is_all_day = true;
-        let start_time = null;
-        let start_clocktime = null;
-        let end_time = null;
-        let end_clocktime = null;
-        let category = null;
-        let title = null;
-        let id = null;
+        let start_time;
+        let start_clocktime;
+        let end_time;
+        let end_clocktime;
+        let category;
+        let title;
+        let id;
 
         let initialize = function(e) {
             let id = e.info.id;
