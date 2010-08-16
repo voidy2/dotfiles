@@ -405,6 +405,7 @@ let self = liberator.plugins.gcal = (function() {
 
     let CalendarData = (function(arg) {
         let is_all_day = false;
+        let is_long = false;
         let start_time;
         let start_clocktime;
         let end_time;
@@ -420,8 +421,11 @@ let self = liberator.plugins.gcal = (function() {
             let info_html = "";
             start_time = start;
             end_time = end;
-            if (end - start == 86400000) {
+            let diff = end - start;
+            if (!(diff % 86400000)) {
                 is_all_day = true;
+                if (diff != 86400000)
+                    is_long = true;
                 start = setTimeZero(start);
                 end = setTimeZero(end);
             }
@@ -433,6 +437,10 @@ let self = liberator.plugins.gcal = (function() {
 
         let isAllDay = function() {
             return is_all_day;
+        }
+
+        let isLong = function() {
+            return is_long;
         }
 
         let getTitle = function() {
@@ -447,6 +455,13 @@ let self = liberator.plugins.gcal = (function() {
             return new Date(start_time).toLocaleDateString();
         }
 
+        let getEndLocaleDateString = function() {
+            return new Date(end_time).toLocaleDateString();
+        }
+
+        let getStartLocaleDateString = function() {
+            return new Date(start_time).toLocaleDateString();
+        }
         let getStartDateString = function() {
             let start= new Date(start_time);
             return start.getFullYear() + "/" + 
@@ -473,12 +488,12 @@ let self = liberator.plugins.gcal = (function() {
         }
 
         let getDisplayHtml = function() {
-            let clock = <tr style='font-size:80%'><td>
+            let clock = <tr class='clock'><td>
                 {start_clocktime} - {end_clocktime}</td></tr>
             let table = <table class='calendar'/>
             let tbody = new XML("<tbody style='background-color:" + getCategoryColor() + "'/>");
             let body = <tr class='body'/>;
-            let allday = <>{getStartLocaleDateString()}<br/></>;
+            let allday = <>{getStartLocaleDateString() + (isLong() ? " - " + getEndLocaleDateString() : "")}<br/></>;
             let header = <td/>;
             if (isAllDay() || !isToday())
                 header.appendChild(allday);
@@ -494,9 +509,11 @@ let self = liberator.plugins.gcal = (function() {
         initialize(arg);
         return {
             isAllDay : isAllDay,
+            isLong : isLong,
             getTitle : getTitle,
             getStartTime : getStartTime,
             getStartLocaleDateString : getStartLocaleDateString,
+            getEndLocaleDateString : getEndLocaleDateString,
             getStartDateString : getStartDateString,
             getCategoryColor : getCategoryColor,
             isToday : isToday,
@@ -508,7 +525,8 @@ let self = liberator.plugins.gcal = (function() {
         const html = <style type="text/css"><![CDATA[
                 .cal{ vertical-align: top;  }
                 .calendar{ margin: 1px 0px; width: 300px;}
-                .calendar .body {background-color:rgba(255,255,255,0.15);color:#FFFFFF;}
+                .calendar .body { background-color:rgba(255,255,255,0.15); color:#FFFFFF;}
+                .clock {font-size:80%; color:#FFFFFF; font-weight:bold;}
                 .datepicker {width:"100px"}
             ]]></style>.toSource()
                 .replace(/(?:\r\n|[\r\n])[ \t]*/g, " ");
