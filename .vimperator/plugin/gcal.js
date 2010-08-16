@@ -586,16 +586,16 @@ let self = liberator.plugins.gcal = (function() {
             options: [
                [['-date', '-d'],
                    commands.OPTION_STRING,
-                   ,
+                   null,
                    function(context){
-                       return GoogleCalendar.getCalendarDataCompleter()
+                       return GoogleCalendar.getCalendarDataCompleter();
                    }
                 ],
                [['-calendar', '-c'],
                    commands.OPTION_INT,
-                   ,
+                   null,
                    function(context){
-                       return GoogleCalendar.getCalendarUrlCompleter()
+                       return GoogleCalendar.getCalendarUrlCompleter();
                    }
                ]
             ]
