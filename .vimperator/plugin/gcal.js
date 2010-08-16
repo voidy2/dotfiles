@@ -480,7 +480,7 @@ let self = liberator.plugins.gcal = (function() {
         };
     });
 
-        let Display = (function(){
+    let Display = (function(){
         const html = <style type="text/css"><![CDATA[
                 .cal{ vertical-align: top;  }
                 .calendar{ margin: 1px 0px; width: 300px;}
@@ -537,6 +537,7 @@ let self = liberator.plugins.gcal = (function() {
             createCalendarHtml : createCalendarHtml
         };
     })();
+    //}}}
 
     function toQuery(source)
         [encodeURIComponent(i) + "=" + encodeURIComponent(source[i]) for (i in source)].join('&');
@@ -602,4 +603,5 @@ let self = liberator.plugins.gcal = (function() {
         },
         true
     );
+    //}}}
 })();
