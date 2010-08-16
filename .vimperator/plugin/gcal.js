@@ -168,8 +168,8 @@ let self = liberator.plugins.gcal = (function() {
                 }
             );
             request.addEventListener("onSuccess", function(data) {
-                let response = data.responseText;
-                if ( response.substr(0,6) == "<html>" ){
+                 let response = data.responseText;
+                 if ( response.substr(0,6) == "<html>" ){
                      liberator.echoerr("google Web login required",-1);
                      return;
                  }
