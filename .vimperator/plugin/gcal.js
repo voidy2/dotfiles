@@ -21,10 +21,6 @@ var PLUGIN_INFO =
    == Commands ==
     :gc[al]
 
-   == Global variables ==
-    
-   == API ==
-
   ]]></detail>
   <detail lang="ja"><![CDATA[
     == 概要 ==
@@ -58,7 +54,14 @@ var PLUGIN_INFO =
         - [-d]ate
         指定した日付でのスケジュールを表示します。
 
+    == グローバル変数 ==
+      g:gcalCacheDays:
+        何日先までの予定をキャッシュとして保持して表示するか
+        default:14 
+
     == API ==
+      plugins.gcal.post(arg):
+        予定argをGoogle Calendarに登録します。
 
     == ChangeLog ==
       0.0.1:
@@ -107,8 +110,8 @@ let self = liberator.plugins.gcal = (function() {
     // GLOBAL VARIABLES ////////////////////////////////////////////// {{{
     let gv = liberator.globalVariables;
 
-    function getDisplayDays()
-        gv.gcalDisplayDays || 14;
+    function getCacheDays()
+        gv.gcalCacheDays || 14;
 
     // CLASS ///////////////////////////////////////////////////////// {{{
     let GoogleCalendarApiController = (function() {
@@ -164,7 +167,7 @@ let self = liberator.plugins.gcal = (function() {
         let getPrivateCalendarUrl = function(url,isAsync) {
             let result = null;
             let start_min = getDayTime(0);
-            let start_max = getDayTime(getDisplayDays());
+            let start_max = getDayTime(getCacheDays());
             let params = toQuery({
                 "start-min" : start_min.toISOString(),
                 "start-max" : start_max.toISOString(),
@@ -257,6 +260,7 @@ let self = liberator.plugins.gcal = (function() {
                 //名前空間を取り除く
                 response = response.replace(/(xmlns='.*?')/,"");
                 let entry = new XML(response);
+                alert(entry);
                 GoogleCalendar.setCacheDataFromXmlEntry(url,entry,true);
             });
             request.addEventListener("onFailure", function(data) {
@@ -615,4 +619,10 @@ let self = liberator.plugins.gcal = (function() {
         true
     );
     //}}}
+    // API /////////////////////////////////////////////////////////// {{{
+    return {
+        post: function(arg)
+            GoogleCalendarApiController.postCalendarEntry(0,arg)
+    };
+    // }}}
 })();
