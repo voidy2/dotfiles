@@ -484,7 +484,7 @@ let self = liberator.plugins.gcal = (function() {
 
         let isToday = function() {
             let start = getStartTime();
-            return getDayTime(0).getTime() < start && start < getDayTime(1).getTime();
+            return getDayTime(0).getTime() <= start && start < getDayTime(1).getTime();
         }
 
         let getDisplayHtml = function() {
