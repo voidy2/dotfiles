@@ -86,6 +86,7 @@ bindkey . rationalise-dot
 export LANG=ja_JP.UTF-8
 
 cdpath=(.. ~ ~/myapp/gae/ ~/myapp/gae/google_appengine/demos/)
+PATH=~/local/bin:$PATH
 PATH=~/lib/flex/bin:$PATH
 PATH=~/local/bin:$PATH
 PATH=/var/lib/gems/1.8/bin:$PATH
