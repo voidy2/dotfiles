@@ -133,14 +133,14 @@ if (liberator.plugins.LDRizeCooperation == undefined) (function(){
             this.LDRizeCooperationPanel = this.setupStatusbarPanel();
 
             this.isEnable = liberator.globalVariables.ldrc_enable != undefined ?
-                window.eval(liberator.globalVariables.ldrc_enable) : true ;
+                liberator.eval(liberator.globalVariables.ldrc_enable) : true ;
             this.isIntelligenceBind = liberator.globalVariables.ldrc_intelligence_bind != undefined ?
-                window.eval(liberator.globalVariables.ldrc_intelligence_bind) : false ;
+                liberator.eval(liberator.globalVariables.ldrc_intelligence_bind) : false ;
             this.isModHints = liberator.globalVariables.ldrc_hints != undefined ?
-                window.eval(liberator.globalVariables.ldrc_hints) : false ;
-            this.captureMappings = window.eval(liberator.globalVariables.ldrc_captureMappings) || ["j","k","p","o"];
+                liberator.eval(liberator.globalVariables.ldrc_hints) : false ;
+            this.captureMappings = liberator.eval(liberator.globalVariables.ldrc_captureMappings) || ["j","k","p","o"];
             this.skipHeight = liberator.globalVariables.ldrc_skip != undefined ?
-                window.eval(liberator.globalVariables.ldrc_skip) : 0.5 ;
+                liberator.eval(liberator.globalVariables.ldrc_skip) : 0.5 ;
 
             this.convertHandlerInfo(this.handlerInfo);
             this.hookGreasemonkey();
@@ -275,15 +275,15 @@ if (liberator.plugins.LDRizeCooperation == undefined) (function(){
             liberator.modules.commands.addUserCommand(["toggleldrizecooperation","toggleldrc"],"Toggle LDRize Cooperation",
             function(arg){ self.isEnable = !self.isEnable},{});
             //Options
-            liberator.modules.options.add(["ldrc","ldrizecooperation"],"LDRize cooperation","boolean",this.isEnable,
+            liberator.modules.options.add(["ldrc","ldrizecooperation"],"LDRize cooperation","boolean",this.isEnable.toString(),
                 {
-                    setter: function(value){ self.isEnable = value; },
+                    setter: function(value) self.isModHints = value,
                     getter: function() self.isEnable
                 }
             );
-            liberator.modules.options.add(["ldrchints"],"mod hinttags for LDRize","boolean",this.isModHints,
+            liberator.modules.options.add(["ldrchints"],"mod hinttags for LDRize","boolean",this.isModHints.toString(),
                 {
-                    setter: function(value){ self.isModHints = value; },
+                    setter: function(value) self.isModHints = value,
                     getter: function() self.isModHints
                 }
             );
