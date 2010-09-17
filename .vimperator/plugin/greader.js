@@ -168,15 +168,18 @@ let self = liberator.plugins.greader = (function() {
         for(let i = 0; i < max; ++i) {
           if (!(star = stars.shift()))
             break;
+          //最初のタブは現在のタブか、新しいタブに読み込むかをグローバル変数から決定する
           liberator.open(star.link, (i==0) ? openBehavior() : liberator.NEW_BACKGROUND_TAB);
+          //タブが新しいタブに読み込まれる場合はBarTabで蓋をする
           if (!(i==0 && openBehavior()==liberator.CURRENT_TAB))
             gBrowser.BarTabHandler.unloadTab(tabs.getTab(count+i));
         }
         return;
       }
       else {
-        liberator.open(args.string, openBehavior());
-        setTimeout(function(e_id) { stars.removeId(e_id)}, 10 , stars.getEntryId(args.string));
+        //補完から絞り込んだURLを全て開く
+        //liberator.open(args.string, openBehavior());
+        //setTimeout(function(e_id) { stars.removeId(e_id)}, 10 , stars.getEntryId(args.string));
         return;
       }
     },
@@ -513,6 +516,20 @@ let self = liberator.plugins.greader = (function() {
           return e.id;
       }
       return null;
+    },
+
+    search : function(word) {
+      function lmatch (re, item){
+        return ((item.link.match(re) || item.title.match(re)));
+      }
+      function makeRegExp (str) {
+        return XMigemoCore ? (str.indexOf('/') == 0) ? new RegExp(str.slice(1), 'i')
+                                            : XMigemoCore.getRegExp(str)
+                  : new RegExp(str, 'i');
+      }
+      let re = makeRegExp(word);
+      return [it for each (it in this.items()) if (lmatch(re, it))];
+     
     }
   }
   //}}}
