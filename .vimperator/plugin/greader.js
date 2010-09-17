@@ -123,6 +123,8 @@ var PLUGIN_INFO =
       ただし、最新のスターからg:greaderViewItemsCountで指定した数(デフォルトでは20)までしか辿らないので注意。
 
     == ChangeLog ==
+      - 0.3.1
+      -- BarTabの蓋をする位置が間違っていたのを修正
       - 0.3.0
       -- まとめて開く際はBarTabで蓋をするようにした
       - 0.2.0
@@ -130,6 +132,7 @@ var PLUGIN_INFO =
 
     == TODO ==
       - 指定したURLのGoogleReaderのフィード登録を出来るようにする
+      - strageを使って軽くしたい＆ネット無しでもいけるようにしたい
   ]]></detail>
 </VimperatorPlugin>;
 //}}}
@@ -161,11 +164,13 @@ let self = liberator.plugins.greader = (function() {
         let star;
         let max = (args.count >= 1) ? args.count : openItemsCount();
         let index = tabs.index(tabs.getTab());
+        let count = tabs.count;
         for(let i = 0; i < max; ++i) {
           if (!(star = stars.shift()))
             break;
-          liberator.open(star.link, openBehavior());
-          gBrowser.BarTabHandler.unloadTab(tabs.getTab(index+i+1));
+          liberator.open(star.link, (i==0) ? openBehavior() : liberator.NEW_BACKGROUND_TAB);
+          if (!(i==0 && openBehavior()==liberator.CURRENT_TAB))
+            gBrowser.BarTabHandler.unloadTab(tabs.getTab(count+i));
         }
         return;
       }
