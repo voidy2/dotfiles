@@ -178,8 +178,12 @@ let self = liberator.plugins.greader = (function() {
       }
       else {
         //補完から絞り込んだURLを全て開く
-        //liberator.open(args.string, openBehavior());
-        //setTimeout(function(e_id) { stars.removeId(e_id)}, 10 , stars.getEntryId(args.string));
+        let matchstars = stars.search(args.string);
+        for each(let ms in matchstars) {
+          liberator.open(ms.link, liberator.NEW_BACKGROUND_TAB);
+          gBrowser.BarTabHandler.unloadTab(tabs.getTab(tabs.count-1));
+          setTimeout(function(e_id) { stars.removeId(e_id)}, 10 , ms.id);
+        }
         return;
       }
     },
@@ -511,7 +515,7 @@ let self = liberator.plugins.greader = (function() {
 
     getEntryId : function(url) {
       let items = this.items();
-      for each( let e in  items) {
+      for each(let e in  items) {
         if(e.link == url)
           return e.id;
       }
@@ -529,7 +533,6 @@ let self = liberator.plugins.greader = (function() {
       }
       let re = makeRegExp(word);
       return [it for each (it in this.items()) if (lmatch(re, it))];
-     
     }
   }
   //}}}
