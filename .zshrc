@@ -219,7 +219,7 @@ esac
 
 alias less='/usr/share/vim/vim71/macros/less.sh'
 function cd(){
-    builtin cd $@ && tree -L 1 -a;
+    builtin cd $@ && tree -N -L 1 -a;
 }
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 #screenセッション保存先
