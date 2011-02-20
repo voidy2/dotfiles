@@ -153,7 +153,7 @@ SBMEntry.prototype = { //{{{
                    xml.* += <span class="liberator-sbmcommentsviewer-timestamp">{self.formatDate()}</span>; 
                    break;
                 case 'tags':
-                    xml.* += <span class="liberator-sbmcommentsviewer-tags">{self.tags.join(',')}</span>; break;
+                    xml.* += <span class="liberator-sbmcommentsviewer-tags" highlight="Tag" style="margin-right: 10px;"> {self.tags.join(',')}</span>; break;
                 case 'comment':
                     xml.* += <span class="liberator-sbmcommentsviewer-comment" style="white-space:normal;">{makeLink(self.comment)}</span>; break;
                 case 'tagsAndComment':
