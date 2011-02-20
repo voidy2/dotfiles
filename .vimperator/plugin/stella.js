@@ -1,5 +1,5 @@
 /* {{{
-Copyright (c) 2008-2010, anekos.
+Copyright (c) 2008-2011, anekos.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -39,13 +39,13 @@ let PLUGIN_INFO =
   <name lang="ja">すてら</name>
   <description>For Niconico/YouTube/Vimeo, Add control commands and information display(on status line).</description>
   <description lang="ja">ニコニコ動画/YouTube/Vimeo 用。操作コマンドと情報表示(ステータスライン上に)追加します。</description>
-  <version>0.25.1</version>
+  <version>0.32.6</version>
   <author mail="anekos@snca.net" homepage="http://d.hatena.ne.jp/nokturnalmortum/">anekos</author>
   <license>new BSD License (Please read the source code comments of this plugin)</license>
   <license lang="ja">修正BSDライセンス (ソースコードのコメントを参照してください)</license>
   <minVersion>2.0</minVersion>
-  <maxVersion>2.3</maxVersion>
-  <updateURL>http://svn.coderepos.org/share/lang/javascript/vimperator-plugins/trunk/stella.js</updateURL>
+  <maxVersion>3.0</maxVersion>
+  <updateURL>https://github.com/vimpr/vimperator-plugins/raw/master/stella.js</updateURL>
   <detail><![CDATA[
     == Commands ==
       :stpl[ay]:
@@ -106,7 +106,7 @@ function addLocalMappings(buffer, maps) {
 }
 
 addLocalMappings(
-  /^(http:\/\/(es|www).nicovideo.jp\/watch|http:\/\/(jp|www)\.youtube\.com\/watch|http:\/\/(www\.)?vimeo\.com\/(channels\/(hd)?#)?\d+)/,
+  /^(http:\/\/(es|www).nicovideo.jp\/(watch|playlist\/mylist)|http:\/\/(jp|www)\.youtube\.com\/watch|http:\/\/(www\.)?vimeo\.com\/(channels\/(hd)?#)?\d+)/,
   [
     ['<C-g>', ':pageinfo S',      ],
     ['p',     ':stplay',          ],
@@ -214,7 +214,7 @@ function addLocalMappings(buffer, maps) {
 }
 
 addLocalMappings(
-  /^(http:\/\/(es|www).nicovideo.jp\/watch|http:\/\/(jp|www)\.youtube\.com\/watch|http:\/\/(www\.)?vimeo\.com\/(channels\/(hd)?#)?\d+)/,
+  /^(http:\/\/(es|www).nicovideo.jp\/(watch|playlist\/mylist)|http:\/\/(jp|www)\.youtube\.com\/watch|http:\/\/(www\.)?vimeo\.com\/(channels\/(hd)?#)?\d+)/,
   [
     ['<C-g>', ':pageinfo S',      ],
     ['p',     ':stplay',          ],
@@ -257,6 +257,7 @@ TODO
    ・パネルなどの要素にクラス名をつける
    ・上書き保存
    ・Fx の pref と liberator.globalVariables の両方で設定をできるようにする (Setting)
+   ・ext_setInputMessage(String, String)
 
 MEMO
    ・prototype での定義順: 単純な値 initialize finalize (get|set)ter メソッド
@@ -298,10 +299,20 @@ Thanks:
     capitalize: function (s)
       s.replace(/^[a-z]/, String.toUpperCase).replace(/-[a-z]/, function (s) s.slice(1).toUpperCase()),
 
-    currentURL: function ()
-      content.document.location.href,
+    get currentURL() content.document.location.href,
 
-    download: function (url, filepath, ext, title) {
+    download: function (url, filepath, ext, title, postData) {
+      function makePostStream (postData) {
+        let sis = Cc["@mozilla.org/io/string-input-stream;1"].createInstance(Ci.nsIStringInputStream);
+        sis.setData(postData, postData.length);
+        let mis = Cc["@mozilla.org/network/mime-input-stream;1"].createInstance(Ci.nsIMIMEInputStream);
+        mis.addHeader("Accept-Charset", "utf-8");
+        mis.addHeader("Content-Type", "application/x-www-form-urlencoded");
+        mis.addContentLength = true;
+        mis.setData(sis);
+        return mis;
+      }
+
       let dm = Cc["@mozilla.org/download-manager;1"].getService(Ci.nsIDownloadManager);
       let wbp = Cc["@mozilla.org/embedding/browser/nsWebBrowserPersist;1"].createInstance(Ci.nsIWebBrowserPersist);
       let file;
@@ -311,40 +322,30 @@ Thanks:
       } else {
         file = dm.userDownloadsDirectory;
       }
-      if (file.isDirectory() && title)
-        file.appendRelativePath(U.fixFilename(title) + ext);
+
+      if (file.exists() && file.isDirectory() && title)
+          file.appendRelativePath(U.fixFilename(title) + ext);
+
       if (file.exists())
-        return liberator.echoerr('The file already exists! -> ' + file.path);
+        return U.echoerr('The file already exists! -> ' + file.path);
+
       file = makeFileURI(file);
 
       let dl = dm.addDownload(0, U.makeURL(url, null, null), file, title, null, null, null, null, wbp);
       wbp.progressListener = dl;
       wbp.persistFlags |= wbp.PERSIST_FLAGS_AUTODETECT_APPLY_CONVERSION;
-      wbp.saveURI(U.makeURL(url), null, null, null, null, file);
+      wbp.saveURI(U.makeURL(url), null, null, postData && makePostStream(postData), null, file);
 
-      return true;
+      return file;
     },
 
-    xpathGet: function (xpath, doc, root) {
-      if (!doc)
-        doc = content.document;
-      if (!root)
-        root = doc;
-      return doc.evaluate(xpath, doc, null, 9, null, 7, null).singleNodeValue;
-    },
+    // FIXME
+    echo: function (msg)
+      (void liberator.echo(msg)),
 
-    xpathGets: function (xpath, doc, root) {
-      if (!doc)
-        doc = content.document;
-      if (!root)
-        root = doc;
-      let result = [];
-      let r = doc.evaluate(xpath, root, null, 7, null);
-      for (let i = 0, l = r.snapshotLength; i < l; i++) {
-        result.push(r.snapshotItem(i));
-      }
-      return result;
-    },
+    // FIXME
+    echoError: function (msg)
+      (void liberator.echoerr(msg)),
 
     fixDoubleClick: function (obj, click, dblClick) {
       let clicked = 0;
@@ -378,12 +379,14 @@ Thanks:
     },
 
     // 上手い具合に秒数に直すよ
-    fromTimeCode: function (code) {
+    fromTimeCode: function (code, max) {
       var m;
+      if (max && (m = /^(-?\d+(?:\.\d)?)%/(code)))
+        return Math.round(max * (parseFloat(m[1]) / 100));
       if (m = /^(([-+]?)\d+):(\d+)$/(code))
         return parseInt(m[1], 10) * 60 + (m[2] == '-' ? -1 : 1) * parseInt(m[3], 10);
       if (m = /^([-+]?\d+\.\d+)$/(code))
-        return Math.round(parseFloat(m[1], 10) * 60);
+        return Math.round(parseFloat(m[1]) * 60);
       return parseInt(code, 10);
     },
 
@@ -417,6 +420,9 @@ Thanks:
 
     lz: function (s, n)
       String(Math.pow(10, n) + s).substring(1),
+
+    log: function (msg)
+      Application.console.log(msg),
 
     makeFile: function (s) {
       var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
@@ -473,7 +479,53 @@ Thanks:
 
     toTimeCode: function (v)
       (U.isNum(v) ? (parseInt((v / 60)) + ':' + U.lz(v % 60, 2))
-                : '??:??')
+                : '??:??'),
+
+    toXML: function (html) {
+      function createHTMLDocument (source) {
+        let wcnt = window.content;
+        let doc = wcnt.document.implementation.createDocument(
+          'http://www.w3.org/1999/xhtml',
+          'html',
+          wcnt.document.implementation.createDocumentType(
+            'html',
+            '-//W3C//DTD HTML 4.01//EN',
+            'http://www.w3.org/TR/html4/strict.dtd'
+          )
+        );
+        let range = wcnt.document.createRange();
+        range.selectNodeContents(wcnt.document.documentElement);
+        let content = doc.adoptNode(range.createContextualFragment(source));
+        doc.documentElement.appendChild(content);
+        return doc;
+      }
+
+      function replaceHTML (s)
+        s.replace(/<br>/g, '<br />').replace(/&nbsp;/g, '<span style="margin-left: 0.5em"></span>');
+
+      return replaceHTML(createHTMLDocument(html).documentElement.innerHTML);
+    },
+
+    xpathGet: function (xpath, doc, root) {
+      if (!doc)
+        doc = content.document;
+      if (!root)
+        root = doc;
+      return doc.evaluate(xpath, doc, null, 9, null, 7, null).singleNodeValue;
+    },
+
+    xpathGets: function (xpath, doc, root) {
+      if (!doc)
+        doc = content.document;
+      if (!root)
+        root = doc;
+      let result = [];
+      let r = doc.evaluate(xpath, root, null, 7, null);
+      for (let i = 0, l = r.snapshotLength; i < l; i++) {
+        result.push(r.snapshotItem(i));
+      }
+      return result;
+    }
   };
 
 
@@ -511,7 +563,7 @@ Thanks:
 
     let setting = {
       common: {
-        autoFullscreenDelay: 200
+        autoFullscreenDelay: 500
       },
       nico: {
         useComment: false
@@ -654,7 +706,7 @@ Thanks:
 
     get title () undefined,
 
-    get isValid () /^http:\/\/(tw|es|de|www)\.nicovideo\.jp\/watch\//.test(buffer.URL),
+    get isValid () /^http:\/\/(tw|es|de|www)\.nicovideo\.jp\/(watch|playlist\/mylist)\//.test(U.currentURL),
 
     get volume () undefined,
     set volume (value) value,
@@ -683,14 +735,14 @@ Thanks:
     },
 
     seek: function (v) {
-      v = U.fromTimeCode(v);
+      v = U.fromTimeCode(v, this.totalTime);
       if (v < 0)
         v = this.totalTime + v;
       return this.currentTime = Math.min(Math.max(v, 0), this.totalTime);
     },
 
     seekRelative: function (v)
-      this.currentTime = Math.min(Math.max(this.currentTime + U.fromTimeCode(v), 0), this.totalTime),
+      this.currentTime = Math.min(Math.max(this.currentTime + U.fromTimeCode(v, this.totalTime), 0), this.totalTime),
 
     toggle: function (name) {
       if (!this.has(name, 'rwt'))
@@ -717,8 +769,9 @@ Thanks:
     get command () this._command,
     get description () this._description,
     get thumbnail () this._thumbnail,
+    get completionText () this.command,
     get completionItem () ({
-      text: this.command,
+      text: this.completionText,
       description: this.description,
       thumbnail: this.thumbnail
     })
@@ -782,27 +835,15 @@ Thanks:
   }
 
   YouTubePlayer.getIDfromURL = function (url) let ([_, r] = url.match(/[?;&]v=([-\w]+)/)) r;
-
-  YouTubePlayer.OUTER_NODES = [
-    'old-masthead',
-    'watch-vid-title',
-    'watch-other-vids',
-    'old-footer',
-    'copyright',
-    'watch-main-area',
-    'watch-comments-stats',
-    'watch-video-response',
-    'chrome-promo',
-    'watch-video-quality-setting',
-  ];
+  YouTubePlayer.isVideoURL = function (url) /^https?:\/\/(www\.)?youtube\.com\/watch\?.+/(url);
 
   YouTubePlayer.prototype = {
     __proto__: Player.prototype,
 
     functions: {
       currentTime: 'rw',
+      fetch: 'x',
       fileURL: 'r',
-      fullscreen: 'rwt',
       makeURL: 'x',
       muted: 'rwt',
       pageinfo: 'r',
@@ -811,7 +852,6 @@ Thanks:
       playEx: 'x',
       playOrPause: 'x',
       relations: 'r',
-      repeating: '',
       title: 'r',
       totalTime: 'r',
       volume: 'rw',
@@ -835,56 +875,33 @@ Thanks:
       let (as = content.document.defaultView.wrappedJSObject.swfArgs)
         ('http://www.youtube.com/get_video?fmt=22&video_id=' + as.video_id + '&t=' + as.t),
 
-    get fullscreen () this.storage.fullscreen,
-    // FIXME - うまく元に戻らないことがある？
-    set fullscreen (value) {
-      function changeOuterNodes (hide) {
-        return;
-        const st = {display: 'none'};
-        let f = hide ? function (node) U.storeStyle(node, st)
-                     : function (node) U.restoreStyle(node);
-        YouTubePlayer.OUTER_NODES.forEach(
-          function (id) {
-            let (node = U.getElementById(id)) {
-              node && f(node);
-            }
-          }
-        );
-      }
-
-      this.last.screenMode = value ? 'fullscreen' : null;
-      this.storage.fullscreen = value;
-
-      // changeOuterNodes(value);
-
-      let p = this.player;
-      let r = p.getBoundingClientRect();
-      if (this.fullscreen) {
-        if (this.storage.r === undefined)
-          this.storage.r = options['guioptions'].indexOf('r') >= 0;
-        U.storeStyle(p, {
-          marginLeft: -r.left + 'px',
-          marginTop: -r.top + 'px',
-          width: content.innerWidth + 'px',
-          height: content.innerHeight + 'px',
-        });
-        p.setSize(content.innerWidth, content.innerHeight);
-      } else {
-        p.setSize(640, 385);
-        U.restoreStyle(p);
-      }
-    },
+    get id ()
+      YouTubePlayer.getIDfromURL(U.currentURL),
 
     get muted () this.player.isMuted(),
     set muted (value) ((value ? this.player.mute() : this.player.unMute()), value),
 
-    get pageinfo () [
-      [
-        name,
-        U.xpathGet(this.xpath[name]).innerHTML.replace(/&nbsp;/g, ', ')
-      ]
-      for (name in this.xpath)
-    ],
+    get pageinfo () {
+      let doc = content.document;
+      let desc = doc.querySelector('#eow-description');
+      return [
+        [
+          'comment',
+          desc ? desc.textContent.trim() : ''
+        ],
+        [
+          'tags',
+          XMLList([
+            <span>[<a href={v.href}>{v.textContent}</a>]</span>
+            for ([, v] in Iterator(doc.querySelectorAll('#eow-tags > li > a')))
+          ].join(''))
+        ],
+        [
+          'quality',
+          this.quality
+        ]
+      ];
+    },
 
     get player ()
       U.getElementByIdEx('movie_player'),
@@ -896,13 +913,23 @@ Thanks:
 
     get ready () !!this.player,
 
-    get relatedtions () {
+    get relations () {
       let result = [];
       let doc = content.document;
-      let r = doc.evaluate("//div[@class='video-mini-title']/a", doc, null, 7, null);
-      for (let i = 0, l = r.snapshotLength; i < l; i++) {
-        let e = r.snapshotItem(i);
-        result.push(new RelatedID(YouTubePlayer.getIDfromURL(e.href), e.textContent));
+      for each (let item in Array.slice(doc.querySelectorAll('#watch-tags > div > a'))) {
+        result.push(new RelatedTag(item.textContent));
+      }
+      for each (let item in Array.slice(doc.querySelectorAll('.video-list-item'))) {
+        let url = item.querySelector('a').href;
+        if (!YouTubePlayer.isVideoURL(url))
+          continue;
+        result.push(
+          new RelatedID(
+            YouTubePlayer.getIDfromURL(url),
+            item.querySelector('span.title').textContent,
+            item.querySelector('img').src
+          )
+        );
       }
       return result;
     },
@@ -931,15 +958,49 @@ Thanks:
 
     get totalTime () parseInt(this.player.getDuration()),
 
-    get isValid () buffer.URL.match(/^http:\/\/(?:[^.]+\.)?youtube\.com\/watch/),
+    get isValid () U.currentURL.match(/^http:\/\/(?:[^.]+\.)?youtube\.com\/watch/),
 
     get volume () parseInt(this.player.getVolume()),
     set volume (value) (this.player.setVolume(value), this.volume),
 
+    fetch: function (filepath) {
+      function _fetch (id, t) {
+        let url =
+          "http://youtube.com/get_video?video_id=" + id +
+          "&t=" + decodeURIComponent(t) +
+          (quality ? "&fmt=" + quality : '');
+        U.download(url, filepath, '.flv', self.title);
+      }
+
+      let self = this;
+
+      // all(1080p,720p,480p,360p) -> 37, 22, 35, 34, 5
+      // FIXME 一番初めが最高画質だと期待
+      let cargs = content.wrappedJSObject.yt.config_.SWF_CONFIG.args;
+      let quality = cargs.fmt_map.match(/^\d+/);
+      let t = cargs.t;
+      let id = this.id;
+
+      // 時間が経っていると無効化されてしまっている
+      //_fetch(t, id);
+
+      U.httpRequest(
+        U.currentURL,
+        null,
+        function (xhr) {
+          // XXX t が変わるために、キャッシュを利用できない問題アリアリアリアリ
+          let [, t] = xhr.responseText.match(/swfHTML.*&t=([^&]+)/);
+          _fetch(id, t);
+        }
+      );
+    },
+
     makeURL: function (value, type) {
       switch (type) {
         case Player.URL_ID:
-          return 'http://www.youtube.com/watch?v=' + value + '&fmt=22'; //XXX さりげなく高画質に！
+          return 'http://www.youtube.com/watch?v=' + value;
+        case Player.URL_TAG:
+          return 'http://www.youtube.com/results?search=tag&search_query=' + encodeURIComponent(value);
         case Player.URL_SEARCH:
           return 'http://www.youtube.com/results?search_query=' + encodeURIComponent(value);
       }
@@ -954,29 +1015,70 @@ Thanks:
   // }}}
 
   /*********************************************************************************
+  * YouTubeUserChannelPlayer                                                                {{{
+  *********************************************************************************/
+
+  function YouTubeUserChannelPlayer () {
+    Player.apply(this, arguments);
+  }
+
+  YouTubeUserChannelPlayer.getIDfromURL = function (url) let ([_, r] = url.match(/\/([^\/]+)($|[\?]+)/)) r;
+  YouTubeUserChannelPlayer.isVideoURL = function (url) /^https?:\/\/(www\.)?youtube\.com\/watch\?.+/(url);
+
+  YouTubeUserChannelPlayer.prototype = {
+    __proto__: YouTubePlayer.prototype,
+
+    get id ()
+      YouTubeUserChannelPlayer.getIDfromURL(U.currentURL),
+
+    get isValid () U.currentURL.match(/^http:\/\/(?:[^.]+\.)?youtube\.com\/user\//),
+
+    fetch: function (filepath) {
+      // TODO 動画変数が手に入らない？
+      throw "not implmented!!";
+    },
+
+    get pageinfo () {
+      let doc = content.document;
+      let wd = doc.querySelector('#playnav-curvideo-description');
+      return [
+        [
+          'comment',
+          wd.textContent
+        ]
+      ];
+    },
+
+    get relations () {
+      let result = [];
+      let doc = content.document;
+      for each (let item in Array.slice(doc.querySelectorAll('div.playnav-item.playnav-video'))) {
+        let link = item.querySelector('a.playnav-item-title.ellipsis');
+        let url = link.href;
+        if (!YouTubePlayer.isVideoURL(url))
+          continue;
+        result.push(
+          new RelatedID(
+            YouTubePlayer.getIDfromURL(url),
+            link.querySelector('span').textContent,
+            item.querySelector('img').src
+          )
+        );
+      }
+      return result;
+    },
+
+  };
+
+  // }}}
+
+  /*********************************************************************************
   * NicoPlayer                                                                   {{{
   *********************************************************************************/
 
   function NicoPlayer () {
     Player.apply(this, arguments);
   }
-
-  // name, Normal, Fullscreen
-  // 任意の順で設定できるように配列で持つ
-  NicoPlayer.Variables = [
-    ['videowindow._xscale',                     100,   null],
-    ['videowindow._yscale',                     100,   null],
-    ['videowindow._x',                            6,      0],
-    ['videowindow._y',                           65,      0],
-    ['controller._x',                             6,  -1000],
-    ['inputArea._x',                              4,  -1000],
-    ['controller._visible',                       1,      1],
-    ['inputArea._visible',                        1,      1],
-    ['waku._visible',                             1,      0],
-    ['tabmenu._visible',                          1,      0],
-    ['videowindow.video_mc.video.smoothing',   null,      1],
-    ['videowindow.video_mc.video.deblocking',  null,      5]
-  ];
 
   NicoPlayer.SIZE_LARGE  = 'fit';
   NicoPlayer.SIZE_NORMAL = 'normal';
@@ -1013,7 +1115,7 @@ Thanks:
     icon: 'http://www.nicovideo.jp/favicon.ico',
 
     xpath: {
-      comment: 'id("des_2")/table[2]/tbody/tr/td[2]'
+      comment: 'id("itab_description")'
     },
 
     initialize: function () {
@@ -1023,7 +1125,7 @@ Thanks:
     get baseURL () 'http://www.nicovideo.jp/',
 
     get cachedInfo () {
-      let url = U.currentURL();
+      let url = U.currentURL;
       if (this.__info_cache.url != url)
         this.__info_cache = {url: url};
       return this.__info_cache;
@@ -1036,8 +1138,8 @@ Thanks:
       try {
       return parseInt(this.player.ext_getPlayheadTime())
       } catch (e) {
-        liberator.log(e)
-        liberator.log(e.stack)
+        U.log(e)
+        U.log(e.stack)
       }
     },
     set currentTime (value) (this.player.ext_setPlayheadTime(U.fromTimeCode(value)), this.currentTime),
@@ -1048,7 +1150,7 @@ Thanks:
     set fullscreen (value) (this.large = value),
 
     get id ()
-      let (m = U.currentURL().match(/\/watch\/([a-z\d]+)/))
+      let (m = U.currentURL.match(/\/(?:watch|playlist\/mylist)\/([a-z\d]+)/))
         (m && m[1]),
 
     get muted () this.player.ext_isMute(),
@@ -1058,18 +1160,18 @@ Thanks:
       let v = content.wrappedJSObject.Video;
       return [
         ['thumbnail', <img src={v.thumbnail} />],
-        ['comment', v.description],
+        ['comment', U.toXML(v.description)],
         [
           'tag',
           [
-            <span><a href={this.makeURL(t, Player.URL_TAG)}>{t}</a></span>
+            <span>[<a href={this.makeURL(t, Player.URL_TAG)}>{t}</a>]</span>
             for each (t in Array.slice(v.tags))
-          ].join()
+          ].join('')
         ]
       ];
     },
 
-    get player () U.getElementByIdEx('flvplayer'),
+    get player () content.document.getElementById('flvplayer').wrappedJSObject.__proto__,
 
     get playerContainer () U.getElementByIdEx('flvplayer_container'),
 
@@ -1087,7 +1189,7 @@ Thanks:
       let self = this;
 
       function IDsFromAPI () {
-        if (self.__rid_last_url == U.currentURL())
+        if (self.__rid_last_url == U.currentURL)
           return self.__rid_cache || [];
 
         let failed = false, videos = [];
@@ -1113,10 +1215,10 @@ Thanks:
             );
           }
 
-          self.__rid_last_url = U.currentURL();
+          self.__rid_last_url = U.currentURL;
           self.__rid_cache = videos;
         } catch (e) {
-          liberator.log('stella: ' + e)
+          U.log('stella: ' + e)
         }
 
         return videos;
@@ -1130,16 +1232,16 @@ Thanks:
           let xpath = self.xpath.comment;
           let comment = U.xpathGet(xpath).innerHTML;
           let links = U.xpathGets(xpath + '//a')
-                       .filter(function (it) /watch\//.test(it.href))
+                       .filter(function (it) /(watch|playlist\/mylist)\//.test(it.href))
                        .map(function(v) v.textContent);
           links.forEach(function (link) {
-            let re = RegExp('(?:^|[\u3000\\s\\>])([^\u3000\\s\\>]+)\\s*<a href="http:\\/\\/www\\.nicovideo\\.\\w+\\/watch\\/' + link + '" class="(watch|video)">');
+            let re = RegExp('(?:^|[\u3000\\s\\>])([^\u3000\\s\\>]+)\\s*<a href="http:\\/\\/www\\.nicovideo\\.\\w+\\/(?:watch|playlist\\/mylist)\\/' + link + '" class="(watch|video)">');
             let r = re.exec(comment);
             if (r)
               videos.push(new RelatedID(link, r[1].slice(-20)));
           });
         } catch (e) {
-          liberator.log('stella: ' + e)
+          U.log('stella: ' + e)
         }
         return videos;
       }
@@ -1178,7 +1280,7 @@ Thanks:
         case 'end':
           return Player.ST_ENDED;
         case 'playing':
-          return Player.ST_PLAYING;
+          return this.storage.bug_paused ? Player.ST_PAUSED : Player.ST_PLAYING;
         case 'paused':
           return Player.ST_PAUSED;
         case 'buffering':
@@ -1195,13 +1297,32 @@ Thanks:
     set volume (value) (this.player.ext_setVolume(value), this.volume),
 
     fetch: function (filepath) {
-      let onComplete = U.bindr(this, function (xhr) {
-          let res = xhr.responseText;
-          let info = {};
-          res.split(/&/).forEach(function (it) let ([n, v] = it.split(/=/)) (info[n] = v));
-          U.download(decodeURIComponent(info.url), filepath, this.fileExtension, this.title);
-      });
-      U.httpRequest('http://www.nicovideo.jp/api/getflv?v=' + this.id, null, onComplete);
+      let self = this;
+
+      let watchURL = U.currentURL;
+      let [,id] = watchURL.match(/watch\/(.+)$/);
+      let apiURL = 'http://www.nicovideo.jp/api/getflv?v=' + id;
+
+      U.httpRequest(
+        watchURL,
+        null,
+        function () {
+          U.httpRequest(
+            'http://www.nicovideo.jp/api/getflv?v=' + self.id,
+            null,
+            function (xhr) {
+              let res = xhr.responseText;
+              let info = {};
+              res.split(/&/).forEach(function (it) let ([n, v] = it.split(/=/)) (info[n] = v));
+              U.download(decodeURIComponent(info.url), filepath, self.fileExtension, self.title);
+              let postData = '<thread thread="' + info.thread_id + '"' + ' version="20061206" res_from="-1000" />';
+              // FIXME
+              let msgFilepath = filepath.replace(/\.[^\.]+$/, '.xml');
+              U.download(decodeURIComponent(info.ms), msgFilepath, '.xml', self.title, postData);
+            }
+          );
+        }
+      );
     },
 
     makeURL: function (value, type) {
@@ -1216,9 +1337,15 @@ Thanks:
       return value;
     },
 
-    pause: function () this.player.ext_play(false),
+    pause: function () {
+      this.storage.bug_paused = true;
+      this.player.ext_play(false);
+    },
 
-    play: function () this.player.ext_play(true),
+    play: function () {
+      this.storage.bug_paused = false;
+      this.player.ext_play(true)
+    },
 
     playOrPause: function () {
       if (this.is(Player.ST_PLAYING)) {
@@ -1230,7 +1357,7 @@ Thanks:
     },
 
     say: function (message) {
-      liberator.log('stsay');
+      U.log('stsay');
       this.sendComment(message);
     },
 
@@ -1250,7 +1377,7 @@ Thanks:
       }
 
       function getThumbInfo () {
-        liberator.log('getThumbInfo');
+        U.log('getThumbInfo');
         if (self.cachedInfo.block_no !== undefined)
           return;
         let xhr = U.httpRequest(self.baseURL + 'api/getthumbinfo/' + self.id);
@@ -1260,7 +1387,7 @@ Thanks:
       }
 
       function getFLV () {
-        liberator.log('getFLV');
+        U.log('getFLV');
         if (self.cachedInfo.flvInfo !== undefined)
           return;
         let xhr = U.httpRequest(self.baseURL + 'api/getflv?v=' + self.id);
@@ -1269,7 +1396,7 @@ Thanks:
       }
 
       function getPostkey () {
-        liberator.log('getPostkey');
+        U.log('getPostkey');
         let info = self.cachedInfo;
         if (info.postkey !== undefined)
           return;
@@ -1281,14 +1408,14 @@ Thanks:
                       block_no: info.block_no
                     }
                   );
-        liberator.log(url);
+        U.log(url);
         let xhr = U.httpRequest(url);
         let res = xhr.responseText;
         info.postkey = res.replace(/^.*=/, '');
       }
 
       function getComments () {
-        liberator.log('getComments');
+        U.log('getComments');
         let info = self.cachedInfo;
         if (info.ticket !== undefined)
           return;
@@ -1300,29 +1427,37 @@ Thanks:
       }
 
       function sendChat () {
-        liberator.log('sendChat');
+        U.log('sendChat');
         let info = self.cachedInfo;
         let tmpl = '<chat premium="--is_premium--" postkey="--postkey--" user_id="--user_id--" ticket="--ticket--" mail="--mail--" vpos="--vpos--" thread="--thread_id--">--body--</chat>';
         let args = {
           __proto__: info.flvInfo,
           ticket: info.ticket,
           postkey: info.postkey,
-          // 0 秒コメントはうざいらしいので勝手に自重する
-          vpos: Math.max(100, parseInt(vpos || (self.player.ext_getPlayheadTime() * 100), 10)),
+          vpos: vpos * 100,
+          mail: command,
           body: message
         };
-        liberator.log(args);
+        U.log(args);
         let data = U.fromTemplate(tmpl, args);
         let xhr = U.httpRequest(info.flvInfo.ms, data);
-        liberator.log(xhr.responseText);
+        U.log(xhr.responseText);
       }
 
-      liberator.log('sendcommnet');
+      function sendDummyComment (message, command, position) {
+        self.player.ext_sendLocalMessage(message, command, vpos);
+      }
+
+      // 0 秒コメントはうざいらしいので勝手に自重する
+      vpos = Math.max(1, parseInt(vpos || self.currentTime, 10));
+
+      U.log('sendcommnet');
       getThumbInfo();
       getFLV();
       getPostkey();
       getComments();
       sendChat();
+      sendDummyComment(message, command, vpos);
     }
   };
 
@@ -1371,7 +1506,7 @@ Thanks:
     set muted (value) (this.volume = value ? 0 : 100),
 
     get player ()
-      this.__initializePlayer(U.xpathGet('//embed[contains(@id,"vimeo_clip_")]').wrappedJSObject),
+      this.__initializePlayer(content.document.querySelector('.player > object').wrappedJSObject),
 
     get ready () !!this.player,
 
@@ -1386,7 +1521,7 @@ Thanks:
     get title ()
       U.xpathGet('//div[@class="title"]').textContent,
 
-    get isValid () buffer.URL.match(/^http:\/\/(www\.)?vimeo\.com\/(channels\/(hd)?#)?\d+$/),
+    get isValid () U.currentURL.match(/^http:\/\/(www\.)?vimeo\.com\/(channels\/(hd)?#)?\d+$/),
 
     // XXX setVolume は実際には存在しない？
     get volume () parseInt(this.player.__stella_volume),
@@ -1421,7 +1556,7 @@ Thanks:
     'play',
     'pause',
     'comment',
-    'repeat',
+    'repeating',
     'fullscreen',
     'fetch',
     {
@@ -1526,15 +1661,22 @@ Thanks:
       this.players = {
         niconico: new NicoPlayer(this.stella),
         youtube: new YouTubePlayer(this.stella),
+        youtubeuc: new YouTubeUserChannelPlayer(this.stella),
         vimeo: new VimeoPlayer(this.stella)
       };
 
+      // this.noGUI = true;
+      this.createGUI();
+      this.__onResize = window.addEventListener('resize', U.bindr(this, this.onResize), false);
+      this.progressListener = new WebProgressListener({onLocationChange: U.bindr(this, this.onLocationChange)});
+    },
+
+    createGUI: function () {
+      if (this.noGUI)
+        return;
       this.createStatusPanel();
       this.onLocationChange();
       this.hidden = true;
-
-      this.__onResize = window.addEventListener('resize', U.bindr(this, this.onResize), false);
-      this.progressListener = new WebProgressListener({onLocationChange: U.bindr(this, this.onLocationChange)});
     },
 
     // もちろん、勝手に呼ばれたりはしない。
@@ -1611,6 +1753,24 @@ Thanks:
         add('sa[y]', 'say');
 
       commands.addUserCommand(
+        ['stfe[tch]'],
+        'Download movie file - Stella',
+        function (args) {
+          if (!self.isValid)
+            return U.raiseNotSupportedPage();
+          if (!self.player.has('fetch', 'x'))
+            return U.raiseNotSupportedFunction();
+
+          self.player.fetch(args.literalArg);
+        },
+        {
+          literal: 0,
+          completer: function (context) completion.file(context)
+        },
+        true
+      );
+
+      commands.addUserCommand(
         ['stqu[ality]'],
         'Quality - Stella',
         function (args) {
@@ -1633,50 +1793,63 @@ Thanks:
         true
       );
 
-      commands.addUserCommand(
-        ['strel[ations]'],
-        'relations - Stella',
-        function (args) {
-          if (!self.isValid)
-            return U.raiseNotSupportedPage();
-
-          let arg = args.string;
-          let url = self.player.has('makeURL', 'x') ? makeRelationURL(self.player, arg) : arg;
-          liberator.open(url, args.bang ? liberator.NEW_TAB : liberator.CURRENT_TAB);
-        },
-        {
-          argCount: '*',
-          bang: true,
-          completer: function (context, args) {
+      let (lastCompletions = []) {
+        commands.addUserCommand(
+          ['strel[ations]'],
+          'relations - Stella',
+          function (args) {
             if (!self.isValid)
-              U.raiseNotSupportedPage();
-            if (!self.player.has('relations', 'r'))
-              U.raiseNotSupportedFunction();
+              return U.raiseNotSupportedPage();
 
-            context.title = ['Tag/ID', 'Description'];
-            context.keys = {text: 'text', description: 'description', thumbnail: 'thumbnail'};
-            let process = Array.slice(context.process);
-            context.process = [
-              process[0],
-              function (item, text)
-                (item.thumbnail ? <><img src={item.thumbnail} style="margin-right: 0.5em; height: 3em;"/>{text}</>
-                                : process[1].apply(this, arguments))
-            ];
-            context.completions = self.player.relations.map(function (rel) rel.completionItem);
+            let arg = args.literalArg;
+            let index = (/^\d+:/)(arg) && parseInt(arg, 10);
+            if (index > 0)
+              arg = lastCompletions[index - 1].command;
+            let url = self.player.has('makeURL', 'x') ? makeRelationURL(self.player, arg) : arg;
+            liberator.open(url, args.bang ? liberator.NEW_TAB : liberator.CURRENT_TAB);
           },
-        },
-        true
-      );
+          {
+            literal: 0,
+            argCount: '*',
+            bang: true,
+            completer: function (context, args) {
+              if (!self.isValid)
+                U.raiseNotSupportedPage();
+              if (!self.player.has('relations', 'r'))
+                U.raiseNotSupportedFunction();
+
+              context.filters = [CompletionContext.Filter.textDescription];
+              context.anchored = false;
+              context.title = ['Tag/ID', 'Description'];
+              context.keys = {text: 'text', description: 'description', thumbnail: 'thumbnail'};
+              let process = Array.slice(context.process);
+              context.process = [
+                process[0],
+                function (item, text)
+                  (item.thumbnail ? <><img src={item.thumbnail} style="margin-right: 0.5em; height: 3em;"/>{text}</>
+                                  : process[1].apply(this, arguments))
+              ];
+              lastCompletions = self.player.relations;
+              context.completions = lastCompletions.map(function (rel) rel.completionItem);
+            },
+          },
+          true
+        );
+      }
     },
 
     addPageInfo: function () {
       let self = this;
+      delete buffer.pageInfo.S;
       buffer.addPageInfoSection(
         'S',
         'Stella Info',
         function (verbose)
           (self.isValid && self.player.has('pageinfo', 'r')
-            ? self.player.pageinfo
+            ? [
+                [n, <div style="white-space: normal">{modules.template.maybeXML(v)}</div>]
+                for each ([n, v] in self.player.pageinfo)
+              ]
             : [])
       );
     },
@@ -1685,13 +1858,17 @@ Thanks:
       let self = this;
 
       function setEvents (name, elem) {
-        ['click', 'popupshowing'].forEach(function (eventName) {
-          let onEvent = self['on' + U.capitalize(name) + U.capitalize(eventName)];
+        ['click', 'command', 'popupshowing'].forEach(function (eventName) {
+          let onEvent = self[
+            'on' +
+              U.capitalize(name) +
+              U.capitalize(eventName == 'command' ? 'click' : eventName)
+          ];
           onEvent && elem.addEventListener(eventName, function (event) {
-            if (eventName != 'click' || event.button == 0) {
-              onEvent.apply(self, arguments);
-              self.update();
-            }
+            if (eventName == 'click' && event.button != 0)
+              return;
+            onEvent.apply(self, arguments);
+            self.update();
           }, false);
         });
       }
@@ -1743,7 +1920,7 @@ Thanks:
       });
 
       let stbar = document.getElementById('status-bar');
-      stbar.insertBefore(panel, document.getElementById('liberator-statusline').nextSibling);
+      stbar.appendChild(panel);
 
       let relmenu = document.getElementById('anekos-stella-relations-menupopup');
 
@@ -1751,6 +1928,8 @@ Thanks:
     },
 
     disable: function () {
+      if (this.noGUI)
+        return;
       this.hidden = true;
       if (this.__updateTimer) {
         clearInterval(this.__updateTimer);
@@ -1762,6 +1941,8 @@ Thanks:
     },
 
     enable: function () {
+      if (this.noGUI)
+        return;
       this.hidden = false;
       this.icon.setAttribute('src', this.player.icon);
       for (let name in this.toggles) {
@@ -1866,10 +2047,6 @@ Thanks:
           timerHandle = setTimeout(
             U.bindr(this, function () {
               this.player.currentTime = this.__currentTimeTo;
-              liberator.log({
-                pl: this.player.currentTime,
-                to: this.__currentTimeTo
-              })
               delete this.__currentTimeTo;
             }),
             1000
@@ -1931,7 +2108,7 @@ Thanks:
                      rel instanceof RelatedTag ? 'Tag: ' :
                      '';
         elem.setAttribute('label', prefix + rel.description);
-        elem.addEventListener('click', clickEvent(rel.command), false);
+        elem.addEventListener('command', clickEvent(rel.command), false);
         relmenu.appendChild(elem);
       }, this);
     },
@@ -1979,13 +2156,12 @@ Thanks:
       let stella = liberator.globalVariables.stella = new Stella(new Setting());
       stella.addUserCommands();
       stella.addPageInfo();
-      liberator.log('Stella: installed.');
+      U.log('Stella: installed.');
     };
 
     // すでにインストール済みの場合は、一度ファイナライズする
     // (デバッグ時に前のパネルが残ってしまうため)
     if (estella) {
-      liberator.log(estella)
       estella.finalize();
       install();
     } else {
