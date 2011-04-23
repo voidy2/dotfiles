@@ -7,7 +7,7 @@ if version < 600
   syntax clear
 elseif exists("b:current_syntax")
   finish
-endif
+	endif
 
 syn case match
 syn sync minlines=50
@@ -38,7 +38,7 @@ syn keyword scalaObject object nextgroup=scalaClassName skipwhite
 syn keyword scalaTrait trait nextgroup=scalaClassName skipwhite
 syn match scalaDefName "[^ =:;([]\+" contained nextgroup=scalaDefSpecializer skipwhite
 syn match scalaValName "[^ =:;([]\+" contained
-syn match scalaVarName "[^ =:;([]\+" contained 
+syn match scalaVarName "[^ =:;([]\+" contained
 syn match scalaClassName "[^ =:;(\[]\+" contained nextgroup=scalaClassSpecializer skipwhite
 syn region scalaDefSpecializer start="\[" end="\]" contained contains=scalaDefSpecializer
 syn region scalaClassSpecializer start="\[" end="\]" contained contains=scalaClassSpecializer
@@ -149,3 +149,4 @@ let b:current_syntax = "scala"
 " hi scalaMethodCall gui=italic
 " hi scalaValName gui=underline
 " hi scalaVarName gui=underline
+

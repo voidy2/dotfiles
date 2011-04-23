@@ -412,6 +412,17 @@ let g:neocomplcache_dictionary_filetype_lists = {
   \ 'scala' : $HOME . '/.vim/dict/scala.dict',
   \ }
 
+if &filetype == 'scala'
+    setlocal iskeyword+=@-@
+    setlocal includeexpr=substitute(v:fname,'\\.','/','g')
+    setlocal suffixesadd=.scala
+    setlocal suffixes+=.class
+    setlocal comments& comments^=sO:*\ -,mO:*\ \ ,exO:*/
+    setlocal commentstring=//%s
+    setlocal formatoptions-=t formatoptions+=croql
+    setlocal dict=$HOME/.vim/dict/java.dict,$HOME/.vim/dict/scala.dict
+endif
+
 " Use Hatena.vim
 let g:hatena_user='voidy21'
 " Use git-vim

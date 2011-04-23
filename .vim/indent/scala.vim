@@ -42,14 +42,25 @@ function! GetScalaIndent()
     return ind + &shiftwidth
   endif
 
+  "### Taken from mail on scala mailing list
+  "### -------------------------------------
   " Add a 'shiftwidth' after lines that start a block
   " If if, for or while end with ), this is a one-line block
   " If val, var, def end with =, this is a one-line block
-  if prevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\|va[lr]\|def\)\>.*[)=]\s*$'
-        \ || prevline =~ '^\s*\<else\>\s*$'
-        \ || prevline =~ '{\s*$'
-    let ind = ind + &shiftwidth
-  endif
+  "if prevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\|va[lr]\|def\)\>.*[)=]\s*$'
+      "\ || prevline =~ '^\s*\<else\>\s*$'
+      "\ || prevline =~ '{\s*$'
+      "let ind = ind + &shiftwidth
+      "endif
+      " Add a 'shiftwidth' after lines that start a block
+      " If if, for or while end with ), this is a one-line block
+      " If val, var, def end with =, this is a one-line block
+      if prevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>.*[)]\s*$'
+                  \ || prevline =~ '^\s*\<\(\(va[lr]\|def\)\>.*[=]\s*$'
+                  \ || prevline =~ '^\s*\<else\>\s*$'
+                  \ || prevline =~ '{\s*$'
+          let ind = ind + &shiftwidth
+      endif
 
   " If parenthesis are unbalanced, indent or dedent
   let c = CountParens(prevline)
@@ -60,12 +71,21 @@ function! GetScalaIndent()
     let ind = ind - &shiftwidth
   endif
   
+  "### Taken from mail on scala mailing list
+  "### -------------------------------------
   " Dedent after if, for, while and val, var, def without block
-  let pprevline = getline(prevnonblank(lnum - 1))
-  if pprevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\|va[lr]\|def\)\>.*[)=]\s*$'
-        \ || pprevline =~ '^\s*\<else\>\s*$'
-    let ind = ind - &shiftwidth
-  endif
+  "let pprevline = getline(prevnonblank(lnum - 1))
+  "if pprevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\|va[lr]\|def\)\>.*[)=]\s*$'
+      "\ || pprevline =~ '^\s*\<else\>\s*$'
+      "let ind = ind - &shiftwidth
+      "endif
+      " Dedent after if, for, while and val, var, def without block
+      "let pprevline = getline(prevnonblank(lnum - 1))
+      if pprevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>.*[)]\s*$'
+                  \ || pprevline =~ '^\s*\<\(\va[lr]\|def\)\>.*[=]\s*$'
+                  \ || pprevline =~ '^\s*\<else\>\s*$'
+          let ind = ind - &shiftwidth
+      endif
 
   " Align 'for' clauses nicely
   if prevline =~ '^\s*\<for\> (.*;\s*$'
