@@ -1,7 +1,6 @@
 "オートコマンドを初期化
 autocmd!
 
-
 syntax on
 filetype plugin indent on
 autocmd FileType *
@@ -165,9 +164,9 @@ set wildmode=list:longest,full
 set directory=~/tmp
 "" タブ幅
 set expandtab
-set shiftwidth=4
-set softtabstop=4
-set tabstop=8
+set shiftwidth=2
+set softtabstop=2
+set tabstop=4
 "" タブ文字と改行文字を表示(^I,$)
 set list
 "" 検索時に大文字小文字区別しない
@@ -197,7 +196,6 @@ nnoremap <silent> <C-n> :<C-u>tabnext<cr>
 nnoremap <silent> <C-p> :<C-u>tabprevious<CR>
 nnoremap <silent> tn :<C-u>tabnew<CR>
 nnoremap <silent> tq :<C-u>tabclose<CR>
-nmap bb :ls<CR>:buf 
 " 表示行単位で移動
 noremap j gj
 noremap k gk
@@ -259,12 +257,6 @@ inoremap <C-d> <Del>
 inoremap <leader>[ [
 inoremap <leader>{ {
 inoremap <leader>( (
-inoremap [ []<LEFT>
-inoremap [] []<LEFT>
-inoremap { {}<LEFT>
-inoremap {} {}<LEFT>
-inoremap ( ()<LEFT>
-inoremap () ()<LEFT>
 inoremap <leader>; <End>;
 nnoremap <leader>; A;
 "コマンドモードの履歴
@@ -405,11 +397,21 @@ function! s:ExecPy()
 endfunction
 command! Exec call <SID>ExecPy()
 autocmd FileType python nnoremap  <leader>t :call <SID>ExecPy()<CR>
-"
-" Use neocomplcache.
-let g:NeoComplCache_EnableAtStartup = 1
-" Use smartcase.
-let g:NeoComplCache_SmartCase = 1
+"--------------
+let g:neocomplcache_enable_at_startup = 1
+let g:neocomplcache_disable_auto_select_buffer_name_pattern = '.*'
+let g:neocomplcache_enable_ignore_case = 1
+let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_enable_camel_case_completion = 1
+let g:neocomplcache_auto_completion_start_length = 3
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_enable_auto_delimiter = 1
+""ユーザ定義の辞書を指定
+let g:neocomplcache_dictionary_filetype_lists = {
+  \ 'default' : '',
+  \ 'scala' : $HOME . '/.vim/dict/scala.dict',
+  \ }
+
 " Use Hatena.vim
 let g:hatena_user='voidy21'
 " Use git-vim

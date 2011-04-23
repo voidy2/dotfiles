@@ -90,6 +90,7 @@ PATH=~/local/bin:$PATH
 PATH=~/lib/flex/bin:$PATH
 PATH=~/local/bin:$PATH
 PATH=/var/lib/gems/1.8/bin:$PATH
+PATH=~/myapp/android-sdk-linux_x86/tools:$PATH
 FLEX_HOME=~/lib/flex
 export GREP_OPTIONS="--color=auto"
 export STAX_HOME=~/stax-sdk-0.2.14
@@ -219,7 +220,7 @@ esac
 
 alias less='/usr/share/vim/vim71/macros/less.sh'
 function cd(){
-    builtin cd $@ && tree -N -L 1 -a;
+    builtin cd $@ && ls;
 }
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 #screenセッション保存先
@@ -381,6 +382,11 @@ if [ "$TERM" = "screen" ]; then
     }
     chpwd
 fi
+
+# git completion
+#autoload bashcompinit
+#bashcompinit
+#source ~/git-completion.bash
 
 #source ~/dotfiles/zsh/auto-fu.zsh; zle-line-init () { auto-fu-init; }; zle -N zle-line-init
 

@@ -1,7 +1,7 @@
 "=============================================================================
-" FILE: snippets.vim
+" FILE: abbrev_complete.vim
 " AUTHOR:  Shougo Matsushita <Shougo.Matsu@gmail.com>
-" Last Modified: 22 Apr 2011.
+" Last Modified: 17 Aug 2010
 " License: MIT license  {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
 "     a copy of this software and associated documentation files (the
@@ -24,38 +24,49 @@
 " }}}
 "=============================================================================
 
-" Only load this indent file when no other was loaded.
-if exists('b:did_indent')
-  finish
-endif
-let b:did_indent = 1
-
 let s:save_cpo = &cpo
 set cpo&vim
 
-if !exists('b:undo_indent')
-    let b:undo_indent = ''
-endif
+let s:source = {
+      \ 'name' : 'abbrev_complete',
+      \ 'kind' : 'plugin',
+      \}
 
-setlocal indentexpr=SnippetsIndent()
-
-function! SnippetsIndent()"{{{
-    let l:line = getline('.')
-    let l:prev_line = (line('.') == 1)? '' : getline(line('.')-1)
-
-    if l:prev_line =~ '^\s*$'
-        return 0
-    elseif l:prev_line =~ '^\%(include\|snippet\|abbr\|prev_word\|rank\|delete\|alias\|condition\)'
-                \&& l:line !~ '^\s*\%(include\|snippet\|abbr\|prev_word\|rank\|delete\|alias\|condition\)'
-        return &shiftwidth
-    else
-        return match(l:line, '\S')
-    endif
+function! s:source.initialize()"{{{
+  " Initialize.
 endfunction"}}}
 
-let b:undo_indent .= '
-    \ | setlocal indentexpr<
-    \'
+function! s:source.finalize()"{{{
+endfunction"}}}
+
+function! s:source.get_keyword_list(cur_keyword_str)"{{{
+  " Get current abbrev list.
+  let l:abbrev_list = ''
+  redir => l:abbrev_list
+  silent! iabbrev
+  redir END
+
+  let l:list = []
+  for l:line in split(l:abbrev_list, '\n')
+    let l:abbrev = split(l:line)
+
+    if l:abbrev[0] !~ '^[!i]$'
+      " No abbreviation found.
+      return []
+    endif
+
+    call add(l:list, 
+          \{ 'word' : l:abbrev[1], 'menu' : printf('[A] %.'. g:neocomplcache_max_filename_width.'s', l:abbrev[2]) })
+  endfor
+
+  return neocomplcache#keyword_filter(l:list, a:cur_keyword_str)
+endfunction"}}}
+
+function! neocomplcache#sources#abbrev_complete#define()"{{{
+  return s:source
+endfunction"}}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
+
+" vim: foldmethod=marker
