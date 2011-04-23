@@ -1,9 +1,10 @@
 echo 'Now Loading...'
 
+set gui=none,tabs
 command! -nargs=+ lazy autocmd VimperatorEnter .* <args>
 " 自動フォーカス回避
 set focuscontent
-set showtabline=2
+set tabnumbers=true
 set hintchars=hjklasdfgyuiopqwertnmzxcvb
 hi! Hint z-index:5000; font-family:monospace; font-weight: bold; font-size:16px; color:white; background-color:#6666cc; border-color:ButtonShadow; border-width:0px; border-style:solid; text-transform:uppercase; padding:0px 1px 0px 1px; position:absolute;
 
@@ -40,17 +41,7 @@ nnoremap rd :removetabsright<CR>
 nnoremap ld :removetabsleft<CR>
 nnoremap <C-j> <Down>
 nnoremap <C-k> <Up>
-" C-a,C-v,C-v,C-zを設定
-inoremap <C-a> <C-v><C-a>
-inoremap <C-z> <C-v><C-z>
-inoremap <C-x> <C-v><C-x>
-inoremap <C-c> <C-v><C-c>
-inoremap <C-v> <C-v><C-v>
-cnoremap <C-a> <C-v><C-a>
-cnoremap <C-z> <C-v><C-z>
 "cnoremap <C-x> <C-v><C-x>
-cnoremap <C-c> <C-v><C-c>
-cnoremap <C-v> <C-v><C-v>
 nnoremap <C-H> <BS>
 cnoremap <C-i> <Tab>
 cnoremap <C-n> <Tab>
@@ -92,8 +83,8 @@ vnoremap <Leader>q :tombloo Quote<CR>
 vnoremap <Leader>g y<normal>:tabopen google <C-v><C-v><CR>
 nnoremap <Leader>g :gr<CR>
 " Unhidden and hidden the menubar and the toolbar
-noremap <A-Up> :set guioptions+=mT<CR>
-noremap <A-Down> :set guioptions=<CR>
+noremap <A-Up> :set gui=all<CR>
+noremap <A-Down> :set gui=none,tabs<CR>
 
 noremap <A-T> :restart<CR>
 
@@ -110,7 +101,6 @@ nnoremap <S-Down> :stvolume! -3<CR>
 "}}}
 
 " スクロールバーとタブ番号を非表示
-set go=
 set hinttimeout=1000
 " Firefox起動時には前回のタブを復元して起動する(ダイアログなし)
 set! browser.startup.page=3
@@ -160,11 +150,9 @@ set! signed.applets.codebase_principal_support=true
 set hlsearch
 set noincsearch
 set runtimepath=~/.vimperator
-set guioptions=nbr
 set history=1000
 " set complete=tls
 set complete=ls
-set wildoptions=auto
 set suggestengines=google
 set newtab=all
 
@@ -204,7 +192,7 @@ let g:statstat_interval = '400'
 " next linkのタブを新しく読み込むようにする
 let g:nextlink_followlink = 'true'
 
-colorscheme voidy21-color
+"colorscheme voidy21-color
 
 " タブ追加ボタン消去
 " @http://fifnel.com/2009/03/15/2278/
@@ -239,20 +227,6 @@ autocmd LocationChange mail\\.google\\.com/mail/.*/[0-9a-f]+$ fmap! c / j,n k,p 
 autocmd LocationChange 'www\.google\.com/calendar/' :fmap! -vkey -event keydown t a d w m x c e <Del> / + q s ?
 
 let g:maine_coon_default = 'am'
-
-" ステータスバーにfeedボタンを表示
-" @http://d.hatena.ne.jp/teramako/20071205/p1
-js <<EOM
-(function(){
- var feedPanel = document.createElement('statusbarpanel');
- var feedButton = document.getElementById('feed-button');
- feedPanel.setAttribute('id','feed-panel-clone');
- feedPanel.appendChild(feedButton.cloneNode(true));
- feedButton.parentNode.removeChild(feedButton);
- document.getElementById('status-bar').insertBefore(feedPanel,document.getElementById('security-button'));
-})();
-EOM
-
 
 " 選択されている単語をmulti_requester.jsを使用して、英辞郎 on the Web で検索するためのキーマップです
 " @http://vimperator.g.hatena.ne.jp/snaka72/20090506/1241608109
@@ -486,8 +460,6 @@ commands.addUserCommand(
 );
 EOM
 
-" debugger on
-js services.get('debugger').on()
 " コマンドラインでlibly.$U.getNodesFromXPathを簡単に呼び出せるようにする
 " @http://vimperator.g.hatena.ne.jp/snaka72/20100313/1268470861
 js liberator.modules.__defineGetter__('$LXs', function() liberator.plugins.libly.$U.getNodesFromXPath) 
