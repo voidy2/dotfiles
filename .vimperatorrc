@@ -564,6 +564,17 @@ mappings.addUserMap(
 );
 EOM
 
+"ページ内検索を Esc で隠す
+"@http://hibari.2ch.net/test/read.cgi/software/1282406907/268
+js <<EOM
+mappings.addUserMap([modes.NORMAL], ["<Esc>","<C-[>"], "Esc",
+  function () {
+  var findbar = document.getElementById("FindToolbar");
+  if (!findbar.hidden) { findbar.close(); }
+  else { events.feedkeys('<Esc>', true); }
+});
+EOM
+
 " リンクのテキストをリンク先URLに変換
 command showurl :js for each(let link in Array.slice(content.document.links)){link.textContent = link.href}
 
