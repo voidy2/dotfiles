@@ -1,5 +1,5 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =8
+let g:netrw_dirhist_cnt =9
 let g:netrw_dirhist_1='/home/voidy21/myapp/gae/google_appengine/demos/ordinary_bbs/src/view'
 let g:netrw_dirhist_2='/home/voidy21/prog/GoogleReaderForJava/src/networkaccess'
 let g:netrw_dirhist_3='/var/lib/jenkins/updates'
@@ -8,3 +8,4 @@ let g:netrw_dirhist_5='/home/voidy21/prog/cpp/src/Calc'
 let g:netrw_dirhist_6='/home/voidy21/prog/cpp/src'
 let g:netrw_dirhist_7='/home/voidy21/prog/cpp/src/Calc'
 let g:netrw_dirhist_8='/home/voidy21/prog/cpp/test/Calc'
+let g:netrw_dirhist_9='/home/voidy21/vim/unite.vim'
