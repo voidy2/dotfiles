@@ -1,110 +1,83 @@
-Description:
-neocomplcache performs keyword completion by making a cache of keyword in
-buffer. Because I implemented it by paying own expenses unlike the keyword
-completion including the Vim composing type, neocomplcache can be customized
-flexibly. Unfortunately neocomplcache may use more memory than other
-plugins.
+description:
 
-Installation:
-1: Extract the file and Put files in your Vim directory
-   (usually ~/.vim/ or Program Files/Vim/vimfiles on Windows).
-2: Execute |:NeoComplCacheEnable| command or
-let g:neocomplcache_enable_at_startup = 1
-in your .vimrc.
+*unite* or *unite.vim* searches and displays information from arbitrary sources like files,
+buffers, recently used files or registers. You can run one of defined action
+on a target displayed.
 
-Caution:
-Because all variable names are changed in neocomplcache Ver.5, there is not
-backward compatibility. In the case of the upgrade, you should use the next
-script which Mr.thinca made.
-http://gist.github.com/422503
+The differences between |unite| and similar plugins like |fuzzyfinder| or |ku|
+are that |unite| doesn't use the built-in completion interface of Vim, and
+integrates sources at the same time.
 
-Screen shots:
-Quick match.
-http://3.bp.blogspot.com/_ci2yBnqzJgM/TD1PeahCmOI/AAAAAAAAADc/Rz_Pbpr92z4/s1600/quick_match.png
-Snippet completion like snipMate.
-http://3.bp.blogspot.com/_ci2yBnqzJgM/SfkgaHXLS0I/AAAAAAAAAA4/TmaylpFl_Uw/s1600-h/Screenshot2.PNG
-Original filename completion.
-http://1.bp.blogspot.com/_ci2yBnqzJgM/TD1O5_bOQ2I/AAAAAAAAADE/vHf9Xg_mrTI/s1600/filename_complete.png
-Register completion.
-http://1.bp.blogspot.com/_ci2yBnqzJgM/TD1Pel4fomI/AAAAAAAAADk/YsAxF8i6r3w/s1600/register_complete.png
-Omni completion.
-http://2.bp.blogspot.com/_ci2yBnqzJgM/TD1PTolkTBI/AAAAAAAAADU/knJ3eniuHWI/s1600/omni_complete.png
-Completion with vimshell(http://github.com/Shougo/vimshell).
-http://1.bp.blogspot.com/_ci2yBnqzJgM/TD1PLfdQrwI/AAAAAAAAADM/2pSFRTHwYOY/s1600/neocomplcache_with_vimshell.png
-Vim completion.
-http://1.bp.blogspot.com/_ci2yBnqzJgM/TD1PfKTlwnI/AAAAAAAAADs/nOGWTRLuae8/s1600/vim_complete.png
+usage:
 
-Setting examples:
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-" Use camel case completion.
-let g:neocomplcache_enable_camel_case_completion = 1
-" Use underbar completion.
-let g:neocomplcache_enable_underbar_completion = 1
-" Set minimum syntax keyword length.
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+In case when you run with files and buffers as the source 
 
-" Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-    \ }
+:Unite file buffer
 
-" Define keyword.
-if !exists('g:neocomplcache_keyword_patterns')
-  let g:neocomplcache_keyword_patterns = {}
-endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
-" Plugin key-mappings.
-imap <C-k>     <Plug>(neocomplcache_snippets_expand)
-smap <C-k>     <Plug>(neocomplcache_snippets_expand)
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
+In case when you run with the initial input value foo 
 
-" SuperTab like snippets behavior.
-"imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+:Unite -input=foo file
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
-" AutoComplPop like behavior.
-"let g:neocomplcache_enable_auto_select = 1
+The unite you started splits the window horizontally as default, opening on 
+the top of the Vim.  For example,
 
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplcache_enable_auto_select = 1
-"let g:neocomplcache_disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<TAB>"
-"inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+:Unite file
 
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+lists up the files of the current directory.  You may choose one of the 
+candidates by moving j or k, and typing Enter opens the candidate in a new 
+buffer.  That's the default action for candidates of which kind is file.  You 
+may also select an action with <Tab> on a candidate.  See also |unite-action| 
+about the actions.
 
-" Enable heavy omni completion.
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-"autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
-let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+You can narrow down the candidates with a keyword.  After opening a unite 
+window, the cursor goes on the right side of > in the 2nd line by typing i. 
+Then you can input a keyword to narrow down the candidates.  Each single 
+characters you type narrows down the candidates.  You also can use a wild 
+card * as an arbitrary character sequence.  For example
+
+*hisa
+
+matches hisa, ujihisa, or ujihisahisa.  Furthermore, two consequence wild cards 
+matches directory recursively.  For example
+
+**/foo
+
+matches bar/foo or buzz/bar/foo.  Note that you should consider using 
+|file_rec| that will be described bellow in most cases.
+
+You may specify multiple keywords to narrow down, separating by spaces.
+
+foo bar
+
+That matches candidates that match both foo and bar.
+
+You may specify negative conditions with !.
+
+foo !bar
+
+That matches foo but candidates that match bar will be rejected.
+
+You may add wild cards automatically with / if you specify files on
+-buffer-name option.  That's handy in case you select file with unite.
+
+:Unite -buffer-name=files file
+
+See also |unite_default_key_mappings| for other actions.
+
+Screencast is available. Thanks ujihisa!
+http://www.ustream.tv/recorded/11240673
+ 
+install details:
+Install the distributed files into Vim script directory which is usually
+~/.vim/, or $HOME/vimfiles on Windows.
+
+In future VimJolts the Vim plugin package manager will support unite, you can
+install unite just by `jolt install unite`.
+
+You may run unite with |:Unite| command with source as parameters if you
+succeeded in installing unite.  However, it's pain in ass to run the command
+explicitly every time, so I recommend you to set a key mapping for the
+command.
+

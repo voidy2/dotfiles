@@ -1,11 +1,4 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =9
-let g:netrw_dirhist_1='/home/voidy21/myapp/gae/google_appengine/demos/ordinary_bbs/src/view'
-let g:netrw_dirhist_2='/home/voidy21/prog/GoogleReaderForJava/src/networkaccess'
-let g:netrw_dirhist_3='/var/lib/jenkins/updates'
-let g:netrw_dirhist_4='/home/voidy21/prog/cpp/src'
-let g:netrw_dirhist_5='/home/voidy21/prog/cpp/src/Calc'
-let g:netrw_dirhist_6='/home/voidy21/prog/cpp/src'
-let g:netrw_dirhist_7='/home/voidy21/prog/cpp/src/Calc'
-let g:netrw_dirhist_8='/home/voidy21/prog/cpp/test/Calc'
-let g:netrw_dirhist_9='/home/voidy21/vim/unite.vim'
+let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_1='/home/voidy21/prog/atlas-plugin/com.voidy21.jira.scala.plugin/src/main'
+let g:netrw_dirhist_2='/home/voidy21/prog/atlas-plugin/com.voidy21.jira.scala.plugin/src/main/resources'
