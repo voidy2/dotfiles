@@ -3,28 +3,9 @@ autocmd!
 
 syntax on
 filetype plugin indent on
-autocmd FileType *
-\   if &l:omnifunc == ''
-\ |   setlocal omnifunc=syntaxcomplete#Complete
-\ | endif
 
 colorscheme desert
 let mapleader=","
-"" -------------------
-"" 文字エンコーディング
-"" -------------------
-"{{{
-command! -bang -bar -complete=file -nargs=? UTf8
-        \ edit<bang> ++enc=utf-8 <args>
-command! -bang -bar -complete=file -nargs=? Cp932
-        \ edit<bang> ++enc=cp932 <args>
-command! -bang -bar -complete=file -nargs=? Eucjp
-        \ edit<bang> ++enc=euc-jp <args>
-command! -bang -bar -complete=file -nargs=? Iso2022jp
-        \ edit<bang> ++enc=iso-2022-jp <args>
-command! -bang -bar -complete=file -nargs=? Jis Iso2022jp<bang> <args>
-command! -bang -bar -complete=file -nargs=? Sjis Cp932<bang> <args>
-"}}}
 "" -------------------
 "" ハイライト
 "" -------------------
@@ -38,11 +19,7 @@ let &statusline .= '%y' " filetype
 let &statusline .= '[%{&fileencoding == "" ? &encoding : &fileencoding}]'
 let &statusline .= '[%{&fileformat}]'
 let &statusline .= '  %-14.(%l,%c%V%) %P'
-autocmd ColorScheme *
-\ highlight StatusLine
-\ cterm=bold,reverse
-\ ctermfg=blue
-\ ctermbg=white
+autocmd ColorScheme * highlight StatusLine cterm=bold,reverse ctermfg=blue ctermbg=white
 autocmd ColorScheme * highlight StatusLineNC cterm=reverse
 " ステータスラインの色(挿入モード:green,ノーマルモード:blue)
 autocmd InsertEnter * highlight StatusLine ctermfg=green
@@ -406,11 +383,6 @@ let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_auto_completion_start_length = 3
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_enable_auto_delimiter = 1
-""ユーザ定義の辞書を指定
-let g:neocomplcache_dictionary_filetype_lists = {
-  \ 'default' : '',
-  \ 'scala' : $HOME . '/.vim/dict/scala.dict',
-  \ }
 
 if &filetype == 'scala'
     setlocal iskeyword+=@-@
@@ -460,7 +432,6 @@ nnoremap <Leader>gd :<C-u>GitDiff --cached<CR>
 nnoremap <Leader>gD :<C-u>GitDiff<CR>
 nnoremap <Leader>gs :<C-u>GitStatus<CR>
 nnoremap <Leader>gl :<C-u>GitLog<CR>
-nnoremap <Leader>gL :<C-u>GitLog -u \| head -10000<CR>
 nnoremap <Leader>ga :<C-u>GitAdd<CR>
 nnoremap <Leader>gA :<C-u>GitAdd <cfile><CR>
 nnoremap <Leader>gc :<C-u>GitCommit<CR>
