@@ -202,7 +202,7 @@ style -name simple_tabs_container chrome://* <<EOM
 EOM
 
 " ぶくまコメを表示
-noremap v :viewSBMComments<CR>
+noremap v :viewSBMComments -t h<CR>
 
 autocmd LocationChange .* :fmapc
 " Hatena Bookmark
