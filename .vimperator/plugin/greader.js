@@ -171,8 +171,8 @@ let self = liberator.plugins.greader = (function() {
           //最初のタブは現在のタブか、新しいタブに読み込むかをグローバル変数から決定する
           liberator.open(star.link, (i==0) ? openBehavior() : liberator.NEW_BACKGROUND_TAB);
           //タブが新しいタブに読み込まれる場合はBarTabで蓋をする
-          if (!(i==0 && openBehavior()==liberator.CURRENT_TAB))
-            gBrowser.BarTabHandler.unloadTab(tabs.getTab(count+i));
+          //if (!(i==0 && openBehavior()==liberator.CURRENT_TAB))
+          //  gBrowser.BarTabHandler.unloadTab(tabs.getTab(count+i));
         }
         return;
       }
@@ -181,7 +181,7 @@ let self = liberator.plugins.greader = (function() {
         let matchstars = stars.search(args.string);
         for each(let ms in matchstars) {
           liberator.open(ms.link, liberator.NEW_BACKGROUND_TAB);
-          gBrowser.BarTabHandler.unloadTab(tabs.getTab(tabs.count-1));
+          //gBrowser.BarTabHandler.unloadTab(tabs.getTab(tabs.count-1));
           setTimeout(function(e_id) { stars.removeId(e_id)}, 10 , ms.id);
         }
         return;
@@ -191,6 +191,7 @@ let self = liberator.plugins.greader = (function() {
       literal: 0,
       count: true,
       completer: function(context) {
+        context.compare = void 0;
         context.format = {
           anchored: false,
           title: ["TITLE & URL","SOURCE"],
@@ -416,7 +417,7 @@ let self = liberator.plugins.greader = (function() {
              return;
          }
          //firefox bug 336551
-         response = response.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/,"");
+         response = response.replace(/^<\?xml\s+version\s*=\s*(["'])1.0\1[^?]*\?>/,"");
          //名前空間を取り除く
          response = response.replace(/(xmlns=".*")/,"");
          let e4x = new XML(response);
@@ -467,20 +468,28 @@ let self = liberator.plugins.greader = (function() {
   }
 
   function Stars() {
-    this.cache_items = null;
-    this.gapi = new GoogleApiController();
-    this.isRemoveEnable =
-      liberator.globalVariables.greaderStarRemoveEnable != undefined ?
-      window.eval(liberator.globalVariables.greaderStarRemoveEnable) : true;
+    let self = arguments.callee;
+    this.initialize.apply(this,arguments);
+    self.instance = this;
+    return self.instance;
   }
 
   Stars.prototype = {
+    initialize : function() {
+      this.cache_items = null;
+      this.gapi = new GoogleApiController();
+      this.isRemoveEnable =
+        liberator.globalVariables.greaderStarRemoveEnable != undefined ?
+        window.eval(liberator.globalVariables.greaderStarRemoveEnable) : true;
+    },
+
     items : function() {
       let result = this.cache_items
                  ? this.cache_items
                  : this.cache_items = this._getStarredItems();
       return result;
     },
+
     _getStarredItems : function() {
       return this.gapi.getFeed("_get_starred_item");
     },

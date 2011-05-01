@@ -3,7 +3,7 @@ var PLUGIN_INFO =
     <name>SBM Comments Viewer</name>
     <description>List show Social Bookmark Comments</description>
     <description lang="ja">ソーシャル・ブックマーク・コメントを表示します</description>
-    <version>0.2.2</version>
+    <version>0.2.4</version>
     <minVersion>2.0pre</minVersion>
     <maxVersion>3.0</maxVersion>
     <updateURL>https://github.com/vimpr/vimperator-plugins/raw/master/sbmcommentsviewer.js</updateURL>
@@ -76,24 +76,24 @@ SBMContainer.prototype = { //{{{
     },
     toHTML: function(format, countOnly){
         var label = <>
-            {this.faviconURL ? <img src={this.faviconURL} width="16" height="16"/> : <></>}
+            {this.faviconURL ? <img src={this.faviconURL} width="16" height="16" style="vertical-align: middle; margin-right: 5px;" /> : <></>}
             {manager.type[this.type] + ' ' + this.count + '(' + this.entries.length + ')'}
-            {this.pageURL ? <a href="#" highlight="URL">{this.pageURL}</a> : <></>}
+            {this.pageURL ? <a href="#" highlight="URL" style="margin-left: 5px;">{this.pageURL}</a> : <></>}
         </>;
         if (countOnly){
             return label;
         } else {
-            let xml = <dl class="liberator-sbmcommentsviewer" style="width: 99%; margin: 0; padding: .5em 0; line-height: 1.6;">
-                <dt highlight="CompTitle">{label}</dt>
-            </dl>;
+            let xml = <div highlight="CompGroup" class="liberator-sbmcommentsviewer" style="line-height: 1.6;">
+                <div highlight="Completions"><div highlight="CompTitle"><li highlight="CompResult">{label}</li><li highlight="CompDesc"></li></div></div>
+            </div>;
             let self = this;
             xml.* += (function(){
-                var dd = <></>;
+                var div = <></>;
                 self.entries.forEach(function(e){
                     if (isFilterNoComments && !e.comment) return;
-                    dd += e.toHTML(format);
+                    div += e.toHTML(format);
                 });
-                return dd;
+                return div;
             })();
             return xml;
         }
@@ -140,26 +140,20 @@ SBMEntry.prototype = { //{{{
             return result;
         }
 
-        var xml = <dd highlight="Completions" style="margin: 0; padding: 3px 5px; border-bottom: 1px solid #333;"/>;
+        var xml = <div highlight="Completions" class="liberator-sbmcommentsviewer-content" style="margin: 0; padding: 3px 5px; border-bottom: 1px dotted;"/>;
         var self = this;
         format.forEach(function(colum){
             switch(colum){
                 case 'id':
-                    xml.* += <span class="liberator-sbmcommentsviewer-id" style="margin-right: 10px;">
-                                {self.userIcon ? <><img src={self.userIcon} width="16" height="16" style="margin-right: 5px; vertical-align: middle;"/>{self.id}</> : <>{self.id}</>}
-                             </span>;
+                    xml.* += <span class="liberator-sbmcommentsviewer-id" style="margin-right: 10px;">{self.userIcon ? <><img src={self.userIcon} width="16" height="16" style="margin-right: 5px; vertical-align: middle;"/>{self.id}</> : <>{self.id}</>}</span>;
                     break;
                 case 'timestamp':
-                   xml.* += <span class="liberator-sbmcommentsviewer-timestamp">{self.formatDate()}</span>; 
-                   break;
-                case 'tags':
-                    xml.* += <span class="liberator-sbmcommentsviewer-tags" highlight="Tag" style="margin-right: 10px;"> {self.tags.join(',')}</span>; break;
-                case 'comment':
-                    xml.* += <span class="liberator-sbmcommentsviewer-comment" style="white-space:normal;">{makeLink(self.comment)}</span>; break;
-                case 'tagsAndComment':
-                    var tagString = self.tags.length ? '[' + self.tags.join('][') + ']':'';
-                    xml.* += <span class="liberator-sbmcommentsviewer-tagsAndComment" style="white-space:normal;">{tagString + ' '}{makeLink(self.comment)}</span>;
+                    xml.* += <span class="liberator-sbmcommentsviewer-timestamp" style="margin-right: 10px;">{self.formatDate()}</span>;
                     break;
+                case 'tags':
+                    xml.* += <span class="liberator-sbmcommentsviewer-tags" highlight="Tag" style="margin-right: 10px;">{self.tags.join(',')}</span>; break;
+                case 'comment':
+                    xml.* += <span class="liberator-sbmcommentsviewer-comment" style="margin-right: 10px; white-space: normal;">{makeLink(self.comment)}</span>; break;
                 default:
                     xml.* += <span>-</span>;
             }
@@ -470,7 +464,7 @@ var manager = {
         id: 'ID',
         comment: 'Comment',
         timestamp: 'TimeStamp',
-        tags: 'Tags'
+        tags: 'Tags',
     },
     // for debug
     convertMD5: function(str){
@@ -510,7 +504,7 @@ commands.addUserCommand(['viewSBMComments'], 'SBM Comments Viewer', //{{{
         var types =  liberator.globalVariables.def_sbms || 'hdlz';
         var format = (liberator.globalVariables.def_sbm_format || 'id,timestamp,tags,comment').split(',');
         var countOnly = false, openToBrowser = false;
-        var url = buffer.URL;
+        var url = arg.literalArg || buffer.URL;
         [
             let (v = arg['-' + name]) (v && f(v))
             for ([name, f] in Iterator({
@@ -526,7 +520,7 @@ commands.addUserCommand(['viewSBMComments'], 'SBM Comments Viewer', //{{{
             let type = types.charAt(i);
             if ( manager.type[type] ){
                 if ( cacheManager.isAvailable(url, type) ){
-                    liberator.log('cache avairable');
+                    liberator.log('cache available');
                     if (openToBrowser)
                         // TODO
                         manager.open(cacheManager.get(url,type).toHTML(format,false), liberator.forceNewTab);
@@ -543,6 +537,7 @@ commands.addUserCommand(['viewSBMComments'], 'SBM Comments Viewer', //{{{
         }
     }, //}}}
     {
+        literal: 0,
         argCount:"*",
         options: options,
         completer: function(context) completion.url(context, 'l')

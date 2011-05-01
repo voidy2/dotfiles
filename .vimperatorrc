@@ -580,5 +580,28 @@ command showurl :js for each(let link in Array.slice(content.document.links)){li
 
 let g:twlist_screen_name = "voidy21"
 let g:twittperator_plugin_twlist = 1
+
+
+" Greasemonkey 0.9.1でwindowを共通にする。（必要性は一時的？"
+js <<EOM
+autocommands.add('VimperatorEnter', '.*',
+  function() {
+    let gm = Components.classes['@greasemonkey.mozdev.org/greasemonkey-service;1'];
+    if (gm) {
+      gm = gm.getService().wrappedJSObject;
+      if (gm.injectScripts.toSource().search('sharedWindow') == -1) {
+          gm.injectScripts = liberator.eval(
+              gm.injectScripts.toSource()
+                  .replace(/(?=var firebugConsole)/,
+                          'var sharedWindow = {};' +
+                          'sharedWindow.window = sharedWindow;' +
+                          'sharedWindow.__proto__ = new XPCNativeWrapper(unsafeContentWin);')
+                  .replace(/(?=sandbox\.__proto__)/, ' sandbox.window = sharedWindow;'),
+              gm.injectScripts);
+      }
+    }
+  });
+EOM
+
 echo '.vimperatorrc sourced'
 
