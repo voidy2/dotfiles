@@ -91,6 +91,7 @@ PATH=~/lib/flex/bin:$PATH
 PATH=~/local/bin:$PATH
 PATH=/var/lib/gems/1.8/bin:$PATH
 PATH=~/myapp/android-sdk-linux_x86/tools:$PATH
+PATH=~/atlassian-plugin-sdk-3.3/bin:$PATH
 FLEX_HOME=~/lib/flex
 export GREP_OPTIONS="--color=auto"
 export STAX_HOME=~/stax-sdk-0.2.14
