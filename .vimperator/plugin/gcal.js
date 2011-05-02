@@ -128,7 +128,12 @@ let self = liberator.plugins.gcal = (function() {
             let result = null;
             let request = new libly.Request(
                 API_PREFIX + ALL_CALENDARS_URL,
-                null,
+                {
+                  "Content-type":"application/atom+xml; charset=UTF-8;",
+                  "Authorization":'GoogleLogin auth=' + getAuthToken(),
+                  "Connection":"close"
+                },
+
                 {
                    asynchronous: isAsync,
                 }
@@ -179,7 +184,11 @@ let self = liberator.plugins.gcal = (function() {
             });
             let request = new libly.Request(
                 url + "?" + params,
-                null,
+                {
+                  "Content-type":"application/atom+xml; charset=UTF-8;",
+                  "Authorization":'GoogleLogin auth=' + getAuthToken(),
+                  "Connection":"close"
+                },
                 {
                    asynchronous: isAsync,
                 }
