@@ -1,6 +1,6 @@
 echo 'Now Loading...'
 
-set gui=none,tabs
+set gui=none
 command! -nargs=+ lazy autocmd VimperatorEnter .* <args>
 " 自動フォーカス回避
 set focuscontent
@@ -84,7 +84,7 @@ vnoremap <Leader>g y<normal>:tabopen google <C-v><C-v><CR>
 nnoremap <Leader>g :gr<CR>
 " Unhidden and hidden the menubar and the toolbar
 noremap <A-Up> :set gui=all<CR>
-noremap <A-Down> :set gui=none,tabs<CR>
+noremap <A-Down> :set gui=none<CR>
 
 noremap <A-T> :restart<CR>
 
