@@ -5,9 +5,9 @@ var PLUGIN_INFO =
   <description>Google Calendar Controller</description>
   <description lang="ja">Google Calendarを操作したい</description>
   <author mail="y2.void@gmail.com" homepage="http://vimperator.g.hatena.ne.jp/voidy21/">voidy21</author>
-  <version>0.0.1</version>
-  <minVersion>2.3pre</minVersion>
-  <maxVersion>2.4pre</maxVersion>
+  <version>0.0.2</version>
+  <minVersion>3.0</minVersion>
+  <maxVersion>3.1</maxVersion>
   <updateURL>http://github.com/voidy21/dotfiles/raw/master/.vimperator/plugin/gcal.js</updateURL>
   <require type="plugin">_libly.js</require>
   <detail><![CDATA[
@@ -64,10 +64,13 @@ var PLUGIN_INFO =
         予定argをGoogle Calendarに登録します。
 
     == ChangeLog ==
+      0.0.2:
+      - Vimp3対応?
+      - ユーザ名とパスワードが使われていないひどいバグを見た
       0.0.1:
       - ちょっと作ってみる
 
-    == TODO ==
+      == TODO ==
       - 一通り操作できるところまで作りたい
   ]]></detail>
 </VimperatorPlugin>;
@@ -75,20 +78,21 @@ var PLUGIN_INFO =
 
 let self = liberator.plugins.gcal = (function() {
     var accessor = storage.newMap("gcal",{ store: true });
+    var gmailUser, gmailPassword;
     // Googleログイン用 ////////////////////////////////////////////// {{{
     try {
         var form = ['https://www.google.com', 'https://www.google.com', null];
         var passwordManager = Cc["@mozilla.org/login-manager;1"].getService(Ci.nsILoginManager);
         var logins = passwordManager.findLogins({}, form[0], form[1], form[2]);
         if(logins.length){
-            var [gmailUser, gmailPassword] = [logins[0].username, logins[0].password];
+            [gmailUser, gmailPassword] = [logins[0].username, logins[0].password];
         } else {
             var promptSvc = Cc["@mozilla.org/embedcomp/prompt-service;1"]
                 .getService(Ci.nsIPromptService);
             var user = { value : null };
             var pass = { value : null };
             var ret = promptSvc.promptUsernameAndPassword(
-                window, form[0], "GMail Biff Login", user, pass, null, {});
+                window, form[0], "Greader Login", user, pass, null, {});
             if(ret){
                 var nsLoginInfo = new Components.Constructor("@mozilla.org/login-manager/loginInfo;1",
                         Ci.nsILoginInfo,
@@ -136,7 +140,7 @@ let self = liberator.plugins.gcal = (function() {
                     return;
                 }
                 //firefox bug 336551
-                response = response.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/,"");
+                response = response.replace(/^<\?xml\s+version\s*=\s*(["'])1.0\1[^?]*\?>/,"");
                 //名前空間を取り除く
                 response = response.replace(/(xmlns='.*?')/,"");
                 //gCal名前空間接頭辞ィィィ
@@ -187,7 +191,7 @@ let self = liberator.plugins.gcal = (function() {
                      return;
                  }
                  //firefox bug 336551
-                 response = response.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/,"");
+                 response = response.replace(/^<\?xml\s+version\s*=\s*(["'])1.0\1[^?]*\?>/,"");
                  //めんどいのでデフォルトの名前空間を取り除く
                  response = response.replace(/(xmlns='.*?')/,"");
                  let e4x = new XML(response);
@@ -256,7 +260,7 @@ let self = liberator.plugins.gcal = (function() {
             request.addEventListener("onSuccess", function(data) {
                 response = data.responseText;
                 //firefox bug 336551
-                response = response.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/,"");
+                response = response.replace(/^<\?xml\s+version\s*=\s*(["'])1.0\1[^?]*\?>/,"");
                 //名前空間を取り除く
                 response = response.replace(/(xmlns='.*?')/,"");
                 let entry = new XML(response);
@@ -264,6 +268,9 @@ let self = liberator.plugins.gcal = (function() {
             });
             request.addEventListener("onFailure", function(data) {
                 liberator.log("Google calendar post failure");
+            });
+            request.addEventListener("onException", function(data) {
+                liberator.log("Google calendar post failure"+ data);
             });
             request.post();
         }

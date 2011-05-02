@@ -5,9 +5,9 @@ var PLUGIN_INFO =
   <description>Open Google Reader starred items</description>
   <description lang="ja">Google Reader でスターを付けたページを開く</description>
   <author mail="y2.void@gmail.com" homepage="http://d.hatena.ne.jp/voidy21/">voidy21</author>
-  <version>0.3.0</version>
-  <minVersion>2.2pre</minVersion>
-  <maxVersion>2.4pre</maxVersion>
+  <version>0.4.0</version>
+  <minVersion>3.0</minVersion>
+  <maxVersion>3.1</maxVersion>
   <updateURL>http://github.com/voidy21/dotfiles/raw/master/.vimperator/plugin/greader.js</updateURL>
   <require type="plugin">_libly.js</require>
   <detail><![CDATA[
@@ -123,6 +123,8 @@ var PLUGIN_INFO =
       ただし、最新のスターからg:greaderViewItemsCountで指定した数(デフォルトでは20)までしか辿らないので注意。
 
     == ChangeLog ==
+      - 0.4.0
+      -- Firefox4＆Vimperator 3.0に対応。BarTab不要論
       - 0.3.1
       -- BarTabの蓋をする位置が間違っていたのを修正
       - 0.3.0
