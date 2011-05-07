@@ -44,17 +44,15 @@ let INFO =
   let U = liberator.plugins.libly.$U;
 
   function jump (url) {
-    let index = 0;
     let url = util.stringToURLArray(url).toString();
     if (url == buffer.URL){
       return false;
     }
     for each ( [,tab] in tabs.browsers ) {
       if (url == tab.currentURI.spec){
-        tabs.select(index);
+        tabs.switchTo(url, true);
         return true;
       }
-      ++index;
     }
     return false;
   }
@@ -94,7 +92,6 @@ let INFO =
           let [elem,] = args;
           let url = elem.href;
           if (!(url && jump(url))){
-            liberator.echo("Now Loading... " + url);
             return next();
           }
         });
